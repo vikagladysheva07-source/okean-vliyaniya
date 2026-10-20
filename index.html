@@ -165,12 +165,40 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .qo input:checked + span b{background:var(--v);color:#fff}
 .qo input:focus-visible + span{outline:2px solid var(--vb);outline-offset:2px}
 @media(max-width:640px){.qopts{grid-template-columns:1fr}}
-@media(min-width:901px){#q-result{position:sticky;top:96px}}
 .qnums{display:flex;gap:18px;margin-top:10px;font-size:14px;color:var(--muted)}
 .qnums b{color:var(--text)}
 .weak{margin-top:16px;border-radius:16px;padding:14px 16px;background:var(--cbg);border:1px solid rgba(0,196,212,.25);font-size:14.5px;text-align:left;width:100%}
 .weak b{color:var(--cb);display:block;font-size:12.5px;margin-bottom:4px}
 #q-cta{margin-top:18px;width:100%}
+
+
+/* TEASER + DIALOG */
+.teaser{display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;margin-top:40px;padding:26px 30px;border-radius:28px;background:radial-gradient(ellipse at left,rgba(91,47,190,.4),transparent 60%),var(--s1);border:1px solid rgba(155,111,232,.4)}
+.t-gauge{position:relative;width:92px;height:92px}
+.t-gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.t-gauge circle{transition:stroke-dashoffset .6s}
+.t-gauge b{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:900}
+.t-body h3{font-size:clamp(20px,2.4vw,26px);font-weight:900;line-height:1.2}
+.t-body p{font-size:14.5px;color:var(--muted);margin-top:4px}
+@media(max-width:700px){.teaser{grid-template-columns:auto 1fr;padding:22px}.teaser .btn{grid-column:1/-1;width:100%}.t-gauge{width:72px;height:72px}.t-gauge b{font-size:24px}}
+dialog#qd{border:none;padding:0;background:transparent;color:var(--text);max-width:620px;width:calc(100% - 24px);max-height:calc(100svh - 24px);margin:auto}
+dialog#qd::backdrop{background:rgba(4,4,10,.82);backdrop-filter:blur(8px)}
+.qd-in{border-radius:28px;background:radial-gradient(ellipse at top,rgba(91,47,190,.35),transparent 60%),var(--s1);border:1px solid rgba(155,111,232,.4);padding:26px;max-height:calc(100svh - 24px);overflow:auto}
+.qd-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)}
+.qd-x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--text);font-size:24px;line-height:1;cursor:pointer}
+.qd-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin:16px 0 26px;overflow:hidden}
+.qd-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--vd),var(--vb));transition:width .3s}
+#quiz{padding:0;border:none;background:none;border-radius:0}
+.qd-nav[hidden]{display:none}
+.qd-steps .qz{display:none;margin:0}
+.qd-steps .qz.on{display:block}
+.qd-steps .qopts{grid-template-columns:1fr}
+.qd-steps .qz legend{font-size:clamp(20px,3vw,24px);font-weight:900;margin-bottom:18px}
+.qd-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;font-size:14px;color:var(--muted)}
+#qd .result{display:flex;flex-direction:column;align-items:center;text-align:center}
+#qd .result[hidden]{display:none}
+#qd .gauge{width:180px;height:180px}#qd .gauge .val b{font-size:60px}
+.qd-again{margin-top:12px;background:none;border:none;color:var(--muted);font-size:14px;text-decoration:underline;cursor:pointer}
 
 /* PATH */
 .path{position:relative;display:grid;grid-template-columns:repeat(5,1fr);margin-top:20px;border-radius:28px;border:1px solid var(--line);background:var(--s1);overflow:hidden}
@@ -550,27 +578,14 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
   <div class="wrap">
     <div class="depth">600 м</div>
     <h2 class="disp grad h2">Влияние =<br>Глубина × Масштаб</h2>
-    <p class="sub">Маркетинг личности раскрывает глубину, AI даёт масштаб. Ответь на 6 вопросов и узнай свой Индекс влияния — это бесплатно и займёт минуту.</p>
-    <div class="calc quiz">
-      <div class="panel" id="quiz">
-<fieldset class="qz"><legend><small>Глубина · Ценность</small>Можешь одной фразой объяснить, за что тебя выбирают?</legend><div class="qopts"><label class="qo"><input type="radio" name="q0" value="0"><span>Пока нет</span></label><label class="qo"><input type="radio" name="q0" value="1"><span>Примерно</span></label><label class="qo"><input type="radio" name="q0" value="2"><span>Да, чётко</span></label></div></fieldset>
-<fieldset class="qz"><legend><small>Глубина · Позиционирование</small>Чем ты отличаешься от других в своей нише?</legend><div class="qopts"><label class="qo"><input type="radio" name="q1" value="0"><span>Сложно сказать</span></label><label class="qo"><input type="radio" name="q1" value="1"><span>Есть идеи</span></label><label class="qo"><input type="radio" name="q1" value="2"><span>Знаю и показываю</span></label></div></fieldset>
-<fieldset class="qz"><legend><small>Глубина · Оффер</small>Есть продукт с понятной ценой и результатом?</legend><div class="qopts"><label class="qo"><input type="radio" name="q2" value="0"><span>Нет</span></label><label class="qo"><input type="radio" name="q2" value="1"><span>Есть, но цену приходится объяснять</span></label><label class="qo"><input type="radio" name="q2" value="2"><span>Да, и он продаётся</span></label></div></fieldset>
-<fieldset class="qz"><legend><small>Глубина · Привлечение</small>Откуда приходят клиенты?</legend><div class="qopts"><label class="qo"><input type="radio" name="q3" value="0"><span>Случайно или по сарафану</span></label><label class="qo"><input type="radio" name="q3" value="1"><span>Есть канал, но нестабильно</span></label><label class="qo"><input type="radio" name="q3" value="2"><span>Есть свой стабильный поток</span></label></div></fieldset>
-<fieldset class="qz"><legend><small>Глубина · Продажи</small>Как проходят продажи?</legend><div class="qopts"><label class="qo"><input type="radio" name="q4" value="0"><span>Тяжело называть цену</span></label><label class="qo"><input type="radio" name="q4" value="1"><span>Иногда закрываю</span></label><label class="qo"><input type="radio" name="q4" value="2"><span>Есть своя система</span></label></div></fieldset>
-<fieldset class="qz"><legend><small>Масштаб · AI</small>Как ты сейчас работаешь с AI?</legend><div class="qopts five"><label class="qo"><input type="radio" name="qs" value="1"><span><b>1</b>Иногда спрашиваю в чате</span></label><label class="qo"><input type="radio" name="qs" value="2"><span><b>2</b>У AI есть контекст обо мне и проекте</span></label><label class="qo"><input type="radio" name="qs" value="3"><span><b>3</b>Есть агенты с ролями</span></label><label class="qo"><input type="radio" name="qs" value="4"><span><b>4</b>Часть процессов идёт без меня</span></label><label class="qo"><input type="radio" name="qs" value="5"><span><b>5</b>Собираю свои сайты и приложения</span></label></div></fieldset>
+    <p class="sub">Маркетинг личности раскрывает глубину, AI даёт масштаб. Узнай, где ты сейчас.</p>
+    <div class="teaser">
+      <div class="t-gauge" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#5B2FBE"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/><circle id="t-arc" cx="60" cy="60" r="52" fill="none" stroke="url(#tg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="245"/></svg><b id="t-val">?</b></div>
+      <div class="t-body">
+        <h3 id="t-title">Какой у тебя Индекс влияния?</h3>
+        <p id="t-sub">6 вопросов · 1 минута · результат сразу и бесплатно</p>
       </div>
-      <div class="panel result" id="q-result">
-        <div class="gauge">
-          <svg viewBox="0 0 120 120"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#5B2FBE"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10"/><circle id="g-arc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
-          <div class="val"><b id="o-i">?</b><span>из 50</span></div>
-        </div>
-        <h4>Твой Индекс влияния</h4>
-        <div class="qnums"><span>Глубина <b id="o-d">–</b>/10</span><span>Масштаб <b id="o-s">–</b>/5</span></div>
-        <p id="o-txt">Ответь на все вопросы, и здесь появится твой результат.</p>
-        <div class="weak" id="o-weak" hidden></div>
-        <a class="btn btn-p" id="q-cta" href="#apply" hidden>Подать заявку с этим результатом</a>
-      </div>
+      <button class="btn btn-p" type="button" id="t-open">Пройти тест</button>
     </div>
     <div class="path">
       <div class="pstep"><span class="grp g-depth"></span><div class="ic"><svg><use href="#i-user"/></svg></div><h4>Личность</h4><p>Твой опыт и взгляд скопировать нельзя</p></div>
@@ -839,6 +854,39 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
   </div>
 </section>
 
+
+<dialog id="qd" aria-labelledby="qd-title">
+  <div class="qd-in">
+    <div class="qd-top">
+      <span id="qd-title">Индекс влияния</span>
+      <button type="button" class="qd-x" id="qd-close" aria-label="Закрыть">×</button>
+    </div>
+    <div class="qd-bar"><i id="qd-prog"></i></div>
+    <form id="quiz" class="qd-steps" onsubmit="return false">
+
+<fieldset class="qz"><legend><small>Глубина · Ценность</small>Можешь одной фразой объяснить, за что тебя выбирают?</legend><div class="qopts"><label class="qo"><input type="radio" name="q0" value="0"><span>Пока нет</span></label><label class="qo"><input type="radio" name="q0" value="1"><span>Примерно</span></label><label class="qo"><input type="radio" name="q0" value="2"><span>Да, чётко</span></label></div></fieldset>
+<fieldset class="qz"><legend><small>Глубина · Позиционирование</small>Чем ты отличаешься от других в своей нише?</legend><div class="qopts"><label class="qo"><input type="radio" name="q1" value="0"><span>Сложно сказать</span></label><label class="qo"><input type="radio" name="q1" value="1"><span>Есть идеи</span></label><label class="qo"><input type="radio" name="q1" value="2"><span>Знаю и показываю</span></label></div></fieldset>
+<fieldset class="qz"><legend><small>Глубина · Оффер</small>Есть продукт с понятной ценой и результатом?</legend><div class="qopts"><label class="qo"><input type="radio" name="q2" value="0"><span>Нет</span></label><label class="qo"><input type="radio" name="q2" value="1"><span>Есть, но цену приходится объяснять</span></label><label class="qo"><input type="radio" name="q2" value="2"><span>Да, и он продаётся</span></label></div></fieldset>
+<fieldset class="qz"><legend><small>Глубина · Привлечение</small>Откуда приходят клиенты?</legend><div class="qopts"><label class="qo"><input type="radio" name="q3" value="0"><span>Случайно или по сарафану</span></label><label class="qo"><input type="radio" name="q3" value="1"><span>Есть канал, но нестабильно</span></label><label class="qo"><input type="radio" name="q3" value="2"><span>Есть свой стабильный поток</span></label></div></fieldset>
+<fieldset class="qz"><legend><small>Глубина · Продажи</small>Как проходят продажи?</legend><div class="qopts"><label class="qo"><input type="radio" name="q4" value="0"><span>Тяжело называть цену</span></label><label class="qo"><input type="radio" name="q4" value="1"><span>Иногда закрываю</span></label><label class="qo"><input type="radio" name="q4" value="2"><span>Есть своя система</span></label></div></fieldset>
+<fieldset class="qz"><legend><small>Масштаб · AI</small>Как ты сейчас работаешь с AI?</legend><div class="qopts five"><label class="qo"><input type="radio" name="qs" value="1"><span><b>1</b>Иногда спрашиваю в чате</span></label><label class="qo"><input type="radio" name="qs" value="2"><span><b>2</b>У AI есть контекст обо мне и проекте</span></label><label class="qo"><input type="radio" name="qs" value="3"><span><b>3</b>Есть агенты с ролями</span></label><label class="qo"><input type="radio" name="qs" value="4"><span><b>4</b>Часть процессов идёт без меня</span></label><label class="qo"><input type="radio" name="qs" value="5"><span><b>5</b>Собираю свои сайты и приложения</span></label></div></fieldset>
+    </form>
+    <div class="qd-nav" id="qd-nav"><button type="button" class="btn btn-g btn-s" id="qd-back">Назад</button><span id="qd-step">1 из 6</span></div>
+    <div class="result" id="q-result" hidden>
+        <div class="gauge">
+          <svg viewBox="0 0 120 120"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#5B2FBE"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10"/><circle id="g-arc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+          <div class="val"><b id="o-i">?</b><span>из 50</span></div>
+        </div>
+        <h4>Твой Индекс влияния</h4>
+        <div class="qnums"><span>Глубина <b id="o-d">–</b>/10</span><span>Масштаб <b id="o-s">–</b>/5</span></div>
+        <p id="o-txt">Ответь на все вопросы, и здесь появится твой результат.</p>
+        <div class="weak" id="o-weak" hidden></div>
+        <a class="btn btn-p" id="q-cta" href="#apply" hidden>Подать заявку с этим результатом</a>
+      <button type="button" class="qd-again" id="qd-again">Пройти заново</button>
+    </div>
+  </div>
+</dialog>
+
 <footer><div class="wrap"><img class="f-logo" src="assets/wikki-logo-transparent.png" alt="WIKKI.OCEAN"><span>© 2026 WIKKI.OCEAN · Океан влияния</span><a href="https://t.me/wikki_shark" target="_blank" rel="noopener">@wikki_shark</a></div></footer>
 
 
@@ -897,6 +945,23 @@ function quiz(){
   const fi=document.getElementById('f-index'); fi.textContent='Твой Индекс влияния '+i+' из 50 прикрепится к заявке.'; fi.hidden=false;
 }
 document.getElementById('quiz').addEventListener('change',quiz); quiz();
+
+
+/* тест во всплывающем окне */
+const qd=document.getElementById('qd'), steps=[...document.querySelectorAll('#quiz .qz')];
+const prog=document.getElementById('qd-prog'), stepTxt=document.getElementById('qd-step'), back=document.getElementById('qd-back'), nav=document.getElementById('qd-nav'), qres=document.getElementById('q-result'), qform=document.getElementById('quiz');
+let st=0;
+function show(i){st=i;steps.forEach((f,j)=>f.classList.toggle('on',j===i));prog.style.width=(i/steps.length*100)+'%';stepTxt.textContent=(i+1)+' из '+steps.length;back.style.visibility=i?'visible':'hidden';nav.hidden=false;qres.hidden=true;qform.hidden=false;}
+function finish(){steps.forEach(f=>f.classList.remove('on'));prog.style.width='100%';nav.hidden=true;qform.hidden=true;qres.hidden=false;
+  const i=+oi.textContent;document.getElementById('t-val').textContent=i;document.getElementById('t-arc').style.strokeDashoffset=C-(C*i/50);
+  document.getElementById('t-title').textContent='Твой Индекс влияния: '+i+' из 50';document.getElementById('t-sub').textContent=ow.textContent.replace('Где вырастешь сильнее всего','Где вырастешь сильнее всего: ');document.getElementById('t-open').textContent='Посмотреть результат';}
+qform.addEventListener('click',e=>{const inp=e.target.closest('input[type=radio]');if(!inp)return;const k=steps.indexOf(inp.closest('.qz'));quiz();if(k<steps.length-1)setTimeout(()=>show(k+1),220);else if(quizResult)setTimeout(finish,220);});
+document.getElementById('t-open').addEventListener('click',()=>{qd.showModal();if(quizResult)finish();else show(0);});
+back.addEventListener('click',()=>show(Math.max(0,st-1)));
+document.getElementById('qd-close').addEventListener('click',()=>qd.close());
+qd.addEventListener('click',e=>{if(e.target===qd)qd.close();});
+document.getElementById('q-cta').addEventListener('click',()=>qd.close());
+document.getElementById('qd-again').addEventListener('click',()=>{qform.reset();quizResult='';show(0);});
 
 /* траектории */
 const T=[
