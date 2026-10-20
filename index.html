@@ -77,8 +77,8 @@ button{font-family:var(--f)}
 .hero .bg{position:absolute;inset:0;background:url('assets/ocean.jpg') center 40%/cover no-repeat;transform:scale(1.06);animation:drift 22s ease-in-out infinite alternate}
 .hero .bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,5,12,.62) 0%,rgba(4,4,10,.78) 45%,rgba(7,7,13,.97) 92%),radial-gradient(ellipse 50% 50% at 78% 38%,rgba(91,47,190,.35),transparent 70%)}
 @keyframes drift{to{transform:scale(1.12) translate(-1.5%,-1%)}}
-.hero-grid{position:relative;display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:end}
-.hero h1{font-size:clamp(52px,7.4vw,112px)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1fr;align-items:end}
+.hero h1{font-size:clamp(52px,9vw,140px)}
 .hero h1 span{display:block}
 .hero .sub{margin:30px 0 34px;max-width:540px;color:rgba(242,237,226,.84)}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
@@ -401,11 +401,11 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
 @media(max-width:760px){.sticky{display:block}}
 
 /* единственная анимация: загрузка первого экрана */
-.hero h1 span,.hero .sub,.hero .cta,.facts-row,.portrait{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.hero h1 span,.hero .sub,.hero .cta,.facts-row{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
 .hero h1 span:nth-child(2){animation-delay:.1s}.hero h1 span:nth-child(3){animation-delay:.2s}
 .hero .sub{animation-delay:.35s}.hero .cta{animation-delay:.45s}.facts-row{animation-delay:.55s}.portrait{animation-delay:.25s}
 @keyframes rise{to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero h1 span,.hero .sub,.hero .cta,.facts-row,.portrait{opacity:1;transform:none}html{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero h1 span,.hero .sub,.hero .cta,.facts-row{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -481,10 +481,6 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
         <div><b>10</b><span>мест в группе</span></div>
       </div>
     </div>
-    <figure class="portrait">
-      <img src="assets/victoria.jpg" alt="Виктория Гладышева">
-      <figcaption><b>Виктория Гладышева</b><span>основатель WIKKI.OCEAN</span></figcaption>
-    </figure>
   </div>
 </section>
 
