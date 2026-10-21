@@ -155,6 +155,28 @@ button{font-family:var(--f)}
 main,body{position:relative}
 
 /* bento pains */
+.vs{display:grid;grid-template-columns:1fr 60px 1.3fr;align-items:center;margin-top:36px;max-width:920px;padding:30px;border-radius:28px;background:radial-gradient(ellipse 45% 80% at 75% 50%,rgba(155,111,232,.26),transparent 70%),var(--s1);border:1px solid rgba(196,164,255,.18)}
+.vs small{display:block;text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+.vs-b small{color:#C4A4FF;font-weight:700}
+.vs-crowd{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:230px;margin:0 auto}
+.vs-crowd i{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.vs-crowd svg{width:46%;height:46%;color:rgba(242,237,226,.3)}
+.vs-arrow{height:2px;background:linear-gradient(90deg,rgba(255,255,255,.1),#9B6FE8);position:relative}
+.vs-arrow::after{content:'';position:absolute;right:-2px;top:-5px;border:6px solid transparent;border-left:9px solid #9B6FE8}
+.hub2{position:relative;width:100%;max-width:330px;aspect-ratio:1;margin:0 auto}
+.hub2-l{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hub2-l line{stroke:#9B6FE8;stroke-width:.5;stroke-dasharray:1.5 2;opacity:.75;animation:flow 2.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-7}}
+.hub2-ring{position:absolute;left:12%;top:12%;right:12%;bottom:12%;border-radius:50%;border:1px solid rgba(196,164,255,.18)}
+.hub2-me{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#A983F2,#5B2FBE);border:1px solid rgba(225,208,255,.6);box-shadow:0 0 0 8px rgba(155,111,232,.12),0 0 50px rgba(155,111,232,.75);animation:pulse2 3s ease-in-out infinite}
+.hub2-me svg{width:42%;height:42%;color:#fff}
+@keyframes pulse2{50%{box-shadow:0 0 0 14px rgba(155,111,232,.06),0 0 70px rgba(155,111,232,.9)}}
+.hn{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;width:0}
+.hn span{width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(169,131,242,.45),rgba(91,47,190,.35));border:1px solid rgba(196,164,255,.45);box-shadow:0 0 18px rgba(155,111,232,.35)}
+.hn span svg{width:22px;height:22px;color:#fff}
+.hn small{margin:0!important;font-size:11.5px!important;color:#E4D6FF!important;font-weight:600!important;white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.hub2-l line,.hub2-me{animation:none}}
+@media(max-width:700px){.vs{grid-template-columns:1fr;gap:18px;padding:24px 14px;border-radius:22px;margin-top:28px}.vs-arrow{width:2px;height:34px;margin:0 auto;background:linear-gradient(180deg,rgba(255,255,255,.1),#9B6FE8)}.vs-arrow::after{right:auto;left:-5px;top:auto;bottom:-6px;border:6px solid transparent;border-top:9px solid #9B6FE8}.vs-crowd{max-width:250px;gap:6px}.hub2{max-width:300px}.hn span{width:40px;height:40px;border-radius:12px}.hn span svg{width:19px;height:19px}}
 .eq{margin-top:36px;max-width:900px;padding:44px 24px 34px;border-radius:28px;text-align:center;background:radial-gradient(ellipse 60% 70% at 50% 45%,rgba(155,111,232,.28),transparent 70%),var(--s1);border:1px solid rgba(196,164,255,.2);position:relative;overflow:hidden}
 .eq-big{display:flex;flex-direction:column;align-items:center;font-weight:900;text-transform:uppercase;letter-spacing:-.03em;line-height:.95}
 .eq-1{font-size:clamp(40px,7vw,88px);color:#fff}
@@ -844,9 +866,21 @@ footer .seller a{color:var(--muted)}
   <div class="wrap">
     <div class="depth">200 м</div>
     <h2 class="disp grad h2">Масштаб подешевел<br>до цены подписки</h2>
-    <div class="eq">
-      <div class="eq-big"><span class="eq-1">1 человек</span><span class="eq-s" aria-hidden="true">=</span><span class="eq-2">отдел</span></div>
-      <div class="eq-tags"><em>стратегия</em><em>контент</em><em>продажи</em><em>аналитика</em><em>разработка</em><em>рутина</em></div>
+    <div class="vs">
+      <div class="vs-a">
+        <div class="vs-crowd" aria-hidden="true"><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i><i><svg><use href="#i-user"/></svg></i></div>
+        <small>было: 10 человек</small>
+      </div>
+      <div class="vs-arrow" aria-hidden="true"></div>
+      <div class="vs-b">
+        <div class="hub2" aria-hidden="true">
+          <svg class="hub2-l" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="50" x2="50.0" y2="12.0"/><line x1="50" y1="50" x2="82.9" y2="31.0"/><line x1="50" y1="50" x2="82.9" y2="69.0"/><line x1="50" y1="50" x2="50.0" y2="88.0"/><line x1="50" y1="50" x2="17.1" y2="69.0"/><line x1="50" y1="50" x2="17.1" y2="31.0"/></svg>
+          <div class="hub2-ring"></div>
+          <div class="hub2-me"><svg><use href="#i-user"/></svg></div>
+          <div class="hn" style="left:50.0%;top:12.0%"><span><svg><use href="#i-target"/></svg></span><small>стратегия</small></div><div class="hn" style="left:82.9%;top:31.0%"><span><svg><use href="#i-bolt"/></svg></span><small>контент</small></div><div class="hn" style="left:82.9%;top:69.0%"><span><svg><use href="#i-deal"/></svg></span><small>продажи</small></div><div class="hn" style="left:50.0%;top:88.0%"><span><svg><use href="#i-chart"/></svg></span><small>аналитика</small></div><div class="hn" style="left:17.1%;top:69.0%"><span><svg><use href="#i-site"/></svg></span><small>разработка</small></div><div class="hn" style="left:17.1%;top:31.0%"><span><svg><use href="#i-gear"/></svg></span><small>рутина</small></div>
+        </div>
+        <small>стало: ты + AI</small>
+      </div>
     </div>
     <p class="shift-note">AI умножает то, что уже есть. Пустоту — в шум, <b>глубину — во влияние.</b> Поэтому начинаем с тебя.</p>
   </div>
