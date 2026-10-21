@@ -463,10 +463,30 @@ dialog#qd::backdrop{background:rgba(4,4,10,.82);backdrop-filter:blur(8px)}
 @media(max-width:900px){.path{grid-template-columns:1fr}.pstep + .pstep{border-left:none;border-top:1px solid var(--line)}.pstep{display:grid;grid-template-columns:52px 1fr;gap:4px 16px;padding:20px 20px 20px 24px}.pstep .ic{grid-row:span 2;margin:0}.pstep .grp{width:3px;height:auto;bottom:0;right:auto}}
 
 /* TRACK SWITCHER */
+.tr{margin-top:28px;border-radius:28px;overflow:hidden;border:1px solid rgba(196,164,255,.2);background:var(--s1)}
+.tr-pain{padding:26px 28px 24px;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+.tr small{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.tr-pain q{display:block;font-size:clamp(20px,2.6vw,28px);font-weight:700;line-height:1.3;color:rgba(242,237,226,.62);quotes:'«' '»'}
+.tr-res{padding:26px 28px 28px;background:radial-gradient(ellipse 70% 60% at 0% 0%,rgba(155,111,232,.26),transparent 70%),linear-gradient(180deg,rgba(91,47,190,.1),transparent)}
+.tr-res small{color:#C4A4FF;font-weight:700}
+.tr-big{font-size:clamp(22px,3vw,32px);font-weight:900;line-height:1.2;max-width:760px;background:linear-gradient(180deg,#fff,#D7C4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.tg{position:relative;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015) 60%,rgba(91,47,190,.14));border:1px solid rgba(196,164,255,.18)}
+.tg-w{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;color:#C4A4FF;padding:3px 8px;border-radius:999px;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25)}
+.tg-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(169,131,242,.5),rgba(91,47,190,.4));border:1px solid rgba(196,164,255,.45);box-shadow:0 0 18px rgba(155,111,232,.35)}
+.tg-ic svg{width:19px;height:19px;color:#fff}
+.tg p{margin:0;font-size:14.5px;line-height:1.35;font-weight:600;color:#fff}
+.tr.swap .tg{animation:tgIn .45s var(--d) cubic-bezier(.2,.7,.2,1) both}
+.tr.swap .tr-pain q,.tr.swap .tr-big{animation:tgIn .4s cubic-bezier(.2,.7,.2,1) both}
+@keyframes tgIn{from{opacity:0;transform:translateY(8px)}}
+@media(prefers-reduced-motion:reduce){.tr.swap .tg,.tr.swap .tr-pain q,.tr.swap .tr-big{animation:none}}
+@media(max-width:800px){.tr-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.tr{border-radius:22px}.tr-pain,.tr-res{padding:20px 16px}.tr-grid{gap:8px;margin-top:18px}.tg{padding:12px;gap:8px;border-radius:14px}.tg-ic{width:32px;height:32px;border-radius:10px}.tg-ic svg{width:16px;height:16px}.tg p{font-size:13px}.tg-w{top:10px;right:10px;font-size:10px;padding:2px 6px}}
+
 .seg{display:inline-flex;padding:6px;border-radius:999px;background:var(--s1);border:1px solid var(--line);margin-top:40px;gap:4px;flex-wrap:wrap}
 .seg button{height:48px;padding:0 24px;border-radius:999px;border:none;background:transparent;color:var(--muted);font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
 .seg button[aria-selected=true]{background:linear-gradient(180deg,#A983F2,#7C4FD4);color:#fff}
-@media(max-width:600px){.seg{display:grid;grid-template-columns:1fr;border-radius:22px;width:100%}.seg button{border-radius:16px}}
+@media(max-width:600px){.seg{display:grid;grid-template-columns:.8fr 1.25fr 1fr;border-radius:999px;width:100%;padding:4px;gap:2px;margin-top:28px}.seg button{border-radius:999px;height:42px;padding:0 4px;font-size:12.5px}}
 .tview{display:grid;grid-template-columns:1fr 80px 1fr;gap:20px;align-items:stretch;margin-top:22px}
 .tbox{border-radius:28px;padding:34px;background:var(--s1);border:1px solid var(--line)}
 .tbox.b{background:radial-gradient(ellipse at top right,rgba(91,47,190,.4),transparent 65%),var(--s1);border-color:rgba(155,111,232,.4)}
@@ -941,16 +961,19 @@ footer .seller a{color:var(--muted)}
   <div class="wrap">
     <div class="depth">1 000 м</div>
     <h2 class="disp grad h2">Путь<br>у каждого свой</h2>
-    <p class="sub">Программа общая. Задания, AI-партнёр и разборы подстраиваются под твою траекторию.</p>
+    <p class="sub">Выбери, кто ты. Покажем, с чем приходишь и что уносишь через 6 недель.</p>
     <div class="seg" role="tablist" aria-label="Траектория">
       <button role="tab" aria-selected="true" data-t="0">Эксперт</button>
       <button role="tab" aria-selected="false" data-t="1">Предприниматель</button>
       <button role="tab" aria-selected="false" data-t="2">AI-специалист</button>
     </div>
-    <div class="tview" aria-live="polite">
-      <div class="tbox"><small>Сейчас</small><p id="t-a"></p></div>
-      <div class="tarrow"><svg viewBox="0 0 60 24"><use href="#i-arrow"/></svg></div>
-      <div class="tbox b"><small>Через 6 недель</small><p id="t-b"></p><div class="tchips" id="t-c"></div></div>
+    <div class="tr" aria-live="polite">
+      <div class="tr-pain"><small>Сейчас</small><q id="t-a"></q></div>
+      <div class="tr-res">
+        <small>Через 6 недель</small>
+        <p class="tr-big" id="t-b"></p>
+        <div class="tr-grid" id="t-c"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1321,12 +1344,12 @@ document.querySelectorAll('.cnt').forEach(el=>cio.observe(el));
 
 /* траектории */
 const T=[
- {a:'Экспертиза сильная, а видят мало. Клиенты по сарафану, контент отнимает время.',b:'Упакованная ценность, свой продукт и сайт, свой канал привлечения, который приводит заявки.',c:['позиционирование','сайт и мини-продукт','личный бренд','поток заявок']},
- {a:'Бизнес держится на основателе, процессы ручные, маркетинг хаотичный.',b:'Позиционирование компании, внутренняя платформа, процессы на агентах и понятная карта делегирования.',c:['агенты в процессах','CRM и дашборд','маркетинг компании','делегирование']},
- {a:'Интерес к AI есть, навыка и понятной услуги пока нет.',b:'Своя AI-команда, упакованная услуга для бизнеса, демо-продукт и первый пилот.',c:['5 уровней AI','услуга и прайс','демо-продукт','первый пилот']}
+ {a:'Я сильнее многих в своей нише, но клиенты выбирают тех, кто громче.',b:'Тебя видят, выбирают и платят, без выгорания на контенте.',c:[['i-gem','Ценность и позиционирование одной фразой'],['i-team','AI-команда пишет, анализирует и берёт рутину'],['i-coin','Продукт и цена, которую не нужно оправдывать'],['i-site','Свой сайт или приложение за неделю'],['i-magnet','Канал, который приводит заявки без сарафана'],['i-deal','Продажи, где ты уверенно называешь цену']]},
+ {a:'Бизнес держится на мне. Стоит выпасть на неделю, и всё встаёт.',b:'Бизнес растёт, а твоё время уходит на стратегию, а не на рутину.',c:[['i-target','Позиционирование компании, понятное клиенту и команде'],['i-gear','Агенты в процессах: отчёты, ответы, документы'],['i-chart','Линейка продуктов с экономикой до цели в деньгах'],['i-site','Своя платформа: заявки, CRM и дашборд в одном месте'],['i-magnet','Маркетинг, который работает без ручного управления'],['i-deal','Продажи с AI: подготовка, разбор диалогов, сделки в базе']]},
+ {a:'Все говорят, что на AI можно зарабатывать. Я не понимаю, что продавать и кому.',b:'Ты продаёшь AI-решения бизнесу, а не ищешь, с чего начать.',c:[['i-brain','Твоя ниша и ценность как AI-специалиста'],['i-team','Все 5 уровней AI на практике и своя команда агентов'],['i-case','Упакованная AI-услуга с прайсом'],['i-site','Демо-продукт, который не стыдно показать клиенту'],['i-list','Список компаний и первые касания'],['i-deal','Переговоры о первом пилоте']]}
 ];
 const tabs=[...document.querySelectorAll('.seg button')];
-function showT(i){tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;document.getElementById('t-c').innerHTML=T[i].c.map(x=>'<span>'+x+'</span>').join('');}
+function showT(i){tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;const g=document.getElementById('t-c');g.innerHTML=T[i].c.map((x,k)=>'<div class="tg" style="--d:'+(k*50)+'ms"><span class="tg-w">'+(k+1)+' нед</span><span class="tg-ic"><svg><use href="#'+x[0]+'"/></svg></span><p>'+x[1]+'</p></div>').join('');const tr=document.querySelector('.tr');tr.classList.remove('swap');void tr.offsetWidth;tr.classList.add('swap');}
 tabs.forEach((b,i)=>b.addEventListener('click',()=>showT(i))); showT(0);
 
 /* тариф в анкете */
