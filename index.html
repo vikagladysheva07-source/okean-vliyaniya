@@ -956,6 +956,16 @@ footer .seller a{color:var(--muted)}
 .wp-n{font-size:12px;font-weight:700;color:#C4A4FF}
 .wp-h h3{margin:4px 0 0;font-size:clamp(19px,2.2vw,24px);font-weight:900;color:#fff}
 @media(max-width:600px){.steps{margin-top:14px}.wst{width:32px;height:32px;font-size:12.5px}.wst.sup{font-size:10.5px}.st-line{left:16px;right:16px}.wpanel{padding:16px 14px;border-radius:18px}.wp-h h3{font-size:18px}}
+
+/* шкала глубины */
+.depthr{padding-left:64px}
+.depthr::before{left:91px!important;background:linear-gradient(180deg,rgba(196,164,255,.35),rgba(91,47,190,.5) 70%,rgba(91,47,190,.15))!important}
+.depthr::after{content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;margin-left:50px;background:repeating-linear-gradient(180deg,rgba(196,164,255,.3) 0 1px,transparent 1px 10px)}
+.rw-m{position:absolute;left:-64px;width:48px;text-align:right;font-size:11px;font-weight:700;color:rgba(196,164,255,calc(1 - var(--k)*.55));white-space:nowrap;font-variant-numeric:tabular-nums}
+.depthr .rw{background:linear-gradient(90deg,rgba(91,47,190,calc(.16 - var(--k)*.14)),rgba(91,47,190,0) 70%),rgb(calc(18 - var(--k)*10),calc(15 - var(--k)*9),calc(28 - var(--k)*16))!important;border-color:rgba(196,164,255,calc(.24 - var(--k)*.14))}
+.depthr .rw[open]{border-color:rgba(196,164,255,.4)}
+.depthr .rw summary{position:relative}
+@media(max-width:600px){.depthr{padding-left:46px}.depthr::before{left:71px!important}.depthr::after{margin-left:36px}.rw-m{left:-46px;width:38px;font-size:10px}}
 </style>
 </head>
 <body>
@@ -1147,39 +1157,37 @@ footer .seller a{color:var(--muted)}
     <div class="depth">5 000 м</div>
     <h2 class="disp grad h2">Маршрут<br>погружения</h2>
     <p class="pick-h">Нажми на неделю, чтобы увидеть, что внутри</p>
-    <div class="steps" role="tablist" aria-label="Недели"><i class="st-line"><b id="st-fill"></b></i></div>
-    <div class="wpanel" id="wpanel" aria-live="polite"></div>
-    <div class="route" hidden>
-      <details class="rw ">
-        <summary><span class="rw-n">0</span><span class="rw-t"><b>Подготовка</b><small>2–6 ноя</small></span><span class="rw-ic"><svg><use href="#i-map"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+    <div class="route depthr">
+      <details class="rw " style="--k:0.00">
+        <summary><span class="rw-m">0 м</span><span class="rw-n">0</span><span class="rw-t"><b>Подготовка</b><small>2–6 ноя</small></span><span class="rw-ic"><svg><use href="#i-map"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-target"/></svg></span><p>Ставишь цель в цифрах</p></div><div class="wk-a"><span><svg><use href="#i-map"/></svg></span><p>Выбираешь траекторию</p></div><div class="wk-a"><span><svg><use href="#i-check"/></svg></span><p>Проверяем доступ к AI</p></div><div class="wk-a"><span><svg><use href="#i-chart"/></svg></span><p>Считаем стартовый Индекс влияния</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Ты приходишь на старт с понятной целью, утверждённой траекторией и рабочим AI.</p></div></div></div>
       </details>
-      <details class="rw key">
-        <summary><span class="rw-n">1</span><span class="rw-t"><b>Глубина и AI-партнёр</b><small>7–14 ноя</small></span><span class="rw-ic"><svg><use href="#i-dna"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw key" style="--k:0.14">
+        <summary><span class="rw-m">200 м</span><span class="rw-n">1</span><span class="rw-t"><b>Глубина и AI-партнёр</b><small>7–14 ноя</small></span><span class="rw-ic"><svg><use href="#i-dna"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-brain"/></svg></span><p>Настраиваешь AI-партнёра, который знает тебя и твою цель</p></div><div class="wk-a"><span><svg><use href="#i-chat"/></svg></span><p>Проходишь с ним глубинное интервью</p></div><div class="wk-a"><span><svg><use href="#i-gem"/></svg></span><p>Раскрываешь свой взгляд и смыслы</p></div><div class="wk-a"><span><svg><use href="#i-target"/></svg></span><p>Изучаешь аудиторию и пустые места у конкурентов</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">ДНК собрана и сохранена, позиционирование понятно человеку со стороны с одной фразы, есть 5–7 смыслов и портрет клиента его словами.</p></div></div></div>
       </details>
-      <details class="rw ">
-        <summary><span class="rw-n">2</span><span class="rw-t"><b>AI-интенсив</b><small>15–21 ноя</small></span><span class="rw-ic"><svg><use href="#i-team"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw " style="--k:0.29">
+        <summary><span class="rw-m">500 м</span><span class="rw-n">2</span><span class="rw-t"><b>AI-интенсив</b><small>15–21 ноя</small></span><span class="rw-ic"><svg><use href="#i-team"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-list"/></svg></span><p>Проходишь все 5 уровней AI на своей задаче</p></div><div class="wk-a"><span><svg><use href="#i-team"/></svg></span><p>Собираешь команду агентов</p></div><div class="wk-a"><span><svg><use href="#i-gear"/></svg></span><p>Запускаешь первую автоматизацию рутины</p></div><div class="wk-a"><span><svg><use href="#i-site"/></svg></span><p>Без кода делаешь мини-продукт: визитку, тест или калькулятор</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Библиотека из 10 рабочих запросов, 3 агента в работе, одна рутинная задача идёт без тебя, мини-продукт открывается по ссылке.</p></div></div></div>
       </details>
-      <details class="rw ">
-        <summary><span class="rw-n">3</span><span class="rw-t"><b>Оффер и упаковка</b><small>22–28 ноя</small></span><span class="rw-ic"><svg><use href="#i-gem"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw " style="--k:0.43">
+        <summary><span class="rw-m">1 000 м</span><span class="rw-n">3</span><span class="rw-t"><b>Оффер и упаковка</b><small>22–28 ноя</small></span><span class="rw-ic"><svg><use href="#i-gem"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-gem"/></svg></span><p>Собираешь оффер, где цена объяснена ценностью</p></div><div class="wk-a"><span><svg><use href="#i-list"/></svg></span><p>Строишь линейку продуктов</p></div><div class="wk-a"><span><svg><use href="#i-chart"/></svg></span><p>Считаешь экономику до цели в деньгах</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Понятно, что получает клиент и за какой срок, в линейке минимум два продукта, посчитано, сколько продаж нужно до цели.</p></div></div></div>
       </details>
-      <details class="rw key">
-        <summary><span class="rw-n">4</span><span class="rw-t"><b>Своя платформа</b><small>29 ноя – 5 дек</small></span><span class="rw-ic"><svg><use href="#i-site"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw key" style="--k:0.57">
+        <summary><span class="rw-m">2 000 м</span><span class="rw-n">4</span><span class="rw-t"><b>Своя платформа</b><small>29 ноя – 5 дек</small></span><span class="rw-ic"><svg><use href="#i-site"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-target"/></svg></span><p>Решаешь, что строишь под свою цель</p></div><div class="wk-a"><span><svg><use href="#i-site"/></svg></span><p>Собираешь сайт или приложение без программиста</p></div><div class="wk-a"><span><svg><use href="#i-gear"/></svg></span><p>Подключаешь формы, заявки или кабинет</p></div><div class="wk-a"><span><svg><use href="#i-rise"/></svg></span><p>Публикуешь на своём домене, тебя находят и нейросети</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Продукт работает на твоём домене, в нём есть хотя бы одна рабочая функция, и им уже воспользовался человек со стороны.</p></div></div></div>
       </details>
-      <details class="rw ">
-        <summary><span class="rw-n">5</span><span class="rw-t"><b>Поток клиентов</b><small>6–12 дек</small></span><span class="rw-ic"><svg><use href="#i-magnet"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw " style="--k:0.71">
+        <summary><span class="rw-m">3 000 м</span><span class="rw-n">5</span><span class="rw-t"><b>Поток клиентов</b><small>6–12 дек</small></span><span class="rw-ic"><svg><use href="#i-magnet"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-magnet"/></svg></span><p>Выбираешь 1–2 канала: контент, партнёрства, рекомендации или прямые касания</p></div><div class="wk-a"><span><svg><use href="#i-team"/></svg></span><p>Запускаешь их вместе с агентами</p></div><div class="wk-a"><span><svg><use href="#i-list"/></svg></span><p>Собираешь откликнувшихся в свою базу</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Каналы выбраны и запущены, есть повод для контакта или лид-магнит, а новые люди попадают в твою базу.</p></div></div></div>
       </details>
-      <details class="rw key">
-        <summary><span class="rw-n">6</span><span class="rw-t"><b>Продажи и Demo Day</b><small>13–19 дек</small></span><span class="rw-ic"><svg><use href="#i-deal"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw key" style="--k:0.86">
+        <summary><span class="rw-m">4 000 м</span><span class="rw-n">6</span><span class="rw-t"><b>Продажи и Demo Day</b><small>13–19 дек</small></span><span class="rw-ic"><svg><use href="#i-deal"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-user"/></svg></span><p>Понимаешь клиента и ведёшь разговор через ценность</p></div><div class="wk-a"><span><svg><use href="#i-coin"/></svg></span><p>Уверенно называешь цену</p></div><div class="wk-a"><span><svg><use href="#i-brain"/></svg></span><p>AI готовит к встрече и разбирает диалоги</p></div><div class="wk-a"><span><svg><use href="#i-trophy"/></svg></span><p>Защищаешь систему на Demo Day 19 декабря</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Минимум 3 продающих разговора, AI разобрал каждый, система защищена на Demo Day 19 декабря, посчитан финальный Индекс влияния.</p></div></div></div>
       </details>
-      <details class="rw sup">
-        <summary><span class="rw-n">+4</span><span class="rw-t"><b>Сопровождение</b><small>21 дек – 24 янв</small></span><span class="rw-ic"><svg><use href="#i-rise"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+      <details class="rw sup" style="--k:1.00">
+        <summary><span class="rw-m">5 000 м</span><span class="rw-n">+4</span><span class="rw-t"><b>Сопровождение</b><small>21 дек – 24 янв</small></span><span class="rw-ic"><svg><use href="#i-rise"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-chat"/></svg></span><p>Разборы и ответы в чате</p></div><div class="wk-a"><span><svg><use href="#i-gear"/></svg></span><p>Докручиваем то, что буксует</p></div><div class="wk-a"><span><svg><use href="#i-rise"/></svg></span><p>Продажи идут в реальной жизни</p></div></div><p class="wk-note">С 31 декабря по 10 января перерыв на праздники</p></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Система работает стабильно, продажи идут в реальной жизни.</p></div></div></div>
       </details>
     </div>
@@ -1541,15 +1549,8 @@ form.addEventListener('submit',async ev=>{
   form.querySelector('.f-body').style.display='none';document.getElementById('f-ok').style.display='block';
 });
 
-/* маршрут: шаги + панель */
-(()=>{const ws=[...document.querySelectorAll('.route .rw')],bar=document.querySelector('.steps'),pan=document.getElementById('wpanel'),fill=document.getElementById('st-fill');
-const bs=ws.map((w,k)=>{const b=document.createElement('button');b.type='button';b.role='tab';b.className='wst'+(w.classList.contains('key')?' key':'')+(w.classList.contains('sup')?' sup':'');b.textContent=w.querySelector('.rw-n').textContent;b.setAttribute('aria-label',w.querySelector('.rw-t b').textContent);b.addEventListener('click',()=>sel(k));bar.appendChild(b);return b;});
-function sel(k){bs.forEach((b,j)=>{b.setAttribute('aria-selected',j===k);b.classList.toggle('done',j<k);});fill.style.width=(k/(bs.length-1)*100)+'%';
- const w=ws[k];pan.innerHTML='<div class="wp-h"><span class="wp-n">'+(k===ws.length-1?'Сопровождение':'Неделя '+w.querySelector('.rw-n').textContent)+' · '+w.querySelector('.rw-t small').textContent+'</span><h3>'+w.querySelector('.rw-t b').textContent+'</h3></div>'+w.querySelector('.rw-body').innerHTML;
- pan.classList.remove('swap');void pan.offsetWidth;pan.classList.add('swap');}
-sel(0);
-let x0=null;pan.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});pan.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;const k=bs.findIndex(b=>b.getAttribute('aria-selected')==='true');if(Math.abs(dx)>50)sel(Math.max(0,Math.min(bs.length-1,k+(dx<0?1:-1))));});
-})();
+/* маршрут: одна неделя открыта */
+(()=>{const ws=[...document.querySelectorAll('.route .rw')];ws.forEach(d=>d.addEventListener('toggle',()=>{if(!d.open)return;ws.forEach(o=>{if(o!==d)o.open=false;});requestAnimationFrame(()=>{const r=d.getBoundingClientRect();if(r.top<70||r.top>innerHeight*.6)scrollTo({top:scrollY+r.top-90,behavior:'smooth'});});}));})();
 </script>
 </body>
 </html>
