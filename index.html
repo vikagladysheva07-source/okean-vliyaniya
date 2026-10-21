@@ -966,6 +966,29 @@ footer .seller a{color:var(--muted)}
 .depthr .rw[open]{border-color:rgba(196,164,255,.4)}
 .depthr .rw summary{position:relative}
 @media(max-width:600px){.depthr{padding-left:46px}.depthr::before{left:71px!important}.depthr::after{margin-left:36px}.rw-m{left:-46px;width:38px;font-size:10px}}
+
+/* автор */
+.au{display:grid;grid-template-columns:minmax(0,400px) 1fr;gap:48px;align-items:center;margin-top:8px}
+.au-ph{position:relative;margin:0;border-radius:26px;overflow:visible;aspect-ratio:4/5}
+.au-ph img{width:100%;height:100%;object-fit:cover;border-radius:26px;filter:grayscale(1) contrast(1.05);border:1px solid rgba(196,164,255,.3)}
+.au-ph::after{content:'';position:absolute;inset:0;border-radius:26px;background:linear-gradient(180deg,transparent 45%,rgba(7,7,13,.92)),linear-gradient(160deg,rgba(91,47,190,.25),transparent 50%);pointer-events:none}
+.au-ph figcaption{position:absolute;left:20px;right:20px;bottom:18px;z-index:2;display:flex;flex-direction:column;gap:2px}
+.au-ph figcaption b{font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-.01em;color:#fff}
+.au-ph figcaption span{font-size:13px;color:#C4A4FF;font-weight:700}
+.au-chip{position:absolute;z-index:3;font-size:12.5px;color:rgba(242,237,226,.85);padding:8px 13px;border-radius:999px;background:rgba(15,13,23,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(196,164,255,.35);white-space:nowrap}
+.au-chip b{color:#fff;font-weight:900;margin-right:3px}
+.c1{top:22px;right:-18px}.c2{top:72px;right:-30px}
+.au-tx .h2{margin-bottom:14px}
+.au-lead{font-size:clamp(17px,1.7vw,20px);font-weight:700;line-height:1.4;color:#fff;margin:0 0 14px;max-width:520px}
+.au-tx p:not(.au-lead){color:var(--dim);margin:0 0 12px;max-width:540px;font-size:15.5px}
+.au-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:36px}
+.af{display:flex;flex-direction:column;gap:6px;padding:18px;border-radius:20px;background:#0F0D17;border:1px solid rgba(196,164,255,.18)}
+.af-ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25);margin-bottom:6px}
+.af-ic svg{width:17px;height:17px;color:#C4A4FF}
+.af b{font-size:clamp(24px,2.6vw,32px);font-weight:900;letter-spacing:-.02em;line-height:1;color:#fff}
+.af small{font-size:13px;line-height:1.35;color:var(--muted)}
+@media(max-width:900px){.au{grid-template-columns:1fr;gap:28px}.au-ph{max-width:340px;width:calc(100% - 30px)}.au-facts{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.c1{right:-14px}.c2{right:-24px;top:64px}.au-ph figcaption b{font-size:19px}.au-facts{gap:8px;margin-top:26px}.af{padding:14px;border-radius:16px}.af b{font-size:22px}.af small{font-size:12px}.af-ic{width:30px;height:30px}}
 </style>
 </head>
 <body>
@@ -1205,21 +1228,26 @@ footer .seller a{color:var(--muted)}
 
 <section class="sec" id="author" data-depth="10000" data-name="автор" style="padding-top:0">
   <div class="wrap">
-    <div class="author">
-      <figure><img src="assets/victoria.jpg" alt="Виктория Гладышева"></figure>
-      <div>
-        <div class="depth">10 000 м · автор</div>
+    <div class="depth">10 000 м · автор</div>
+    <div class="au">
+      <figure class="au-ph">
+        <img src="assets/victoria.jpg" alt="Виктория Гладышева">
+        <figcaption><span>Основатель</span><b>WIKKI.OCEAN</b></figcaption>
+        <span class="au-chip c1"><b>100+</b> проектов</span>
+        <span class="au-chip c2"><b>6</b> лет в маркетинге</span>
+      </figure>
+      <div class="au-tx">
         <h2 class="disp grad h2">Виктория<br>Гладышева</h2>
-        <p class="role">Основатель WIKKI.OCEAN. Строит системы роста, в которых один человек и AI делают работу целого отдела.</p>
+        <p class="au-lead">Строю системы роста, в которых один человек и AI делают работу целого отдела.</p>
         <p>Свой первый бизнес я начала в 12 лет. За шесть лет в маркетинге запустила больше 100 проектов: от офлайн-событий до AI-платформ.</p>
         <p>Во всех них я видела одно и то же: сильные люди остаются незаметными, пока их глубину никто не раскрыл. Сегодня я делаю это системно, вместе с AI.</p>
       </div>
     </div>
-    <div class="numbers">
-      <div><b><span class="cnt" data-to="12">12</span> лет</b><span>первый бизнес</span></div>
-      <div><b><span class="cnt" data-to="100">100</span>+</b><span>проектов за 6 лет в маркетинге</span></div>
-      <div><b>$<span class="cnt" data-to="40000" data-sep="1">40 000</span>+</b><span>выручка офлайн-тренинга на 100+ участниц</span></div>
-      <div><b>NDA</b><span>руководила digital-командой кандидата в президенты</span></div>
+    <div class="au-facts">
+      <div class="af"><span class="af-ic"><svg><use href="#i-rise"/></svg></span><b>12 лет</b><small>мой первый бизнес</small></div>
+      <div class="af"><span class="af-ic"><svg><use href="#i-case"/></svg></span><b>100+</b><small>проектов за 6 лет в маркетинге</small></div>
+      <div class="af"><span class="af-ic"><svg><use href="#i-team"/></svg></span><b>$40 000+</b><small>выручка офлайн-тренинга на 100+ участниц</small></div>
+      <div class="af"><span class="af-ic"><svg><use href="#i-target"/></svg></span><b>NDA</b><small>руководила digital-командой кандидата в президенты</small></div>
     </div>
   </div>
 </section>
