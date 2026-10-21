@@ -834,6 +834,8 @@ footer .seller a{color:var(--muted)}
 .pk{padding:13px 14px;gap:12px;border-radius:16px}
 .pk-ic{width:38px;height:38px;border-radius:12px}.pk-ic svg{width:18px;height:18px}
 .pk-t b{font-size:15px}.pk-t small{font-size:12.5px}
+.pk{position:relative;padding-right:34px}.pk::after{content:'';position:absolute;right:14px;top:50%;width:8px;height:8px;border-right:2px solid rgba(196,164,255,.7);border-bottom:2px solid rgba(196,164,255,.7);transform:translateY(-70%) rotate(45deg);transition:transform .25s}
+.pk[aria-selected=true]::after{transform:translateY(-30%) rotate(-135deg);border-color:#fff}
 .tr{margin-top:20px;border-radius:22px}
 .tr-pain{padding:18px 22px}.tr-res{padding:18px 22px 22px}
 .tr small{font-size:12px;margin-bottom:6px}
@@ -1387,7 +1389,7 @@ const T=[
 ];
 const tabs=[...document.querySelectorAll('.pick .pk')];
 function showT(i){const pk=document.querySelector('.pick');pk.classList.add('chosen');const tro=document.querySelector('.tr');const first=tro.hidden;tro.hidden=false;if(first&&innerWidth<700)setTimeout(()=>tro.scrollIntoView({behavior:'smooth',block:'start'}),80);tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;const g=document.getElementById('t-c');g.innerHTML=T[i].c.map((x,k)=>'<div class="tg" style="--d:'+(k*50)+'ms"><span class="tg-w">'+(k+1)+' нед</span><span class="tg-ic"><svg><use href="#'+x[0]+'"/></svg></span><p>'+x[1]+'</p></div>').join('');const tr=document.querySelector('.tr');tr.classList.remove('swap');void tr.offsetWidth;tr.classList.add('swap');}
-tabs.forEach((b,i)=>b.addEventListener('click',()=>showT(i)));
+tabs.forEach((b,i)=>b.addEventListener('click',()=>{if(b.getAttribute('aria-selected')==='true'){b.setAttribute('aria-selected','false');document.querySelector('.pick').classList.remove('chosen');document.querySelector('.tr').hidden=true;}else showT(i);}));
 
 /* тариф в анкете */
 document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{const r=document.querySelector('input[name=plan][value="'+b.dataset.plan+'"]');if(r)r.checked=true;}));
