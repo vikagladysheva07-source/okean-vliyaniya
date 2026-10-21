@@ -993,6 +993,30 @@ footer .seller a{color:var(--muted)}
 .af b{overflow-wrap:anywhere}
 @media(max-width:1100px){.au-facts{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){.au-facts{grid-template-columns:1fr 1fr}.af:last-child{grid-column:1/-1}}
+
+/* автор: редакционный */
+.ed{display:grid;grid-template-columns:minmax(0,460px) 1fr;gap:56px;align-items:end;margin-top:10px}
+.ed-ph{position:relative;margin:0;aspect-ratio:4/5;border-radius:6px;overflow:hidden}
+.ed-ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.95)}
+.ed-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,7,13,.55) 70%,#07070D 100%)}
+.ed-ph figcaption{position:absolute;left:24px;right:24px;bottom:22px;z-index:1}
+.ed-ph figcaption span{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,237,226,.7);margin-bottom:10px}
+.ed-ph figcaption b{display:block;font-size:clamp(40px,5vw,64px);font-weight:900;line-height:.92;letter-spacing:-.03em;text-transform:uppercase;color:#fff}
+.ed-tx{padding-bottom:8px}
+.ed-lead{margin:0;font-size:clamp(17px,1.6vw,19px);line-height:1.5;color:rgba(242,237,226,.8);max-width:520px}
+.ed-q{margin:28px 0 0;padding:0;font-size:clamp(24px,2.8vw,36px);font-weight:800;line-height:1.2;letter-spacing:-.01em;color:#fff;max-width:600px}
+.ed-q::before{content:'“';display:block;font-size:64px;line-height:.6;color:#9B6FE8;margin-bottom:6px}
+.ed-sub{margin:12px 0 0;font-size:15px;color:var(--muted)}
+.ed-stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:36px;border-top:1px solid rgba(242,237,226,.14);border-bottom:1px solid rgba(242,237,226,.14)}
+.ed-stats div{padding:18px 16px 18px 0;min-width:0}
+.ed-stats div+div{padding-left:16px;border-left:1px solid rgba(242,237,226,.14)}
+.ed-stats b{display:block;font-size:clamp(22px,2.2vw,30px);font-weight:900;letter-spacing:-.02em;line-height:1;color:#fff}
+.ed-stats span{display:block;margin-top:8px;font-size:12.5px;line-height:1.35;color:var(--muted)}
+.ed-app{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid rgba(242,237,226,.14)}
+.ed-app b{font-size:15px;font-weight:800;color:#C4A4FF;white-space:nowrap}
+.ed-app span{font-size:14px;color:rgba(242,237,226,.8)}
+@media(max-width:900px){.ed{grid-template-columns:1fr;gap:26px}.ed-ph{max-width:none}}
+@media(max-width:600px){.ed-ph{margin:0 -16px;border-radius:0}.ed-ph figcaption{left:16px;bottom:16px}.ed-ph figcaption b{font-size:40px}.ed-q{font-size:23px;margin-top:22px}.ed-q::before{font-size:52px}.ed-stats{grid-template-columns:1fr 1fr;margin-top:26px}.ed-stats div{padding:14px 12px 14px 0}.ed-stats div+div{padding-left:12px}.ed-stats div:nth-child(3){padding-left:0;border-left:none}.ed-stats div:nth-child(n+3){border-top:1px solid rgba(242,237,226,.14)}.ed-stats b{font-size:22px}.ed-app{gap:4px 10px}}
 </style>
 </head>
 <body>
@@ -1233,23 +1257,23 @@ footer .seller a{color:var(--muted)}
 <section class="sec" id="author" data-depth="10000" data-name="автор" style="padding-top:0">
   <div class="wrap">
     <div class="depth">10 000 м · автор</div>
-    <div class="au">
-      <figure class="au-ph">
+    <div class="ed">
+      <figure class="ed-ph">
         <img src="assets/victoria.jpg" alt="Виктория Гладышева">
-        <figcaption><span>Основатель</span><b>WIKKI.OCEAN</b></figcaption>
+        <figcaption><span>Основатель WIKKI.OCEAN</span><b>Виктория<br>Гладышева</b></figcaption>
       </figure>
-      <div class="au-tx">
-        <h2 class="disp grad h2">Виктория<br>Гладышева</h2>
-        <p class="au-lead">Помогаю раскрыть ценность человека и умножить её через AI: от позиционирования до своих платформ, приложений и AI-отделов маркетинга.</p>
-        <p>Почему именно это: сильные люди остаются незаметными, пока их глубину никто не раскрыл. Я видела это в каждом проекте и теперь делаю это системно.</p>
+      <div class="ed-tx">
+        <p class="ed-lead">Помогаю раскрыть ценность человека и умножить её через AI: от позиционирования до своих платформ, приложений и AI-отделов маркетинга.</p>
+        <blockquote class="ed-q">Сильные люди остаются незаметными, пока их глубину никто не раскрыл.</blockquote>
+        <p class="ed-sub">Я видела это в каждом проекте и теперь раскрываю её системно.</p>
+        <div class="ed-stats">
+          <div><b>12 лет</b><span>мой первый бизнес</span></div>
+          <div><b>100+</b><span>проектов за 6 лет в маркетинге</span></div>
+          <div><b>$40 000+</b><span>выручка офлайн-тренинга на 100+ участниц</span></div>
+          <div><b>NDA</b><span>руководила digital-командой кандидата в президенты</span></div>
+        </div>
+        <div class="ed-app"><b>Своё приложение</b><span>для дисциплины и эффективности, вывожу на международный рынок</span></div>
       </div>
-    </div>
-    <div class="au-facts">
-      <div class="af"><span class="af-ic"><svg><use href="#i-rise"/></svg></span><b>12 лет</b><small>мой первый бизнес</small></div>
-      <div class="af"><span class="af-ic"><svg><use href="#i-case"/></svg></span><b>100+</b><small>проектов за 6 лет в маркетинге</small></div>
-      <div class="af"><span class="af-ic"><svg><use href="#i-team"/></svg></span><b>$40 000+</b><small>выручка офлайн-тренинга на 100+ участниц</small></div>
-      <div class="af"><span class="af-ic"><svg><use href="#i-target"/></svg></span><b>NDA</b><small>руководила digital-командой кандидата в президенты</small></div>
-      <div class="af"><span class="af-ic"><svg><use href="#i-bolt"/></svg></span><b>Своё приложение</b><small>для дисциплины и эффективности, вывожу на международный рынок</small></div>
     </div>
   </div>
 </section>
