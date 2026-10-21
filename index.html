@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Океан влияния — Виктория Гладышева</title>
+<title>Океан влияния — программа по маркетингу личности и AI · Виктория Гладышева</title>
 <meta name="description" content="6 недель, чтобы раскрыть свою ценность, упаковать её и умножить через AI. Маркетинг личности и AI. Старт 7 ноября, 10 мест.">
 <meta property="og:title" content="Ты глубже, чем тебя видно · Океан влияния">
 <meta property="og:description" content="6 недель маркетинга личности и AI: своя AI-команда агентов, своя платформа, свой поток клиентов. Старт 7 ноября.">
@@ -226,6 +226,10 @@ main,body{position:relative}
 .mq-row i{font-style:normal;font-size:clamp(16px,2vw,24px);color:var(--cb);opacity:.8}
 @keyframes mq{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.mq-track{animation:none}}
+
+
+.brand-mark{display:flex;align-items:center;gap:14px;font-size:clamp(17px,1.9vw,22px);font-weight:900;text-transform:uppercase;letter-spacing:.32em;color:#fff;margin-bottom:18px}
+.brand-mark::after{content:'';flex:0 0 56px;height:1px;background:linear-gradient(90deg,var(--vb),transparent)}
 
 /* SIGNALS */
 .signals{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:28px;overflow:hidden;margin-top:48px}
@@ -580,11 +584,11 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
 
 
 /* единственная анимация: загрузка первого экрана */
-.hero h1 span,.hero .sub,.hero .cta,.facts-row{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
-.hero h1 span:nth-child(2){animation-delay:.1s}.hero h1 span:nth-child(3){animation-delay:.2s}
+.hero h1,.hero .sub,.hero .cta,.facts-row,.brand-mark{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.hero h1{animation-delay:.12s}
 .hero .sub{animation-delay:.35s}.hero .cta{animation-delay:.45s}.facts-row{animation-delay:.55s}.portrait{animation-delay:.25s}
 @keyframes rise{to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero h1 span,.hero .sub,.hero .cta,.facts-row{opacity:1;transform:none}html{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.hero h1,.hero .sub,.hero .cta,.facts-row,.brand-mark{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -650,6 +654,7 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="wrap hero-grid">
     <div class="h-left">
+      <div class="brand-mark">Океан влияния</div>
       <div class="what"><span class="dotc"></span>Программа по маркетингу личности и AI · 6 недель</div>
       <h1 class="disp grad"><span>Ты глубже,</span><span>чем тебя</span><span>видно</span></h1>
       <p class="sub">Раскроем твою ценность, упакуем её и умножим через AI.</p>
