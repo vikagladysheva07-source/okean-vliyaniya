@@ -989,6 +989,10 @@ footer .seller a{color:var(--muted)}
 .af small{font-size:13px;line-height:1.35;color:var(--muted)}
 @media(max-width:900px){.au{grid-template-columns:1fr;gap:28px}.au-ph{max-width:340px;width:calc(100% - 30px)}.au-facts{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.c1{right:-14px}.c2{right:-24px;top:64px}.au-ph figcaption b{font-size:19px}.au-facts{gap:8px;margin-top:26px}.af{padding:14px;border-radius:16px}.af b{font-size:22px}.af small{font-size:12px}.af-ic{width:30px;height:30px}}
+.au-facts{grid-template-columns:repeat(5,1fr)}
+.af b{overflow-wrap:anywhere}
+@media(max-width:1100px){.au-facts{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.au-facts{grid-template-columns:1fr 1fr}.af:last-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -1248,6 +1252,7 @@ footer .seller a{color:var(--muted)}
       <div class="af"><span class="af-ic"><svg><use href="#i-case"/></svg></span><b>100+</b><small>проектов за 6 лет в маркетинге</small></div>
       <div class="af"><span class="af-ic"><svg><use href="#i-team"/></svg></span><b>$40 000+</b><small>выручка офлайн-тренинга на 100+ участниц</small></div>
       <div class="af"><span class="af-ic"><svg><use href="#i-target"/></svg></span><b>NDA</b><small>руководила digital-командой кандидата в президенты</small></div>
+      <div class="af"><span class="af-ic"><svg><use href="#i-bolt"/></svg></span><b>Своё приложение</b><small>для дисциплины и эффективности, вывожу на международный рынок</small></div>
     </div>
   </div>
 </section>
