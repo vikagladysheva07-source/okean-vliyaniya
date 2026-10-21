@@ -1042,6 +1042,10 @@ footer .seller a{color:var(--muted)}
 .au2-app b{color:#fff;font-weight:800}
 @media(max-width:800px){.au2{padding:28px 20px;border-radius:26px}.au2::before{border-radius:27px}.au2::after{border-radius:26px}.au2-top{grid-template-columns:1fr;gap:22px;justify-items:center;text-align:center}.au2-ph{width:min(230px,70%)}.au2-lead{margin-left:auto;margin-right:auto;font-size:15px}.au2-q{margin-top:28px;padding-top:22px;text-align:center;font-size:21px}.au2-stats{grid-template-columns:1fr 1fr;gap:22px 16px;margin-top:26px;text-align:center}.au2-stats b{font-size:34px}.au2-stats span{margin-left:auto;margin-right:auto;font-size:12px}.au2-app{margin-top:26px;padding:14px}.au2-app p{font-size:13.5px}}
 @media(max-width:600px){.au2-name{font-size:42px}}
+.au2-roles{display:flex;flex-wrap:wrap;gap:8px}
+.au2-roles span{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C4A4FF;padding:6px 12px;border-radius:999px;background:rgba(155,111,232,.1);border:1px solid rgba(196,164,255,.25);white-space:nowrap}
+.au2-lead,.au2-q,.au2-stats span{text-wrap:balance}
+@media(max-width:800px){.au2-roles{justify-content:center;gap:6px}.au2-roles span{font-size:10.5px;letter-spacing:.1em;padding:5px 10px}.au2-name{margin-top:14px}.au2-lead{font-size:15px;line-height:1.55;max-width:300px}.au2-q{font-size:20px;line-height:1.35;max-width:300px;margin-left:auto;margin-right:auto}}
 </style>
 </head>
 <body>
@@ -1286,9 +1290,9 @@ footer .seller a{color:var(--muted)}
       <div class="au2-top">
         <figure class="au2-ph"><img src="assets/victoria.jpg" alt="Виктория Гладышева"></figure>
         <div class="au2-id">
-          <span class="au2-role">Автор программы · основатель WIKKI.OCEAN</span>
+          <div class="au2-roles"><span>Основатель WIKKI.OCEAN</span><span>Основатель приложения VOLYO</span></div>
           <h2 class="au2-name">Виктория<br>Гладышева</h2>
-          <p class="au2-lead">Помогаю раскрыть ценность человека и умножить её через AI: от позиционирования до своих платформ, приложений и AI-отделов маркетинга.</p>
+          <p class="au2-lead">Помогаю экспертам и компаниям раскрыть свою ценность и умножить её через AI: от позиционирования до своих платформ, приложений и AI-отделов маркетинга.</p>
         </div>
       </div>
       <blockquote class="au2-q">Глубина без масштаба остаётся тайной. Масштаб без глубины превращается в шум.</blockquote>
@@ -1298,7 +1302,6 @@ footer .seller a{color:var(--muted)}
         <div><b>$40K+</b><span>офлайн-тренинг на 100+ участниц</span></div>
         <div><b>NDA</b><span>digital-команда кандидата в президенты</span></div>
       </div>
-      <div class="au2-app"><span class="au2-app-ic"><svg><use href="#i-bolt"/></svg></span><p><b>Своё приложение</b> для дисциплины и эффективности, вывожу на международный рынок</p></div>
     </div>
   </div>
 </section>
