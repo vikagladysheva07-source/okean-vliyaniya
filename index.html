@@ -463,6 +463,24 @@ dialog#qd::backdrop{background:rgba(4,4,10,.82);backdrop-filter:blur(8px)}
 @media(max-width:900px){.path{grid-template-columns:1fr}.pstep + .pstep{border-left:none;border-top:1px solid var(--line)}.pstep{display:grid;grid-template-columns:52px 1fr;gap:4px 16px;padding:20px 20px 20px 24px}.pstep .ic{grid-row:span 2;margin:0}.pstep .grp{width:3px;height:auto;bottom:0;right:auto}}
 
 /* TRACK SWITCHER */
+.pick-h{margin-top:22px;font-size:clamp(17px,1.7vw,20px);font-weight:600;color:#fff;max-width:620px}
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.pk{display:flex;align-items:center;gap:14px;text-align:left;padding:18px;border-radius:20px;cursor:pointer;color:#fff;font-family:inherit;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015) 60%,rgba(91,47,190,.14));border:1px solid rgba(196,164,255,.22);transition:transform .2s,border-color .25s,box-shadow .25s,background .25s,opacity .25s}
+.pk:hover{transform:translateY(-2px);border-color:rgba(196,164,255,.55);box-shadow:0 0 30px -8px rgba(155,111,232,.6)}
+.pk:focus-visible{outline:2px solid #C4A4FF;outline-offset:3px}
+.pk-ic{flex:none;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(169,131,242,.5),rgba(91,47,190,.4));border:1px solid rgba(196,164,255,.45);box-shadow:0 0 22px rgba(155,111,232,.4)}
+.pk-ic svg{width:23px;height:23px;color:#fff}
+.pk-t{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pk-t b{font-size:17px;font-weight:800}
+.pk-t small{font-size:13px;color:rgba(242,237,226,.7);line-height:1.3}
+.pick.chosen .pk{opacity:.55}
+.pick.chosen .pk[aria-selected=true]{opacity:1;background:linear-gradient(160deg,rgba(169,131,242,.42),rgba(91,47,190,.32));border-color:rgba(225,208,255,.7);box-shadow:0 0 0 1px rgba(155,111,232,.5),0 14px 40px -14px rgba(155,111,232,.9)}
+.pick.chosen .pk[aria-selected=true] .pk-ic{background:#fff}
+.pick.chosen .pk[aria-selected=true] .pk-ic svg{color:#5B2FBE}
+.tr[hidden]{display:none}
+.tr{animation:tgIn .5s cubic-bezier(.2,.7,.2,1) both}
+@media(max-width:700px){.pick{grid-template-columns:1fr;gap:8px}.pk{padding:12px 14px;border-radius:16px;gap:12px}.pk-ic{width:40px;height:40px;border-radius:12px}.pk-ic svg{width:19px;height:19px}.pk-t b{font-size:15.5px}.pk-t small{font-size:12.5px}}
+
 .tr{margin-top:28px;border-radius:28px;overflow:hidden;border:1px solid rgba(196,164,255,.2);background:var(--s1)}
 .tr-pain{padding:26px 28px 24px;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
 .tr small{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
@@ -961,13 +979,13 @@ footer .seller a{color:var(--muted)}
   <div class="wrap">
     <div class="depth">1 000 м</div>
     <h2 class="disp grad h2">Путь<br>у каждого свой</h2>
-    <p class="sub">Выбери, кто ты. Покажем, с чем приходишь и что уносишь через 6 недель.</p>
-    <div class="seg" role="tablist" aria-label="Траектория">
-      <button role="tab" aria-selected="true" data-t="0">Эксперт</button>
-      <button role="tab" aria-selected="false" data-t="1">Предприниматель</button>
-      <button role="tab" aria-selected="false" data-t="2">AI-специалист</button>
+    <p class="pick-h">Выбери, кто ты, и&nbsp;увидишь свой результат через 6&nbsp;недель</p>
+    <div class="pick" role="tablist" aria-label="Траектория">
+      <button class="pk" role="tab" aria-selected="false"><span class="pk-ic"><svg><use href="#i-user"/></svg></span><span class="pk-t"><b>Эксперт</b><small>Есть знания и опыт, нужны клиенты</small></span></button>
+      <button class="pk" role="tab" aria-selected="false"><span class="pk-ic"><svg><use href="#i-chart"/></svg></span><span class="pk-t"><b>Предприниматель</b><small>Есть бизнес, нужен рост без хаоса</small></span></button>
+      <button class="pk" role="tab" aria-selected="false"><span class="pk-ic"><svg><use href="#i-brain"/></svg></span><span class="pk-t"><b>AI-специалист</b><small>Хочу зарабатывать на AI</small></span></button>
     </div>
-    <div class="tr" aria-live="polite">
+    <div class="tr" aria-live="polite" hidden>
       <div class="tr-pain"><small>Сейчас</small><q id="t-a"></q></div>
       <div class="tr-res">
         <small>Через 6 недель</small>
@@ -1348,9 +1366,9 @@ const T=[
  {a:'Бизнес держится на мне. Стоит выпасть на неделю, и всё встаёт.',b:'Бизнес растёт, а твоё время уходит на стратегию, а не на рутину.',c:[['i-target','Позиционирование компании, понятное клиенту и команде'],['i-gear','Агенты в процессах: отчёты, ответы, документы'],['i-chart','Линейка продуктов с экономикой до цели в деньгах'],['i-site','Своя платформа: заявки, CRM и дашборд в одном месте'],['i-magnet','Маркетинг, который работает без ручного управления'],['i-deal','Продажи с AI: подготовка, разбор диалогов, сделки в базе']]},
  {a:'Все говорят, что на AI можно зарабатывать. Я не понимаю, что продавать и кому.',b:'Ты продаёшь AI-решения бизнесу, а не ищешь, с чего начать.',c:[['i-brain','Твоя ниша и ценность как AI-специалиста'],['i-team','Все 5 уровней AI на практике и своя команда агентов'],['i-case','Упакованная AI-услуга с прайсом'],['i-site','Демо-продукт, который не стыдно показать клиенту'],['i-list','Список компаний и первые касания'],['i-deal','Переговоры о первом пилоте']]}
 ];
-const tabs=[...document.querySelectorAll('.seg button')];
-function showT(i){tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;const g=document.getElementById('t-c');g.innerHTML=T[i].c.map((x,k)=>'<div class="tg" style="--d:'+(k*50)+'ms"><span class="tg-w">'+(k+1)+' нед</span><span class="tg-ic"><svg><use href="#'+x[0]+'"/></svg></span><p>'+x[1]+'</p></div>').join('');const tr=document.querySelector('.tr');tr.classList.remove('swap');void tr.offsetWidth;tr.classList.add('swap');}
-tabs.forEach((b,i)=>b.addEventListener('click',()=>showT(i))); showT(0);
+const tabs=[...document.querySelectorAll('.pick .pk')];
+function showT(i){const pk=document.querySelector('.pick');pk.classList.add('chosen');const tro=document.querySelector('.tr');const first=tro.hidden;tro.hidden=false;if(first&&innerWidth<700)setTimeout(()=>tro.scrollIntoView({behavior:'smooth',block:'start'}),80);tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;const g=document.getElementById('t-c');g.innerHTML=T[i].c.map((x,k)=>'<div class="tg" style="--d:'+(k*50)+'ms"><span class="tg-w">'+(k+1)+' нед</span><span class="tg-ic"><svg><use href="#'+x[0]+'"/></svg></span><p>'+x[1]+'</p></div>').join('');const tr=document.querySelector('.tr');tr.classList.remove('swap');void tr.offsetWidth;tr.classList.add('swap');}
+tabs.forEach((b,i)=>b.addEventListener('click',()=>showT(i)));
 
 /* тариф в анкете */
 document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{const r=document.querySelector('input[name=plan][value="'+b.dataset.plan+'"]');if(r)r.checked=true;}));
