@@ -9,10 +9,11 @@
 <meta property="og:description" content="6 недель маркетинга личности и AI: своя AI-команда агентов, своя платформа, свой поток клиентов. Старт 7 ноября.">
 <meta property="og:image" content="assets/ocean.jpg">
 <meta name="theme-color" content="#07070D">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap" rel="stylesheet">
+
 <style>
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 900;font-display:swap;src:url(assets/fonts/dmsans-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 900;font-display:swap;src:url(assets/fonts/dmsans-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
   --bg:#07070D;--abyss:#04040A;--s1:#0F0F17;--s2:#15151F;
   --text:#F2EDE2;--dim:rgba(242,237,226,.72);--muted:#8E8A98;--line:rgba(255,255,255,.08);
@@ -640,6 +641,19 @@ body{font-size:16px}
 .hA-stats{opacity:0;animation:rise .9s .5s cubic-bezier(.2,.7,.2,1) forwards}
 @media(max-width:600px){.hA-stats div{padding:0 12px}.hA-stats b{font-size:18px}.hA-stats span{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.hA-stats{opacity:1}}
+
+/* LOOT: компактные артефакты по неделям */
+.loot{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:40px}
+.lw{border-radius:20px;padding:16px 14px;background:var(--s1);border:1px solid var(--line);min-width:0}
+.lw:nth-child(2),.lw:nth-child(3),.lw:nth-child(5){background:radial-gradient(ellipse at top,rgba(91,47,190,.35),transparent 70%),var(--s1);border-color:rgba(155,111,232,.35)}
+.lw-h{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.lw-h b{font-size:28px;font-weight:900;line-height:1;color:var(--vb)}
+.lw-h span{font-size:12.5px;color:var(--muted)}
+.lw ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.lw li{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.3;font-weight:600}
+.lw li svg{width:18px;height:18px;flex-shrink:0;color:var(--cb)}
+@media(max-width:1000px){.loot{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:620px){.loot{grid-template-columns:1fr;gap:6px}.lw{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:16px}.lw-h{margin:0;flex-direction:column;gap:2px}.lw-h b{font-size:22px}}
 </style>
 </head>
 <body>
@@ -852,47 +866,16 @@ body{font-size:16px}
         <div class="node sup"><div class="dot">+4</div><time>21 дек – 24 янв</time><h4>Сопровождение</h4><div class="art"><svg><use href="#i-check"/></svg>Система работает</div></div>
       </div>
     </div>
-    <div class="week" aria-label="Ритм недели">
-      <div class="day"><small>вс</small><b>Отдых</b><i>записи остаются</i></div>
-      <div class="day rec"><small>пн</small><b>Урок</b><i>в записи + задание</i></div>
-      <div class="day"><small>вт</small><b>Практика</b><i>60–90 мин с AI</i></div>
-      <div class="day live"><small>ср</small><b>Практикум</b><i>живой эфир</i></div>
-      <div class="day"><small>чт</small><b>Практика</b><i>60–90 мин с AI</i></div>
-      <div class="day"><small>пт</small><b>Практика</b><i>сверка в паре</i></div>
-      <div class="day live"><small>сб</small><b>Разбор</b><i>каждого по траектории</i></div>
-    </div>
-    <div class="wk-legend"><span><i style="background:rgba(0,196,212,.5)"></i>урок в записи</span><span><i style="background:var(--vm)"></i>живой эфир</span><span><i style="background:var(--s2);border:1px solid var(--line)"></i>самостоятельная практика</span></div>
+    
   </div>
 </section>
 
 <section class="sec" data-depth="7000" data-name="артефакты" style="padding-top:0">
   <div class="wrap">
     <div class="depth">7 000 м</div>
-    <h2 class="disp grad h2">10 вещей,<br>которые останутся</h2>
-    <div class="arts bento">
-      <div class="ar"><svg><use href="#i-map"/></svg><div><b>Карта траектории</b><small>неделя 0</small></div></div>
-      <div class="ar big">
-        <div class="ar-viz partner" aria-hidden="true">
-          <div class="pm you">Помоги сформулировать, за что меня выбирают</div>
-          <div class="pm ai"><b>AI-партнёр</b>Помню твою цель: 5 клиентов к декабрю. Судя по твоим кейсам, тебя выбирают за…</div>
-        </div>
-        <div><b>AI-партнёр</b><small>знает тебя, твою цель и ведёт по программе · неделя 1</small></div>
-      </div>
-      <div class="ar"><svg><use href="#i-dna"/></svg><div><b>ДНК и позиционирование</b><small>неделя 1</small></div></div>
-      <div class="ar"><svg><use href="#i-list"/></svg><div><b>Библиотека запросов</b><small>неделя 2</small></div></div>
-      <div class="ar"><svg><use href="#i-team"/></svg><div><b>Команда агентов</b><small>неделя 2</small></div></div>
-      <div class="ar"><svg><use href="#i-bolt"/></svg><div><b>Первая автоматизация</b><small>неделя 2</small></div></div>
-      <div class="ar"><svg><use href="#i-chart"/></svg><div><b>Оффер и экономика</b><small>неделя 3</small></div></div>
-      <div class="ar wide">
-        <div class="ar-viz browser" aria-hidden="true">
-          <div class="bw-top"><i></i><i></i><i></i><span>твой-домен.ru</span></div>
-          <div class="bw-body"><span class="l1"></span><span class="l2"></span><span class="btnx"></span><span class="cards"><i></i><i></i><i></i></span></div>
-        </div>
-        <div><b>Своя платформа</b><small>сайт, приложение или кабинет на твоём домене · неделя 4</small></div>
-      </div>
-      <div class="ar"><svg><use href="#i-magnet"/></svg><div><b>Канал и своя база</b><small>неделя 5</small></div></div>
-      <div class="ar"><svg><use href="#i-deal"/></svg><div><b>Система продаж</b><small>неделя 6</small></div></div>
-    </div>
+    <h2 class="disp grad h2">10 результатов,<br>которые останутся</h2>
+    <p class="sub">Каждая неделя заканчивается тем, что можно показать и использовать в работе.</p>
+    <div class="loot"><div class="lw"><div class="lw-h"><b>0</b><span>Подготовка</span></div><ul><li><svg><use href="#i-map"/></svg>Карта траектории</li></ul></div><div class="lw"><div class="lw-h"><b>1</b><span>Глубина</span></div><ul><li><svg><use href="#i-brain"/></svg>AI-партнёр</li><li><svg><use href="#i-dna"/></svg>ДНК и позиционирование</li></ul></div><div class="lw"><div class="lw-h"><b>2</b><span>AI-интенсив</span></div><ul><li><svg><use href="#i-list"/></svg>Библиотека запросов</li><li><svg><use href="#i-team"/></svg>Команда агентов</li><li><svg><use href="#i-bolt"/></svg>Первая автоматизация</li></ul></div><div class="lw"><div class="lw-h"><b>3</b><span>Оффер</span></div><ul><li><svg><use href="#i-chart"/></svg>Оффер и экономика</li></ul></div><div class="lw"><div class="lw-h"><b>4</b><span>Платформа</span></div><ul><li><svg><use href="#i-site"/></svg>Своя платформа на домене</li></ul></div><div class="lw"><div class="lw-h"><b>5</b><span>Клиенты</span></div><ul><li><svg><use href="#i-magnet"/></svg>Канал и своя база</li></ul></div><div class="lw"><div class="lw-h"><b>6</b><span>Продажи</span></div><ul><li><svg><use href="#i-deal"/></svg>Система продаж</li></ul></div></div>
   </div>
 </section>
 
@@ -1186,7 +1169,7 @@ if(fine&&!calm){
   const g=document.getElementById('cglow');let gx=0,gy=0,tx=0,ty=0;
   let raf=0;const loop=()=>{gx+=(tx-gx)*.14;gy+=(ty-gy)*.14;g.style.transform='translate('+gx+'px,'+gy+'px)';raf=(Math.abs(tx-gx)+Math.abs(ty-gy)>.5)?requestAnimationFrame(loop):0;};
   addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;g.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);},{passive:true});
-  document.querySelectorAll('.glass,.plan,.bp,.ar,.teaser').forEach(el=>{el.classList.add('tilt');
+  document.querySelectorAll('.plan,.bp,.teaser').forEach(el=>{el.classList.add('tilt');
     el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform='perspective(900px) rotateX('+(-y*4)+'deg) rotateY('+(x*5)+'deg)';});
     el.addEventListener('pointerleave',()=>{el.style.transform='';});});
 }
