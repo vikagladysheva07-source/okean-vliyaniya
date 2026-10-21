@@ -668,13 +668,14 @@ footer .seller a{color:var(--muted)}
 .hA-stats.res span{display:block;margin-top:4px;line-height:1.35}
 @media(max-width:600px){.hA-stats.res{gap:0}.hA-stats.res div{padding:0 8px}.hA-stats.res b{font-size:14px}.hA-stats.res span{font-size:11.5px}}
 
-.hA-cards{display:grid;grid-template-columns:repeat(3,minmax(0,190px));justify-content:center;gap:12px;margin-top:52px;opacity:0;animation:rise .9s .5s cubic-bezier(.2,.7,.2,1) forwards}
+.hA-cards{display:grid;grid-template-columns:repeat(3,minmax(0,230px));justify-content:center;gap:12px;margin-top:52px;opacity:0;animation:rise .9s .5s cubic-bezier(.2,.7,.2,1) forwards}
 .hc{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 14px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02) 55%,rgba(91,47,190,.16));border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .hc-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(169,131,242,.5),rgba(91,47,190,.4));border:1px solid rgba(196,164,255,.45);box-shadow:0 0 28px rgba(155,111,232,.45)}
 .hc-ic svg{width:26px;height:26px;color:#fff}
 .hc b{font-size:15.5px;line-height:1.2}
-.hc small{font-size:12.5px;color:var(--muted);margin-top:-6px;line-height:1.3}
-@media(max-width:600px){.hc small{font-size:11px}.hA-cards{gap:8px;margin-top:40px}.hc{padding:16px 8px;border-radius:18px}.hc-ic{width:44px;height:44px;border-radius:14px}.hc-ic svg{width:22px;height:22px}.hc b{font-size:13px}}
+.hc p{font-size:15px;line-height:1.4;color:#fff;font-weight:400;margin:0}
+.hc p b{font-weight:800}
+@media(max-width:600px){.hc p{font-size:14.5px;text-align:left}.hA-cards{grid-template-columns:1fr;gap:8px;margin-top:36px;max-width:340px;margin-left:auto;margin-right:auto}.hc{flex-direction:row;gap:14px;padding:12px 16px;border-radius:18px}.hc-ic{width:44px;height:44px;border-radius:14px}.hc-ic svg{width:22px;height:22px}.hc b{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.hA-cards{opacity:1}}
 </style>
 </head>
@@ -749,9 +750,9 @@ footer .seller a{color:var(--muted)}
         <a class="btn btn-g" href="#program">Программа</a>
       </div>
       <div class="hA-cards">
-        <div class="hc"><span class="hc-ic"><svg><use href="#i-gem"/></svg></span><b>Тебя видят</b><small>ценность упакована</small></div>
-        <div class="hc"><span class="hc-ic"><svg><use href="#i-team"/></svg></span><b>За тебя работает AI</b><small>команда агентов</small></div>
-        <div class="hc"><span class="hc-ic"><svg><use href="#i-rise"/></svg></span><b>Тебя выбирают и платят</b><small>поток клиентов</small></div>
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-gem"/></svg></span><p><b>Тебя видят:</b> ценность упакована</p></div>
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-team"/></svg></span><p><b>За тебя работает AI:</b> своя команда агентов</p></div>
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-rise"/></svg></span><p><b>Тебя выбирают и платят:</b> поток клиентов</p></div>
       </div>
     </div>
   </div>
