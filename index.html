@@ -667,6 +667,14 @@ footer .seller a{color:var(--muted)}
 .hA-stats.res div{max-width:240px}
 .hA-stats.res span{display:block;margin-top:4px;line-height:1.35}
 @media(max-width:600px){.hA-stats.res{gap:0}.hA-stats.res div{padding:0 8px}.hA-stats.res b{font-size:14px}.hA-stats.res span{font-size:11.5px}}
+
+.hA-cards{display:grid;grid-template-columns:repeat(3,minmax(0,190px));justify-content:center;gap:12px;margin-top:52px;opacity:0;animation:rise .9s .5s cubic-bezier(.2,.7,.2,1) forwards}
+.hc{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 14px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02) 55%,rgba(91,47,190,.16));border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hc-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(169,131,242,.5),rgba(91,47,190,.4));border:1px solid rgba(196,164,255,.45);box-shadow:0 0 28px rgba(155,111,232,.45)}
+.hc-ic svg{width:26px;height:26px;color:#fff}
+.hc b{font-size:15.5px;line-height:1.2}
+@media(max-width:600px){.hA-cards{gap:8px;margin-top:40px}.hc{padding:16px 8px;border-radius:18px}.hc-ic{width:44px;height:44px;border-radius:14px}.hc-ic svg{width:22px;height:22px}.hc b{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.hA-cards{opacity:1}}
 </style>
 </head>
 <body>
@@ -739,7 +747,11 @@ footer .seller a{color:var(--muted)}
         <a class="btn btn-p" href="#apply">Подать заявку</a>
         <a class="btn btn-g" href="#program">Программа</a>
       </div>
-      <div class="hA-stats res"><div><b>Своя AI-команда</b><span>агенты делают работу за тебя</span></div><div><b>Свой сайт</b><span>за неделю, без программиста</span></div><div><b>Поток клиентов</b><span>свой канал и система продаж</span></div></div>
+      <div class="hA-cards">
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-team"/></svg></span><b>AI-команда</b></div>
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-site"/></svg></span><b>Свой сайт</b></div>
+        <div class="hc"><span class="hc-ic"><svg><use href="#i-magnet"/></svg></span><b>Поток клиентов</b></div>
+      </div>
     </div>
   </div>
 </section>
