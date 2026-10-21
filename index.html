@@ -372,7 +372,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .qz{border:none;margin:0 0 26px}
 .qz:last-child{margin-bottom:0}
 .qz legend{font-size:18px;font-weight:700;line-height:1.35;margin-bottom:12px;padding:0}
-.qz legend small{display:block;font-size:12.5px;font-weight:500;color:var(--cb);margin-bottom:4px}
+.qz legend small{display:block;font-size:12.5px;font-weight:500;color:#C4A4FF;margin-bottom:4px}
 .qopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .qopts.five{grid-template-columns:1fr}
 .qo{position:relative;min-width:0}
@@ -385,8 +385,8 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 @media(max-width:640px){.qopts{grid-template-columns:1fr}}
 .qnums{display:flex;gap:18px;margin-top:10px;font-size:14px;color:var(--muted)}
 .qnums b{color:var(--text)}
-.weak{margin-top:16px;border-radius:16px;padding:14px 16px;background:var(--cbg);border:1px solid rgba(0,196,212,.25);font-size:14.5px;text-align:left;width:100%}
-.weak b{color:var(--cb);display:block;font-size:12.5px;margin-bottom:4px}
+.weak{margin-top:16px;border-radius:16px;padding:14px 16px;background:rgba(155,111,232,.12);border:1px solid rgba(196,164,255,.3);font-size:14.5px;text-align:left;width:100%}
+.weak b{color:#C4A4FF;display:block;font-size:12.5px;margin-bottom:4px}
 #q-cta{margin-top:18px;width:100%}
 
 
@@ -413,6 +413,33 @@ dialog#qd::backdrop{background:rgba(4,4,10,.82);backdrop-filter:blur(8px)}
 .qd-steps .qopts{grid-template-columns:1fr}
 .qd-steps .qz legend{font-size:clamp(20px,3vw,24px);font-weight:900;margin-bottom:18px}
 .qd-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;font-size:14px;color:var(--muted)}
+.qd-play{display:grid;grid-template-columns:1fr 64px;gap:18px}
+.qd-play:has(#quiz[hidden]){display:none}
+.dm{display:flex;flex-direction:column;align-items:center;gap:6px;min-height:280px}
+.dm-t{font-size:11px;color:var(--muted);white-space:nowrap}
+.dm-track{position:relative;flex:1;width:6px;border-radius:6px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.14) 0 2px,transparent 2px 14px),rgba(255,255,255,.04)}
+.dm-track i{position:absolute;left:0;right:0;top:0;height:0;border-radius:6px;background:linear-gradient(180deg,#C4A4FF,#5B2FBE);box-shadow:0 0 14px rgba(155,111,232,.7);transition:height .6s cubic-bezier(.2,.7,.2,1)}
+.dm-track b{position:absolute;left:50%;top:0;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);background:#fff;box-shadow:0 0 0 4px rgba(155,111,232,.35),0 0 18px #9B6FE8;transition:top .6s cubic-bezier(.2,.7,.2,1)}
+.dm-track em{position:absolute;right:22px;top:50%;transform:translateY(-50%);font-style:normal;font-size:12px;font-weight:800;color:#E4D6FF;white-space:nowrap}
+.ar-k{font-size:13px;color:var(--muted)}
+.ar-name{font-size:clamp(30px,6vw,44px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1;margin:6px 0 10px;background:linear-gradient(180deg,#fff,#C4A4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+#qd #o-txt{max-width:440px;font-size:15px;color:rgba(242,237,226,.85)}
+.ar-row{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center;margin:34px 0 22px;width:100%;text-align:left}
+.mx{position:relative;aspect-ratio:1;border-radius:18px;border:1px solid rgba(196,164,255,.25);background:linear-gradient(90deg,transparent calc(50% - .5px),rgba(196,164,255,.25) calc(50% - .5px) calc(50% + .5px),transparent calc(50% + .5px)),linear-gradient(0deg,transparent calc(50% - .5px),rgba(196,164,255,.25) calc(50% - .5px) calc(50% + .5px),transparent calc(50% + .5px)),radial-gradient(circle at 100% 0,rgba(155,111,232,.3),transparent 60%),rgba(255,255,255,.02)}
+.mx-q{position:absolute;width:50%;height:50%;display:flex;padding:8px;font-size:10.5px;line-height:1.15;color:rgba(242,237,226,.45);font-weight:600}
+.q1{left:0;top:0;align-items:flex-start}.q2{right:0;top:0;color:#C4A4FF;align-items:flex-start;justify-content:flex-end;text-align:right}.q3{left:0;bottom:0;align-items:flex-end}.q4{right:0;bottom:0;align-items:flex-end;justify-content:flex-end;text-align:right}
+.mx-dot{position:absolute;width:18px;height:18px;border-radius:50%;transform:translate(-50%,50%);background:#fff;box-shadow:0 0 0 5px rgba(155,111,232,.4),0 0 22px #9B6FE8;transition:left .8s,bottom .8s}
+.mx-dot em{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font-style:normal;font-size:11px;font-weight:800;color:#fff;padding:2px 7px;border-radius:999px;background:#5B2FBE}
+.mx-ax{position:absolute;font-size:10px;color:var(--muted)}
+.ax-x{right:4px;bottom:-17px}.ax-y{left:4px;top:-17px}
+.ar-stats{display:flex;flex-direction:column;gap:12px}
+.ar-stats>div{display:flex;flex-direction:column}
+.ar-stats>div>b{font-size:34px;font-weight:900;line-height:1;color:#fff}
+.ar-stats>div>b small{font-size:16px;color:var(--muted);font-weight:700}
+.ar-stats>div>span{font-size:13px;color:var(--muted)}
+.ar-stats>.ar-mini{display:block;font-size:13px;color:var(--muted)}
+.ar-stats>.ar-mini b{display:inline;font-size:13px;color:#fff;font-weight:800}
+@media(max-width:560px){.qd-play{grid-template-columns:1fr 48px;gap:10px}.dm-track em{display:none}.ar-row{grid-template-columns:1fr;justify-items:center;text-align:center}.mx{width:220px}.ar-stats{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px 24px}.ar-mini{width:100%}}
 #qd .result{display:flex;flex-direction:column;align-items:center;text-align:center}
 #qd .result[hidden]{display:none}
 #qd .gauge{width:180px;height:180px}#qd .gauge .val b{font-size:60px}
@@ -1156,6 +1183,8 @@ footer .seller a{color:var(--muted)}
       <button type="button" class="qd-x" id="qd-close" aria-label="Закрыть">×</button>
     </div>
     <div class="qd-bar"><i id="qd-prog"></i></div>
+    <div class="qd-play">
+    <div class="qd-main">
     <form id="quiz" class="qd-steps" onsubmit="return false">
 
 <fieldset class="qz"><legend><small>Глубина · Ценность</small>Можешь одной фразой объяснить, за что тебя выбирают?</legend><div class="qopts"><label class="qo"><input type="radio" name="q0" value="0"><span>Пока нет</span></label><label class="qo"><input type="radio" name="q0" value="1"><span>Примерно</span></label><label class="qo"><input type="radio" name="q0" value="2"><span>Да, чётко</span></label></div></fieldset>
@@ -1166,14 +1195,25 @@ footer .seller a{color:var(--muted)}
 <fieldset class="qz"><legend><small>Масштаб · AI</small>Как ты сейчас работаешь с AI?</legend><div class="qopts five"><label class="qo"><input type="radio" name="qs" value="1"><span><b>1</b>Иногда спрашиваю в чате</span></label><label class="qo"><input type="radio" name="qs" value="2"><span><b>2</b>У AI есть контекст обо мне и проекте</span></label><label class="qo"><input type="radio" name="qs" value="3"><span><b>3</b>Есть агенты с ролями</span></label><label class="qo"><input type="radio" name="qs" value="4"><span><b>4</b>Часть процессов идёт без меня</span></label><label class="qo"><input type="radio" name="qs" value="5"><span><b>5</b>Собираю свои сайты и приложения</span></label></div></fieldset>
     </form>
     <div class="qd-nav" id="qd-nav"><button type="button" class="btn btn-g btn-s" id="qd-back">Назад</button><span id="qd-step">1 из 6</span></div>
+    </div>
+    <div class="dm" aria-hidden="true"><span class="dm-t">0 м</span><div class="dm-track"><i id="dm-fill"></i><b id="dm-dot"><em id="dm-val">0 м</em></b></div><span class="dm-t">1000 м</span></div>
+    </div>
     <div class="result" id="q-result" hidden>
-        <div class="gauge">
-          <svg viewBox="0 0 120 120"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#5B2FBE"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10"/><circle id="g-arc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
-          <div class="val"><b id="o-i">?</b><span>из 50</span></div>
-        </div>
-        <h4>Твой Индекс влияния</h4>
-        <div class="qnums"><span>Глубина <b id="o-d">–</b>/10</span><span>Масштаб <b id="o-s">–</b>/5</span></div>
+        <small class="ar-k">Твой тип</small>
+        <h4 class="ar-name" id="o-name">?</h4>
         <p id="o-txt">Ответь на все вопросы, и здесь появится твой результат.</p>
+        <div class="ar-row">
+          <div class="mx" aria-hidden="true">
+            <span class="mx-q q1">Шумная волна</span><span class="mx-q q2">Синий кит</span><span class="mx-q q3">Штиль</span><span class="mx-q q4">Скрытая жемчужина</span>
+            <b class="mx-dot" id="mx-dot"><em>ты</em></b>
+            <span class="mx-ax ax-x">глубина →</span><span class="mx-ax ax-y">↑ масштаб</span>
+          </div>
+          <div class="ar-stats">
+            <div><b id="o-m">0</b><span>метров глубины</span></div>
+            <div><b><span id="o-i">?</span><small>/50</small></b><span>Индекс влияния</span></div>
+            <div class="ar-mini">Глубина <b id="o-d">–</b>/10 · Масштаб <b id="o-s">–</b>/5</div>
+          </div>
+        </div>
         <div class="weak" id="o-weak" hidden></div>
         <a class="btn btn-p" id="q-cta" href="#apply" hidden>Подать заявку с этим результатом</a>
       <button type="button" class="qd-again" id="qd-again">Пройти заново</button>
@@ -1213,7 +1253,7 @@ addEventListener('load',()=>{layoutDots();onScroll();});
 layoutDots();onScroll();
 
 /* тест Индекса влияния */
-const C=326.7, arc=document.getElementById('g-arc');
+const C=326.7;
 const od=document.getElementById('o-d'), os=document.getElementById('o-s'), oi=document.getElementById('o-i'), ot=document.getElementById('o-txt'), ow=document.getElementById('o-weak'), qcta=document.getElementById('q-cta');
 const P=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'];
 const W=['неделя 1 «Глубина и AI-партнёр»','неделя 1 «Глубина и AI-партнёр»','неделя 3 «Оффер и упаковка»','неделя 5 «Поток клиентов»','неделя 6 «Продажи»'];
@@ -1222,23 +1262,26 @@ function quiz(){
   const v=P.map((_,i)=>{const r=document.querySelector('input[name=q'+i+']:checked');return r?+r.value:null;});
   const sr=document.querySelector('input[name=qs]:checked'), s=sr?+sr.value:null;
   const left=v.filter(x=>x===null).length+(s===null?1:0);
+  const m=Math.round(v.reduce((a,b)=>a+(b||0),0)*70+(s||0)*60);
+  document.getElementById('dm-fill').style.height=(m/10)+'%';document.getElementById('dm-dot').style.top=(m/10)+'%';document.getElementById('dm-val').textContent=m+' м';
   if(left){ot.textContent=left===6?'Ответь на все вопросы, и здесь появится твой результат.':'Осталось ответить: '+left+'.';return;}
   const d=v.reduce((a,b)=>a+b,0), i=d*s;
   od.textContent=d; os.textContent=s; oi.textContent=i;
-  arc.style.strokeDashoffset=C-(C*i/50);
-  ot.textContent = d===0 ? 'Без глубины умножать нечего: даже самый сильный AI даст ноль.'
-    : (d<=3 && s>=3) ? 'Масштаб есть, глубины мало. Так AI размножает шум, и влияние почти не растёт.'
-    : i<8 ? 'Глубина есть, масштаба почти нет. Так выглядит старт у многих сильных экспертов.'
-    : i<20 ? 'Хорошая база. Систему уже видно, но она пока держится на твоём времени.'
-    : i<35 ? 'Влияние растёт: глубина упакована, AI берёт на себя заметную часть работы.'
-    : 'Сильная система: ценность ясна, а AI умножает её каждый день.';
+  const deep=d>=6, wide=s>=3;
+  const A= deep&&wide ? ['Синий кит','Глубина и масштаб уже работают вместе. Дальше дело в системе и продажах, чтобы влияние росло без твоего постоянного участия.']
+    : deep ? ['Скрытая жемчужина','Глубина есть, а видят тебя мало. Упаковка и AI покажут твою ценность тем, кто давно тебя ищет.']
+    : wide ? ['Шумная волна','AI уже в работе, но умножает то, что ещё не упаковано. Нужна глубина, тогда объём превратится во влияние.']
+    : ['Штиль','Потенциал есть, но пока тихо. Сначала раскрываем глубину, потом подключаем масштаб.'];
+  document.getElementById('o-name').textContent=A[0];document.getElementById('o-m').textContent=m;
+  const dot=document.getElementById('mx-dot');dot.style.left=(4+d/10*92)+'%';dot.style.bottom=(4+(s-1)/4*92)+'%';
+  ot.textContent=A[1];
   const min=Math.min(...v), wi=v.indexOf(min);
   let weak = (min===2 && s===5) ? 'Глубина и масштаб уже на максимуме → на программе докрутим систему и продажи'
     : ((s<=2 && min>=1) || min===2) ? 'Масштаб · AI → неделя 2 «AI-интенсив»'
     : P[wi]+' → '+W[wi];
   ow.innerHTML='<b>Где вырастешь сильнее всего</b>'+weak; ow.hidden=false; qcta.hidden=false;
-  quizResult='Индекс '+i+' (глубина '+d+', масштаб '+s+'), слабое звено: '+weak;
-  const fi=document.getElementById('f-index'); fi.textContent='Твой Индекс влияния '+i+' из 50 прикрепится к заявке.'; fi.hidden=false;
+  quizResult=A[0]+', '+m+' м, индекс '+i+' (глубина '+d+', масштаб '+s+'), слабое звено: '+weak;
+  const fi=document.getElementById('f-index'); fi.textContent='Твой результат «'+A[0]+'», индекс '+i+' из 50, прикрепится к заявке.'; fi.hidden=false;
 }
 document.getElementById('quiz').addEventListener('change',quiz); quiz();
 
@@ -1250,7 +1293,7 @@ let st=0;
 function show(i){st=i;steps.forEach((f,j)=>f.classList.toggle('on',j===i));prog.style.width=(i/steps.length*100)+'%';stepTxt.textContent=(i+1)+' из '+steps.length;back.style.visibility=i?'visible':'hidden';nav.hidden=false;qres.hidden=true;qform.hidden=false;}
 function finish(){steps.forEach(f=>f.classList.remove('on'));prog.style.width='100%';nav.hidden=true;qform.hidden=true;qres.hidden=false;
   const i=+oi.textContent;document.getElementById('t-val').textContent=i;document.getElementById('t-arc').style.strokeDashoffset=C-(C*i/50);
-  document.getElementById('t-title').textContent='Твой Индекс влияния: '+i+' из 50';document.getElementById('t-sub').textContent=ow.textContent.replace('Где вырастешь сильнее всего','Где вырастешь сильнее всего: ');document.getElementById('t-open').textContent='Посмотреть результат';}
+  document.getElementById('t-title').textContent='Твой тип: '+document.getElementById('o-name').textContent;document.getElementById('t-sub').textContent=ow.textContent.replace('Где вырастешь сильнее всего','Где вырастешь сильнее всего: ');document.getElementById('t-open').textContent='Посмотреть результат';}
 qform.addEventListener('click',e=>{const inp=e.target.closest('input[type=radio]');if(!inp)return;const k=steps.indexOf(inp.closest('.qz'));quiz();if(k<steps.length-1)setTimeout(()=>show(k+1),220);else if(quizResult)setTimeout(finish,220);});
 document.getElementById('t-open').addEventListener('click',()=>{qd.showModal();if(quizResult)finish();else show(0);});
 back.addEventListener('click',()=>show(Math.max(0,st-1)));
