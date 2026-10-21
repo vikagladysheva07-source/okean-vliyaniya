@@ -1062,6 +1062,10 @@ footer .seller a{color:var(--muted)}
 .au2-stats div{position:relative}
 .au2-stats div::before{content:'';display:block;width:22px;height:2px;border-radius:2px;background:#9B6FE8;margin:0 0 12px}
 @media(max-width:800px){.au2-stats div::before{margin:0 auto 10px}}
+.geo{display:flex;gap:6px;margin-top:8px;font-style:normal}
+.geo i{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-size:11.5px;font-weight:600;color:#D9C8FF;padding:4px 9px 4px 7px;border-radius:999px;background:rgba(155,111,232,.12);border:1px solid rgba(196,164,255,.28)}
+.geo svg{width:12px;height:12px;color:#C4A4FF}
+@media(max-width:800px){.geo{justify-content:center}}
 </style>
 </head>
 <body>
@@ -1099,7 +1103,7 @@ footer .seller a{color:var(--muted)}
     <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 3 6 5 8 8M12 8c2-5 6-3 4 0"/></symbol>
     <symbol id="i-case" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/></symbol>
     <symbol id="i-seat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h54M46 4l10 8-10 8"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol><symbol id="i-arrow" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h54M46 4l10 8-10 8"/></symbol>
   </defs>
 </svg>
 
@@ -1314,7 +1318,7 @@ footer .seller a{color:var(--muted)}
       <blockquote class="au2-q">Глубина без масштаба остаётся тайной. Масштаб без глубины превращается в шум.</blockquote>
       <div class="au2-stats">
         <div><b>6 лет</b><span>в маркетинге</span></div>
-        <div><b>100+</b><span>проектов в России и&nbsp;за&nbsp;рубежом</span></div>
+        <div><b>100+</b><span>проектов</span><em class="geo"><i><svg><use href="#i-pin"/></svg>Россия</i><i><svg><use href="#i-globe"/></svg>Мир</i></em></div>
         <div><b>$40K+</b><span>офлайн-тренинг на 100+ участниц</span></div>
         <div><b>NDA</b><span>digital-команда кандидата в президенты</span></div>
       </div>
