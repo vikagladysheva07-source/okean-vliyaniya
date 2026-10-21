@@ -1066,6 +1066,45 @@ footer .seller a{color:var(--muted)}
 .geo i{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-size:11.5px;font-weight:600;color:#D9C8FF;padding:4px 9px 4px 7px;border-radius:999px;background:rgba(155,111,232,.12);border:1px solid rgba(196,164,255,.28)}
 .geo svg{width:12px;height:12px;color:#C4A4FF}
 @media(max-width:800px){.geo{justify-content:center}}
+
+/* тарифы: цена */
+.price{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.price .pr-chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#E4D6FF;padding:6px 12px 6px 9px;border-radius:999px;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.3);margin:0}
+.price .pr-chip svg{width:14px;height:14px;color:#C4A4FF}
+.pr-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 16px}
+.pr-row s{font-size:clamp(20px,2.2vw,26px);font-weight:700;color:rgba(242,237,226,.4);text-decoration-thickness:2px;text-decoration-color:#9B6FE8}
+.price .pr-save{display:block;margin:0;font-size:13.5px;font-weight:700;color:#C4A4FF}
+.plan.pro .pr-row b{background:linear-gradient(180deg,#fff,#D9C8FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* форма компактнее */
+.fg{margin-bottom:14px}
+.fg .q{font-size:15px;margin-bottom:8px}
+.fg .q small{font-size:12.5px}
+input[type=text],textarea{padding:12px 14px;border-radius:14px;font-size:15px}
+textarea{min-height:68px}
+.opt span{min-height:46px;padding:8px 12px;border-radius:14px;font-size:13.5px;gap:10px}
+.opt span svg{width:20px;height:20px}
+.opts{gap:8px}
+#apply-form{padding:24px!important}
+@media(max-width:640px){#apply-form{padding:18px!important}.opts{gap:6px}.opt span{min-height:42px}}
+/* автор: фото без яркого свечения */
+.au2{background:transparent!important}
+.au2::after{background:radial-gradient(ellipse 70% 30% at 50% 0%,rgba(124,79,212,.09),transparent 70%),linear-gradient(180deg,#0E0A18 0%,#0A0910 50%,#08070D 100%)!important}
+.au2-ph{box-shadow:0 0 0 1px rgba(196,164,255,.28),0 30px 60px -30px rgba(0,0,0,.95)!important}
+
+/* градиентные заголовки: не обрезать хвосты и «й» */
+.grad,.au2-name,.ar-name{padding-top:.1em;padding-bottom:.16em}
+.hero h1.grad{padding-top:.12em;padding-bottom:.18em}
+
+/* форма: компактные варианты */
+@media(max-width:640px){
+ .opts{display:flex;flex-wrap:wrap;gap:6px}
+ .opt{flex:0 0 auto}
+ .opt span{min-height:38px;padding:7px 12px;border-radius:999px;font-size:13.5px}
+ .opt span svg{display:none}
+ .fg{margin-bottom:12px}
+ textarea{min-height:56px}
+}
+.final .sub{text-wrap:balance;max-width:340px;margin-left:auto;margin-right:auto}
 </style>
 </head>
 <body>
@@ -1287,8 +1326,8 @@ footer .seller a{color:var(--muted)}
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-user"/></svg></span><p>Понимаешь клиента и ведёшь разговор через ценность</p></div><div class="wk-a"><span><svg><use href="#i-coin"/></svg></span><p>Уверенно называешь цену</p></div><div class="wk-a"><span><svg><use href="#i-brain"/></svg></span><p>AI готовит к встрече и разбирает диалоги</p></div><div class="wk-a"><span><svg><use href="#i-trophy"/></svg></span><p>Защищаешь систему на Demo Day 19 декабря</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Минимум 3 продающих разговора, AI разобрал каждый, система защищена на Demo Day 19 декабря, посчитан финальный Индекс влияния.</p></div></div></div>
       </details>
       <details class="rw sup" style="--k:1.00">
-        <summary><span class="rw-m">5 000 м</span><span class="rw-n">+4</span><span class="rw-t"><b>Сопровождение</b><small>21 дек – 24 янв</small></span><span class="rw-ic"><svg><use href="#i-rise"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
-        <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-chat"/></svg></span><p>Разборы и ответы в чате</p></div><div class="wk-a"><span><svg><use href="#i-gear"/></svg></span><p>Докручиваем то, что буксует</p></div><div class="wk-a"><span><svg><use href="#i-rise"/></svg></span><p>Продажи идут в реальной жизни</p></div></div><p class="wk-note">С 31 декабря по 10 января перерыв на праздники</p></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Система работает стабильно, продажи идут в реальной жизни.</p></div></div></div>
+        <summary><span class="rw-m">5 000 м</span><span class="rw-n">+4</span><span class="rw-t"><b>Сопровождение</b><small>20 дек – 16 янв</small></span><span class="rw-ic"><svg><use href="#i-rise"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
+        <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-chat"/></svg></span><p>Разборы и ответы в чате</p></div><div class="wk-a"><span><svg><use href="#i-gear"/></svg></span><p>Докручиваем то, что буксует</p></div><div class="wk-a"><span><svg><use href="#i-rise"/></svg></span><p>Продажи идут в реальной жизни</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Система работает стабильно, продажи идут в реальной жизни.</p></div></div></div>
       </details>
     </div>
   </div>
@@ -1318,7 +1357,7 @@ footer .seller a{color:var(--muted)}
       <blockquote class="au2-q">Глубина без масштаба остаётся тайной. Масштаб без глубины превращается в шум.</blockquote>
       <div class="au2-stats">
         <div><b>6 лет</b><span>в маркетинге</span></div>
-        <div><b>100+</b><span>проектов</span><em class="geo"><i><svg><use href="#i-globe"/></svg>RU / EU / US</i></em></div>
+        <div><b>100+</b><span>проектов · RU / EU / US</span></div>
         <div><b>$40K+</b><span>офлайн-тренинг на 100+ участниц</span></div>
         <div><b>NDA</b><span>digital-команда кандидата в президенты</span></div>
       </div>
@@ -1334,13 +1373,13 @@ footer .seller a{color:var(--muted)}
       <div class="plan">
         <span class="cap">до 10 участников</span>
         <h3>Группа</h3>
-        <div class="price"><b>50 000 ₽</b><span>до 31 октября · далее <em>70 000 ₽</em></span></div>
+        <div class="price"><span class="pr-chip"><svg><use href="#i-clock"/></svg>Ранняя цена до 31 октября</span><div class="pr-row"><b>50 000 ₽</b><s>70 000 ₽</s></div><span class="pr-save">Выгода 20 000 ₽</span></div>
         <ul class="feat">
           <li><svg><use href="#i-check"/></svg>6 недель + 4 недели сопровождения</li>
           <li><svg><use href="#i-check"/></svg>Уроки в записи и 2 живые встречи в неделю</li>
           <li><svg><use href="#i-check"/></svg>Карта траектории и личная встреча до старта</li>
           <li><svg><use href="#i-check"/></svg>AI-партнёр под твою траекторию</li>
-          <li><svg><use href="#i-check"/></svg>Разбор твоей работы по траектории</li>
+          <li><svg><use href="#i-check"/></svg>7 разборов в личной работе</li>
           <li><svg><use href="#i-check"/></svg>Платформа с трекером и Индексом влияния</li>
           <li><svg><use href="#i-check"/></svg>Чат группы, пары, Demo Day</li>
         </ul>
@@ -1349,14 +1388,14 @@ footer .seller a{color:var(--muted)}
       <div class="plan pro">
         <span class="cap">3 места</span>
         <h3>Индивидуально</h3>
-        <div class="price"><b>100 000 ₽</b><span>до 31 октября · далее <em>120 000 ₽</em></span></div>
+        <div class="price"><span class="pr-chip"><svg><use href="#i-clock"/></svg>Ранняя цена до 31 октября</span><div class="pr-row"><b>100 000 ₽</b><s>120 000 ₽</s></div><span class="pr-save">Выгода 20 000 ₽</span></div>
         <ul class="feat">
           <li><svg><use href="#i-check"/></svg>Всё из групповой программы</li>
           <li class="big"><svg><use href="#i-check"/></svg>Внедряем вместе под ключ: твоя команда агентов (до 5) и сайт или платформа доводятся до работы на совместных сессиях</li>
           <li><svg><use href="#i-check"/></svg>Стратегическая сессия на старте, 2 часа</li>
-          <li><svg><use href="#i-check"/></svg>6 личных созвонов, раз в неделю</li>
+          <li><svg><use href="#i-check"/></svg>8 личных созвонов и дополнительные по запросу</li>
           <li><svg><use href="#i-check"/></svg>Личный чат, ответ в течение дня</li>
-          <li><svg><use href="#i-check"/></svg>Приоритетный разбор и 2 созвона в сопровождении</li>
+          <li><svg><use href="#i-check"/></svg>Приоритетный разбор на эфирах</li>
         </ul>
         <a class="btn btn-p" href="#apply" data-plan="Индивидуально">Подать заявку</a>
       </div>
@@ -1368,31 +1407,6 @@ footer .seller a{color:var(--muted)}
       <div class="ad pay-card"><div><b>Как оплатить</b><div class="pay"><span>Полностью</span><span>Предоплата 30%</span><span>Рассрочка Продамус</span><span>Частями по договорённости</span></div><p style="margin-top:10px">Записи и платформа доступны 3 месяца после программы</p></div></div>
     </div>
     <p class="oferta-note">Оплачивая участие, ты принимаешь условия <a href="oferta.html">публичной оферты</a></p>
-  </div>
-</section>
-
-<section class="sec" data-depth="11000" data-name="отбор" style="padding-top:0">
-  <div class="wrap">
-    <h2 class="disp grad h2">Кому подойдёт</h2>
-    <div class="fit">
-      <div class="y">
-        <h4>Подойдёт</h4>
-        <ul>
-          <li><svg><use href="#i-ok"/></svg>Есть свой проект: бизнес, экспертиза или будущая услуга</li>
-          <li><svg><use href="#i-ok"/></svg>Хочется расти в доходе и значимости через свою систему</li>
-          <li><svg><use href="#i-ok"/></svg>Есть 60–90 минут в день на шесть недель</li>
-        </ul>
-      </div>
-      <div class="n">
-        <h4>Не подойдёт</h4>
-        <ul>
-          <li><svg><use href="#i-minus"/></svg>Нужен готовый результат без своих действий</li>
-          <li><svg><use href="#i-minus"/></svg>Сейчас нет времени на задания и эфиры</li>
-          <li><svg><use href="#i-minus"/></svg>Ищешь быстрые деньги без своей ценности</li>
-        </ul>
-      </div>
-    </div>
-    <div class="need"><b>Для участия нужно:</b><span>доступ к AI-сервису и платная подписка (оплачивается отдельно)</span><span>ноутбук</span><span>свой проект или цель</span></div>
   </div>
 </section>
 
@@ -1475,7 +1489,7 @@ footer .seller a{color:var(--muted)}
   <div class="wrap">
     <div class="depth">11 000 м · максимальная глубина</div>
     <h2 class="disp grad">Ты глубже,<br>чем тебя видно</h2>
-    <p class="sub">Пора, чтобы это увидели. Ранняя цена и личная сессия — до 31 октября.</p>
+    <p class="sub">Всё главное в тебе уже есть. Пора, чтобы это увидели.</p>
     <a class="btn btn-p" href="#apply">Подать заявку</a>
   </div>
 </section>
