@@ -622,6 +622,24 @@ body{font-size:16px}
 .btn-s{height:42px}
 .sec{padding:110px 0}
 @media(max-width:700px){.sec{padding:72px 0}}
+
+/* HERO VARIANT A */
+.heroA{align-items:center!important;text-align:center}
+.heroA .bg::after{background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(7,7,13,.35),rgba(7,7,13,.9) 75%),linear-gradient(180deg,transparent 60%,#07070D)!important}
+.hA{max-width:900px;margin:0 auto}
+.heroA .brand-mark{justify-content:center;color:var(--cb);letter-spacing:.4em;margin-bottom:22px}
+.heroA .brand-mark::after{display:none}
+.heroA h1 span{display:block}
+.heroA .sub{margin:22px auto 32px!important;max-width:540px;color:var(--dim)!important}
+.heroA .cta{justify-content:center}
+.hA-stats{display:flex;justify-content:center;margin-top:56px;border-top:1px solid rgba(255,255,255,.1);padding-top:26px}
+.hA-stats div{padding:0 32px}
+.hA-stats div+div{border-left:1px solid rgba(255,255,255,.1)}
+.hA-stats b{display:block;font-size:24px;font-weight:900;white-space:nowrap}
+.hA-stats span{font-size:13px;color:var(--muted)}
+.hA-stats{opacity:0;animation:rise .9s .5s cubic-bezier(.2,.7,.2,1) forwards}
+@media(max-width:600px){.hA-stats div{padding:0 12px}.hA-stats b{font-size:18px}.hA-stats span{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.hA-stats{opacity:1}}
 </style>
 </head>
 <body>
@@ -682,34 +700,20 @@ body{font-size:16px}
   </div>
 </header>
 
-<section class="hero" data-depth="0" data-name="поверхность">
+<section class="hero heroA" data-depth="0" data-name="поверхность">
   <div class="bg"></div>
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="wrap hero-grid">
-    <div class="h-left">
+  <div class="wrap">
+    <div class="hA">
       <div class="brand-mark">Океан влияния</div>
-      <div class="what">Программа по маркетингу личности и AI на 6 недель</div>
-      <h1 class="disp grad"><span>Ты глубже,</span><span>чем тебя</span><span>видно</span></h1>
-      <p class="sub">Раскроем твою ценность, упакуем её и умножим через AI.</p>
+      <h1 class="disp grad"><span>Ты глубже,</span><span>чем тебя видно</span></h1>
+      <p class="sub">Программа по маркетингу личности и AI. За 6 недель раскроем твою ценность, упакуем её и умножим через AI.</p>
       <div class="cta">
         <a class="btn btn-p" href="#apply">Подать заявку</a>
         <a class="btn btn-g" href="#program">Программа</a>
       </div>
-      <div class="h-meta"><span><b>Старт 7 ноября</b></span><span>10 мест в группе</span><span>Ранняя цена до 31 октября</span></div>
+      <div class="hA-stats"><div><b>6 недель</b><span>+ 4 сопровождения</span></div><div><b>10 мест</b><span>в группе</span></div><div><b>7 ноября</b><span>старт</span></div></div>
     </div>
-    <aside class="glass" aria-label="Результат программы">
-      <div class="g-top"><span>Через 6 недель у тебя</span><i></i></div>
-      <ul class="g-list">
-        <li><span class="g-ic"><svg><use href="#i-gem"/></svg></span><div><b>Упакованная ценность</b><small>позиционирование и оффер</small></div></li>
-        <li><span class="g-ic"><svg><use href="#i-team"/></svg></span><div><b>Своя AI-команда</b><small>агенты делают работу за тебя</small></div></li>
-        <li><span class="g-ic"><svg><use href="#i-site"/></svg></span><div><b>Свой сайт за неделю</b><small>без программиста</small></div></li>
-        <li><span class="g-ic"><svg><use href="#i-magnet"/></svg></span><div><b>Поток клиентов</b><small>свой канал и система продаж</small></div></li>
-      </ul>
-      <div class="g-time">
-        <div class="g-bar"><i></i></div>
-        <div class="g-ends"><span>7.11 · старт</span><span>19.12 · Demo Day</span></div>
-      </div>
-    </aside>
   </div>
 </section>
 <div class="marquee" aria-label="маркетинг личности · AI-команда · своя платформа · поток клиентов · система продаж · Индекс влияния">
