@@ -553,6 +553,7 @@ textarea{min-height:104px;resize:vertical}
 .opt input:checked + span svg{color:var(--vb)}
 .opt input:focus-visible + span{outline:2px solid var(--vb);outline-offset:2px}
 .consent{display:flex;gap:12px;font-size:13.5px;color:var(--muted);margin:4px 0 22px;cursor:pointer}
+.consent a{color:var(--vb)}
 .consent input{width:18px;height:18px;margin-top:2px;accent-color:var(--v);flex-shrink:0}
 form .btn{width:100%}
 .f-index{font-size:14px;color:var(--cb);margin:-6px 0 16px}
@@ -654,6 +655,13 @@ body{font-size:16px}
 .lw li svg{width:18px;height:18px;flex-shrink:0;color:var(--cb)}
 @media(max-width:1000px){.loot{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:620px){.loot{grid-template-columns:1fr;gap:6px}.lw{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:16px}.lw-h{margin:0;flex-direction:column;gap:2px}.lw-h b{font-size:22px}}
+
+footer .legal{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;margin-top:8px}
+footer .legal a{color:var(--muted);font-size:13px}
+footer .seller{font-size:12.5px;color:var(--muted);max-width:620px;line-height:1.5}
+footer .seller a{color:var(--muted)}
+.oferta-note{font-size:13px;color:var(--muted);margin-top:14px;text-align:center}
+.oferta-note a{color:var(--vb)}
 </style>
 </head>
 <body>
@@ -941,6 +949,7 @@ body{font-size:16px}
       <div class="ad"><svg><use href="#i-gift"/></svg><div><b>Сессия 45 минут</b><p>Лично с Викторией до старта. При оплате до 31 октября</p></div></div>
       <div class="ad pay-card"><div><b>Как оплатить</b><div class="pay"><span>Полностью</span><span>Предоплата 30%</span><span>Рассрочка Продамус</span><span>Частями по договорённости</span></div><p style="margin-top:10px">Записи и платформа доступны 3 месяца после программы</p></div></div>
     </div>
+    <p class="oferta-note">Оплачивая участие, ты принимаешь условия <a href="oferta.html">публичной оферты</a></p>
   </div>
 </section>
 
@@ -1016,7 +1025,7 @@ body{font-size:16px}
           <input type="text" id="contact" name="contact" placeholder="Telegram или телефон">
         </div>
         <p class="f-index" id="f-index" hidden></p>
-        <label class="consent"><input type="checkbox" id="consent"><span>Согласие на обработку персональных данных для связи по заявке</span></label>
+        <label class="consent"><input type="checkbox" id="consent"><span>Я даю <a href="consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a>, в том числе на их передачу в Google LLC (США), и ознакомлен(-а) с <a href="privacy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a></span></label>
         <button class="btn btn-p" type="submit">Отправить заявку</button>
         <p class="f-err" id="f-err">Заполни все поля и отметь согласие, чтобы отправить заявку.</p>
       </div>
@@ -1086,7 +1095,9 @@ body{font-size:16px}
   </div>
 </dialog>
 
-<footer><div class="wrap"><img class="f-logo" src="assets/wikki-logo-transparent.png" alt="WIKKI.OCEAN"><span>© 2026 WIKKI.OCEAN · Океан влияния</span><a href="https://t.me/wikki_shark" target="_blank" rel="noopener">@wikki_shark</a></div></footer>
+<footer><div class="wrap"><img class="f-logo" src="assets/wikki-logo-transparent.png" alt="WIKKI.OCEAN"><span>© 2026 WIKKI.OCEAN · Океан влияния</span><a href="https://t.me/wikki_shark" target="_blank" rel="noopener">@wikki_shark</a>
+<div class="legal"><a href="oferta.html">Публичная оферта</a><a href="privacy.html">Политика обработки персональных данных</a><a href="consent.html">Согласие на обработку данных</a></div>
+<div class="seller">Гладышева Виктория Ивановна · ИНН 741205959796 · плательщик налога на профессиональный доход · <a href="mailto:vikagladysheva07@gmail.com">vikagladysheva07@gmail.com</a></div></div></footer>
 
 
 <script>
