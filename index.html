@@ -215,6 +215,18 @@ main,body{position:relative}
 @media(hover:hover) and (pointer:fine){.tilt{transition:transform .25s ease,box-shadow .25s;transform-style:preserve-3d;will-change:transform}}
 @media(prefers-reduced-motion:reduce){.rays i{animation:none}.cursor-glow{display:none}}
 
+
+/* MARQUEE */
+.marquee{position:relative;overflow:hidden;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);-webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mq-track{display:flex;width:max-content;animation:mq 48s linear infinite}
+.marquee:hover .mq-track{animation-play-state:paused}
+.mq-row{display:flex;align-items:center;flex-shrink:0}
+.mq-row span{font-size:clamp(28px,4.4vw,56px);font-weight:900;text-transform:uppercase;letter-spacing:-1.5px;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(196,164,255,.55);padding:0 28px}
+.mq-row span:nth-of-type(even){color:rgba(196,164,255,.16);-webkit-text-stroke:0}
+.mq-row i{font-style:normal;font-size:clamp(16px,2vw,24px);color:var(--cb);opacity:.8}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.mq-track{animation:none}}
+
 /* SIGNALS */
 .signals{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:28px;overflow:hidden;margin-top:48px}
 .sig{background:var(--bg);padding:30px 28px;display:flex;gap:18px;align-items:flex-start;min-height:150px}
@@ -662,6 +674,10 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
     </aside>
   </div>
 </section>
+<div class="marquee" aria-label="маркетинг личности · AI-команда · своя платформа · поток клиентов · система продаж · Индекс влияния">
+  <div class="mq-track" aria-hidden="true"><div class="mq-row"><span>маркетинг личности</span><i aria-hidden="true">✦</i><span>AI-команда</span><i aria-hidden="true">✦</i><span>своя платформа</span><i aria-hidden="true">✦</i><span>поток клиентов</span><i aria-hidden="true">✦</i><span>система продаж</span><i aria-hidden="true">✦</i><span>Индекс влияния</span><i aria-hidden="true">✦</i></div><div class="mq-row"><span>маркетинг личности</span><i aria-hidden="true">✦</i><span>AI-команда</span><i aria-hidden="true">✦</i><span>своя платформа</span><i aria-hidden="true">✦</i><span>поток клиентов</span><i aria-hidden="true">✦</i><span>система продаж</span><i aria-hidden="true">✦</i><span>Индекс влияния</span><i aria-hidden="true">✦</i></div></div>
+</div>
+
 
 <section class="sec" data-depth="40" data-name="узнаёшь себя">
   <div class="wrap">
