@@ -937,6 +937,25 @@ footer .seller a{color:var(--muted)}
 .wk-res li svg{background:rgba(155,111,232,.35);color:#E4D6FF}
 .wk-rt{margin:0;font-size:14px;line-height:1.5;font-weight:600;color:#fff}
 @media(max-width:600px){.wk-rt{font-size:13px}}
+
+/* шаги + панель */
+.route[hidden]{display:none}
+.steps{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:18px;max-width:820px;padding:0 2px}
+.st-line{position:absolute;left:20px;right:20px;top:50%;height:2px;transform:translateY(-50%);background:rgba(196,164,255,.15);border-radius:2px}
+.st-line b{display:block;height:100%;width:0;background:#9B6FE8;border-radius:2px;transition:width .4s cubic-bezier(.2,.7,.2,1)}
+.wst{position:relative;z-index:1;width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font:inherit;font-size:14px;font-weight:900;color:rgba(242,237,226,.7);background:#110E1A;border:1.5px solid rgba(196,164,255,.3);cursor:pointer;transition:background .25s,border-color .25s,color .25s,transform .2s}
+.wst:hover{border-color:rgba(196,164,255,.7);color:#fff}
+.wst.key{border-color:rgba(196,164,255,.55)}
+.wst.sup{font-size:12px;border-style:dashed}
+.wst.done{background:#1C1430;border-color:#9B6FE8;color:#fff}
+.wst[aria-selected=true]{background:#5B2FBE;border-color:#C4A4FF;color:#fff;transform:scale(1.12)}
+.wst:focus-visible{outline:2px solid #C4A4FF;outline-offset:3px}
+.wpanel{margin-top:16px;max-width:820px;padding:20px;border-radius:22px;background:#0F0D17;border:1px solid rgba(196,164,255,.22)}
+.wpanel.swap{animation:tgIn .35s cubic-bezier(.2,.7,.2,1) both}
+.wp-h{margin-bottom:14px}
+.wp-n{font-size:12px;font-weight:700;color:#C4A4FF}
+.wp-h h3{margin:4px 0 0;font-size:clamp(19px,2.2vw,24px);font-weight:900;color:#fff}
+@media(max-width:600px){.steps{margin-top:14px}.wst{width:32px;height:32px;font-size:12.5px}.wst.sup{font-size:10.5px}.st-line{left:16px;right:16px}.wpanel{padding:16px 14px;border-radius:18px}.wp-h h3{font-size:18px}}
 </style>
 </head>
 <body>
@@ -1128,7 +1147,9 @@ footer .seller a{color:var(--muted)}
     <div class="depth">5 000 м</div>
     <h2 class="disp grad h2">Маршрут<br>погружения</h2>
     <p class="pick-h">Нажми на неделю, чтобы увидеть, что внутри</p>
-    <div class="route">
+    <div class="steps" role="tablist" aria-label="Недели"><i class="st-line"><b id="st-fill"></b></i></div>
+    <div class="wpanel" id="wpanel" aria-live="polite"></div>
+    <div class="route" hidden>
       <details class="rw ">
         <summary><span class="rw-n">0</span><span class="rw-t"><b>Подготовка</b><small>2–6 ноя</small></span><span class="rw-ic"><svg><use href="#i-map"/></svg></span><i class="rw-ch" aria-hidden="true"></i></summary>
         <div class="rw-body"><div class="wk-two"><div class="wk-do"><small class="wk-h">Что делаешь</small><div class="wk-acts"><div class="wk-a"><span><svg><use href="#i-target"/></svg></span><p>Ставишь цель в цифрах</p></div><div class="wk-a"><span><svg><use href="#i-map"/></svg></span><p>Выбираешь траекторию</p></div><div class="wk-a"><span><svg><use href="#i-check"/></svg></span><p>Проверяем доступ к AI</p></div><div class="wk-a"><span><svg><use href="#i-chart"/></svg></span><p>Считаем стартовый Индекс влияния</p></div></div></div><div class="wk-res"><small class="wk-h">Итог недели</small><p class="wk-rt">Ты приходишь на старт с понятной целью, утверждённой траекторией и рабочим AI.</p></div></div></div>
@@ -1520,12 +1541,15 @@ form.addEventListener('submit',async ev=>{
   form.querySelector('.f-body').style.display='none';document.getElementById('f-ok').style.display='block';
 });
 
-/* маршрут: одна неделя открыта, кнопка «дальше» */
-const rws=[...document.querySelectorAll('.route .rw')];
-rws.forEach((d,k)=>{
-  d.addEventListener('toggle',()=>{if(!d.open)return;rws.forEach(o=>{if(o!==d)o.open=false;});
-    requestAnimationFrame(()=>{const r=d.getBoundingClientRect();if(r.top<70||r.bottom>innerHeight)scrollTo({top:scrollY+r.top-80,behavior:'smooth'});});});
-});
+/* маршрут: шаги + панель */
+(()=>{const ws=[...document.querySelectorAll('.route .rw')],bar=document.querySelector('.steps'),pan=document.getElementById('wpanel'),fill=document.getElementById('st-fill');
+const bs=ws.map((w,k)=>{const b=document.createElement('button');b.type='button';b.role='tab';b.className='wst'+(w.classList.contains('key')?' key':'')+(w.classList.contains('sup')?' sup':'');b.textContent=w.querySelector('.rw-n').textContent;b.setAttribute('aria-label',w.querySelector('.rw-t b').textContent);b.addEventListener('click',()=>sel(k));bar.appendChild(b);return b;});
+function sel(k){bs.forEach((b,j)=>{b.setAttribute('aria-selected',j===k);b.classList.toggle('done',j<k);});fill.style.width=(k/(bs.length-1)*100)+'%';
+ const w=ws[k];pan.innerHTML='<div class="wp-h"><span class="wp-n">'+(k===ws.length-1?'Сопровождение':'Неделя '+w.querySelector('.rw-n').textContent)+' · '+w.querySelector('.rw-t small').textContent+'</span><h3>'+w.querySelector('.rw-t b').textContent+'</h3></div>'+w.querySelector('.rw-body').innerHTML;
+ pan.classList.remove('swap');void pan.offsetWidth;pan.classList.add('swap');}
+sel(0);
+let x0=null;pan.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});pan.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;const k=bs.findIndex(b=>b.getAttribute('aria-selected')==='true');if(Math.abs(dx)>50)sel(Math.max(0,Math.min(bs.length-1,k+(dx<0?1:-1))));});
+})();
 </script>
 </body>
 </html>
