@@ -97,6 +97,39 @@ button{font-family:var(--f)}
   .portrait{max-width:300px;border-radius:160px 160px 24px 24px}
 }
 
+
+/* HERO A */
+.hero-grid{grid-template-columns:1.15fr .85fr!important;gap:56px!important;align-items:center!important}
+.hero h1{font-size:clamp(50px,6.3vw,104px)!important}
+.what{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border-radius:999px;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.35);font-size:14.5px;font-weight:700;color:#fff;margin-bottom:26px;backdrop-filter:blur(8px)}
+.dotc{width:8px;height:8px;border-radius:50%;background:var(--cb);box-shadow:0 0 12px var(--c)}
+.hero .sub{font-size:clamp(19px,2vw,23px)!important;color:#fff!important;margin:26px 0 32px!important;max-width:520px}
+.h-meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:30px;font-size:14.5px;color:var(--dim)}
+.h-meta span{display:inline-flex;align-items:center;gap:8px}
+.h-meta span+span::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--muted)}
+.h-meta b{color:#fff}
+.glass{position:relative;border-radius:30px;padding:28px;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.03) 45%,rgba(91,47,190,.18));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);box-shadow:0 40px 120px -40px rgba(91,47,190,.9),inset 0 1px 0 rgba(255,255,255,.18)}
+.glass::before{content:'';position:absolute;inset:-1px;border-radius:30px;padding:1px;background:linear-gradient(160deg,rgba(196,164,255,.7),transparent 40%,rgba(0,196,212,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.g-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--dim);margin-bottom:18px}
+.g-top i{width:44px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--vb),var(--cb))}
+.g-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.g-list li{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:rgba(7,7,13,.45);border:1px solid rgba(255,255,255,.08)}
+.g-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(180deg,rgba(169,131,242,.45),rgba(91,47,190,.35));border:1px solid rgba(196,164,255,.4)}
+.g-ic svg{width:24px;height:24px;color:#fff}
+.g-list b{display:block;font-size:16.5px;line-height:1.2}
+.g-list small{display:block;font-size:13.5px;line-height:1.35;color:var(--muted);margin-top:3px}
+@media(max-width:600px){.g-list li{padding:11px 12px}.g-ic{width:40px;height:40px}.g-list b{font-size:15.5px}}
+.g-time{margin-top:20px}
+.g-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.g-bar i{display:block;width:100%;height:100%;background:linear-gradient(90deg,var(--vd),var(--vb) 70%,var(--cb));transform-origin:left;animation:fillbar 1.6s .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fillbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.g-ends{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:8px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr!important;gap:36px!important}.glass{padding:20px}.what{font-size:13px}}
+.hero .what,.glass{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.glass{animation-delay:.3s}
+.h-meta{opacity:0;animation:rise .9s .55s cubic-bezier(.2,.7,.2,1) forwards}
+@media(prefers-reduced-motion:reduce){.hero .what,.glass,.h-meta{opacity:1;transform:none}}
+
 /* SIGNALS */
 .signals{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:28px;overflow:hidden;margin-top:48px}
 .sig{background:var(--bg);padding:30px 28px;display:flex;gap:18px;align-items:flex-start;min-height:150px}
@@ -516,20 +549,29 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:ce
 <section class="hero" data-depth="0" data-name="поверхность">
   <div class="bg"></div>
   <div class="wrap hero-grid">
-    <div>
-      <div class="depth">Океан влияния</div>
+    <div class="h-left">
+      <div class="what"><span class="dotc"></span>Программа по маркетингу личности и AI · 6 недель</div>
       <h1 class="disp grad"><span>Ты глубже,</span><span>чем тебя</span><span>видно</span></h1>
-      <p class="sub">6 недель, чтобы раскрыть свою ценность и умножить её через AI. Своя AI-команда агентов, своя платформа и свой поток клиентов.</p>
+      <p class="sub">Раскроем твою ценность, упакуем её и умножим через AI.</p>
       <div class="cta">
         <a class="btn btn-p" href="#apply">Подать заявку</a>
-        <a class="btn btn-g" href="#program">Смотреть программу</a>
+        <a class="btn btn-g" href="#program">Программа</a>
       </div>
-      <div class="facts-row">
-        <div><b>7.11</b><span>старт</span></div>
-        <div><b>6 + 4</b><span>недель спринта и сопровождения</span></div>
-        <div><b>10</b><span>мест в группе</span></div>
-      </div>
+      <div class="h-meta"><span><b>Старт 7 ноября</b></span><span>10 мест в группе</span><span>Ранняя цена до 31 октября</span></div>
     </div>
+    <aside class="glass" aria-label="Результат программы">
+      <div class="g-top"><span>Через 6 недель у тебя</span><i></i></div>
+      <ul class="g-list">
+        <li><span class="g-ic"><svg><use href="#i-gem"/></svg></span><div><b>Упакованная ценность</b><small>позиционирование и оффер</small></div></li>
+        <li><span class="g-ic"><svg><use href="#i-team"/></svg></span><div><b>Своя AI-команда</b><small>агенты делают работу за тебя</small></div></li>
+        <li><span class="g-ic"><svg><use href="#i-site"/></svg></span><div><b>Свой сайт за неделю</b><small>без программиста</small></div></li>
+        <li><span class="g-ic"><svg><use href="#i-magnet"/></svg></span><div><b>Поток клиентов</b><small>свой канал и система продаж</small></div></li>
+      </ul>
+      <div class="g-time">
+        <div class="g-bar"><i></i></div>
+        <div class="g-ends"><span>7.11 · старт</span><span>19.12 · Demo Day</span></div>
+      </div>
+    </aside>
   </div>
 </section>
 
