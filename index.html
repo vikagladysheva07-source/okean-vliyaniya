@@ -1170,6 +1170,16 @@ textarea{min-height:68px}
 @media(max-width:760px){.loot{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.loot{grid-template-columns:1fr}}
 .price-sub{max-width:520px;margin-top:-4px}
+
+/* telegram-карточка */
+.tgcard{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:30px;border-radius:26px;background:radial-gradient(ellipse at top,rgba(91,47,190,.28),transparent 60%),#0D0B15;border:1px solid rgba(196,164,255,.28)}
+.tg-ic2{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg,#A983F2,#5B2FBE);border:1px solid rgba(225,208,255,.5)}
+.tg-ic2 svg{width:26px;height:26px;color:#fff}
+.tgcard h3{margin:4px 0 0;font-size:clamp(22px,2.6vw,30px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;color:#fff}
+.tgcard p{margin:0;font-size:15.5px;color:rgba(242,237,226,.8);max-width:420px}
+.tgcard .btn{margin-top:8px}
+.tgcard small{font-size:13px;color:var(--muted)}
+@media(max-width:600px){.tgcard{padding:22px;border-radius:22px}.tgcard .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -1207,7 +1217,7 @@ textarea{min-height:68px}
     <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 3 6 5 8 8M12 8c2-5 6-3 4 0"/></symbol>
     <symbol id="i-case" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/></symbol>
     <symbol id="i-seat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
-    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol><symbol id="i-arrow" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h54M46 4l10 8-10 8"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol><symbol id="i-tg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4 3 11l6 2.4L11.5 20l3-4.2L19 19 21 4z"/><path d="M9 13.4 21 4"/></symbol><symbol id="i-arrow" viewBox="0 0 60 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h54M46 4l10 8-10 8"/></symbol>
   </defs>
 </svg>
 
@@ -1225,7 +1235,7 @@ textarea{min-height:68px}
       <a class="l" href="#program">Программа</a>
       <a class="l" href="#author">Об авторе</a>
       <a class="l" href="#pricing">Тарифы</a>
-      <a class="btn btn-p btn-s" href="#apply">Подать заявку</a>
+      <a class="btn btn-p btn-s" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D1%83%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB" target="_blank" rel="noopener">Написать в Telegram</a>
     </nav>
   </div>
 </header>
@@ -1240,7 +1250,7 @@ textarea{min-height:68px}
       <h1 class="disp grad"><span>Ты глубже,</span><span>чем тебя видно</span></h1>
       <p class="sub">Программа по маркетингу личности и AI. За 6 недель раскроем твою ценность, упакуем её и умножим через AI.</p>
       <div class="cta">
-        <a class="btn btn-p" href="#apply">Подать заявку</a>
+        <a class="btn btn-p" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D1%83%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB" target="_blank" rel="noopener">Написать в Telegram</a>
         <a class="btn btn-g" href="#program">Программа</a>
       </div>
       <div class="hA-cards">
@@ -1449,7 +1459,7 @@ textarea{min-height:68px}
           <li><svg><use href="#i-check"/></svg>Платформа с трекером и Индексом влияния</li>
           <li><svg><use href="#i-check"/></svg>Чат группы, пары, Demo Day</li>
         </ul>
-        <a class="btn btn-g" href="#apply" data-plan="Группа">Подать заявку</a>
+        <a class="btn btn-g" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B2%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB%2C%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%3A%20%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0" target="_blank" rel="noopener">Выбрать этот формат</a>
       </div>
       <div class="plan pro">
         <span class="cap">3 места</span>
@@ -1463,7 +1473,7 @@ textarea{min-height:68px}
           <li><svg><use href="#i-check"/></svg>Личный чат, ответ в течение дня</li>
           <li><svg><use href="#i-check"/></svg>Приоритетный разбор на эфирах</li>
         </ul>
-        <a class="btn btn-p" href="#apply" data-plan="Индивидуально">Подать заявку</a>
+        <a class="btn btn-p" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B2%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB%2C%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82%3A%20%D0%98%D0%BD%D0%B4%D0%B8%D0%B2%D0%B8%D0%B4%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE" target="_blank" rel="noopener">Выбрать этот формат</a>
       </div>
     </div>
     <div class="addons bento-add">
@@ -1476,63 +1486,24 @@ textarea{min-height:68px}
   </div>
 </section>
 
-<section class="sec" id="apply" data-depth="11000" data-name="заявка" style="padding-top:0">
+<section class="sec" id="apply" data-depth="11000" data-name="как попасть" style="padding-top:0">
   <div class="wrap apply">
     <div>
-      <h2 class="disp grad h2">Заявка</h2>
-      <p class="sub">Две минуты на анкету. Потом созвон, где я честно скажу, подходит ли тебе программа.</p>
+      <h2 class="disp grad h2">Как попасть</h2>
+      <p class="sub">Напиши мне в Telegram. Потом созвон, где я честно скажу, подходит ли тебе программа.</p>
       <div class="flow">
-        <div class="fl"><span class="n">1</span><div><b>Анкета</b><p>4 вопроса</p></div></div>
+        <div class="fl"><span class="n">1</span><div><b>Сообщение в Telegram</b><p>Пара слов о себе и о цели</p></div></div>
         <div class="fl"><span class="n">2</span><div><b>Созвон 30 минут</b><p>Твоя ситуация и траектория</p></div></div>
         <div class="fl"><span class="n">3</span><div><b>Место в потоке</b><p>Оплата удобным способом и вход в неделю 0</p></div></div>
       </div>
     </div>
-    <form id="apply-form" novalidate>
-      <div class="f-body">
-        <div class="fg">
-          <span class="q">Что ближе к твоей ситуации?</span>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="track" value="Эксперт"><span><svg><use href="#i-user"/></svg>Эксперт или специалист</span></label>
-            <label class="opt"><input type="radio" name="track" value="Предприниматель"><span><svg><use href="#i-case"/></svg>Свой бизнес</span></label>
-            <label class="opt"><input type="radio" name="track" value="AI-специалист"><span><svg><use href="#i-bolt"/></svg>Хочу работать с AI</span></label>
-          </div>
-        </div>
-        <div class="fg">
-          <label class="q" for="goal">Чего хочется достичь за 2–3 месяца?<small>Пара предложений своими словами</small></label>
-          <textarea id="goal" name="goal"></textarea>
-        </div>
-        <div class="fg">
-          <span class="q">Ты уже работаешь с AI?</span>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="claude" value="Да, есть платная подписка"><span>Да, есть подписка</span></label>
-            <label class="opt"><input type="radio" name="claude" value="Есть аккаунт, без подписки"><span>Аккаунт без подписки</span></label>
-            <label class="opt"><input type="radio" name="claude" value="Ещё нет"><span>Ещё нет</span></label>
-          </div>
-        </div>
-        <div class="fg">
-          <span class="q">Какой формат интересен?</span>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="plan" value="Группа"><span>Группа</span></label>
-            <label class="opt"><input type="radio" name="plan" value="Индивидуально"><span>Индивидуально</span></label>
-            <label class="opt"><input type="radio" name="plan" value="Пока не знаю" checked><span>Пока не знаю</span></label>
-          </div>
-        </div>
-        <div class="fg">
-          <label class="q" for="name">Как к тебе обращаться и где написать?</label>
-          <input type="text" id="name" name="name" placeholder="Имя" autocomplete="given-name" style="margin-bottom:10px">
-          <input type="text" id="contact" name="contact" placeholder="Telegram или телефон">
-        </div>
-        <p class="f-index" id="f-index" hidden></p>
-        <label class="consent"><input type="checkbox" id="consent"><span>Я даю <a href="consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a>, в том числе на их передачу в Google LLC (США), и ознакомлен(-а) с <a href="privacy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a></span></label>
-        <button class="btn btn-p" type="submit">Отправить заявку</button>
-        <p class="f-err" id="f-err">Заполни все поля и отметь согласие, чтобы отправить заявку.</p>
-      </div>
-      <div class="f-ok" id="f-ok">
-        <div class="ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></div>
-        <h3 class="grad">Заявка у меня</h3>
-        <p>Напишу в течение дня, чтобы договориться о созвоне. Быстрее — сразу в <a href="https://t.me/wikki_shark" target="_blank" rel="noopener">@wikki_shark</a></p>
-      </div>
-    </form>
+    <div class="tgcard">
+      <span class="tg-ic2"><svg><use href="#i-tg"/></svg></span>
+      <h3>Напиши мне лично</h3>
+      <p>Одним сообщением: кто ты и чего хочешь. Отвечу в течение дня.</p>
+      <a class="btn btn-p" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D1%83%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB" target="_blank" rel="noopener">Написать в Telegram</a>
+      <small>@wikki_shark</small>
+    </div>
   </div>
 </section>
 
@@ -1556,7 +1527,7 @@ textarea{min-height:68px}
     <div class="depth">11 000 м · максимальная глубина</div>
     <h2 class="disp grad">Ты глубже,<br>чем тебя видно</h2>
     <p class="sub">Всё главное в тебе уже есть. Пора, чтобы это увидели.</p>
-    <span class="ringwrap"><span class="rings" aria-hidden="true"><i></i><i></i><i></i></span><a class="btn btn-p" href="#apply">Подать заявку</a></span>
+    <span class="ringwrap"><span class="rings" aria-hidden="true"><i></i><i></i><i></i></span><a class="btn btn-p" href="https://t.me/wikki_shark?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D1%83%20%C2%AB%D0%9E%D0%BA%D0%B5%D0%B0%D0%BD%20%D0%B2%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D1%8F%C2%BB" target="_blank" rel="noopener">Написать в Telegram</a></span>
   </div>
 </section>
 
@@ -1600,20 +1571,19 @@ textarea{min-height:68px}
           </div>
         </div>
         <div class="weak" id="o-weak" hidden></div>
-        <a class="btn btn-p" id="q-cta" href="#apply" hidden>Подать заявку с этим результатом</a>
+        <a class="btn btn-p" id="q-cta" href="https://t.me/wikki_shark" target="_blank" rel="noopener" hidden>Отправить результат в Telegram</a>
       <button type="button" class="qd-again" id="qd-again">Пройти заново</button>
     </div>
   </div>
 </dialog>
 
 <footer><div class="wrap"><div class="fw" aria-hidden="true"><i>W</i><i>I</i><i>K</i><i>K</i><i>I</i><i>.</i><i>O</i><i>C</i><i>E</i><i>A</i><i>N</i></div><img class="f-logo" src="assets/wikki-logo-transparent.png" alt="WIKKI.OCEAN"><span>© 2026 WIKKI.OCEAN · Океан влияния</span><a href="https://t.me/wikki_shark" target="_blank" rel="noopener">@wikki_shark</a>
-<div class="legal"><a href="oferta.html">Публичная оферта</a><a href="privacy.html">Политика обработки персональных данных</a><a href="consent.html">Согласие на обработку данных</a></div>
+<div class="legal"><a href="oferta.html">Публичная оферта</a></div>
 <div class="seller">Гладышева Виктория Ивановна · <a href="mailto:vikagladysheva07@gmail.com">vikagladysheva07@gmail.com</a></div></div></footer>
 
 
 <script>
 // Google Apps Script URL — вставить после развёртывания (см. GOOGLE_SHEETS_SETUP.md)
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztuZ8eqkfUFh13OGYIlWqVoB7I8YweTySs-7DqBQ3-MOQkSm6sZIPOgQG_v436dHJZ/exec';
 
 /* глубиномер */
 const secs=[...document.querySelectorAll('[data-depth]')];
@@ -1666,7 +1636,7 @@ function quiz(){
     : P[wi]+' → '+W[wi];
   ow.innerHTML='<b>Где вырастешь сильнее всего</b>'+weak; ow.hidden=false; qcta.hidden=false;
   quizResult=A[0]+', '+m+' м, индекс '+i+' (глубина '+d+', масштаб '+s+'), слабое звено: '+weak;
-  const fi=document.getElementById('f-index'); fi.textContent='Твой результат «'+A[0]+'», индекс '+i+' из 50, прикрепится к заявке.'; fi.hidden=false;
+  qcta.href='https://t.me/wikki_shark?text='+encodeURIComponent('Привет! Мой результат в тесте «Индекс влияния»: '+quizResult+'. Хочу в «Океан влияния»');
 }
 document.getElementById('quiz').addEventListener('change',quiz); quiz();
 
@@ -1713,23 +1683,6 @@ const T=[
 const tabs=[...document.querySelectorAll('.pick .pk')];
 function showT(i){const pk=document.querySelector('.pick');pk.classList.add('chosen');const tro=document.querySelector('.tr');const first=tro.hidden;tro.hidden=false;if(first&&innerWidth<700)setTimeout(()=>tro.scrollIntoView({behavior:'smooth',block:'start'}),80);tabs.forEach((b,j)=>b.setAttribute('aria-selected',j===i));document.getElementById('t-a').textContent=T[i].a;document.getElementById('t-b').textContent=T[i].b;const g=document.getElementById('t-c');g.innerHTML=T[i].c.map((x,k)=>'<div class="tg" style="--d:'+(k*50)+'ms"><span class="tg-w">'+(k+1)+' нед</span><span class="tg-ic"><svg><use href="#'+x[0]+'"/></svg></span><p>'+x[1]+'</p></div>').join('');const tr=document.querySelector('.tr');tr.classList.remove('swap');void tr.offsetWidth;tr.classList.add('swap');}
 tabs.forEach((b,i)=>b.addEventListener('click',()=>{if(b.getAttribute('aria-selected')==='true'){b.setAttribute('aria-selected','false');document.querySelector('.pick').classList.remove('chosen');document.querySelector('.tr').hidden=true;}else showT(i);}));
-
-/* тариф в анкете */
-document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{const r=document.querySelector('input[name=plan][value="'+b.dataset.plan+'"]');if(r)r.checked=true;}));
-
-/* анкета */
-const form=document.getElementById('apply-form');
-form.addEventListener('submit',async ev=>{
-  ev.preventDefault();
-  const fd=new FormData(form), err=document.getElementById('f-err');
-  const ok=fd.get('track')&&fd.get('claude')&&(fd.get('goal')||'').trim()&&(fd.get('name')||'').trim()&&(fd.get('contact')||'').trim()&&document.getElementById('consent').checked;
-  if(!ok){err.style.display='block';return;}
-  err.style.display='none';
-  const data={date:new Date().toLocaleString('ru-RU'),track:fd.get('track'),goal:fd.get('goal'),claude:fd.get('claude'),plan:fd.get('plan'),name:fd.get('name'),contact:fd.get('contact'),index:quizResult};
-  const btn=form.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Отправляю…';
-  try{if(SCRIPT_URL)await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)});}catch(e){}
-  form.querySelector('.f-body').style.display='none';document.getElementById('f-ok').style.display='block';
-});
 
 /* маршрут: одна неделя открыта */
 (()=>{const ws=[...document.querySelectorAll('.route .rw')];ws.forEach(d=>d.addEventListener('toggle',()=>{if(!d.open)return;ws.forEach(o=>{if(o!==d)o.open=false;});requestAnimationFrame(()=>{const r=d.getBoundingClientRect();if(r.top<70||r.top>innerHeight*.6)scrollTo({top:scrollY+r.top-90,behavior:'smooth'});});}));})();
