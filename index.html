@@ -1215,6 +1215,54 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;back
 .rw summary{align-items:center;padding:12px 14px 12px 10px}
 @media(max-width:600px){.rw-t b{font-size:15px}.rw-t em{font-size:12.5px}.lvl i{width:7px}.rw summary{padding:11px 12px 11px 8px}}
 .rw-t small{white-space:nowrap}
+
+/* ===== размеры чуть меньше ===== */
+.hero h1.disp{font-size:clamp(34px,4.3vw,56px)!important}
+.hero .sub{font-size:clamp(15px,1.25vw,17px)!important}
+.h2{font-size:clamp(24px,2.6vw,34px)!important}
+.sub{font-size:clamp(14.5px,1.2vw,16px)!important}
+.sec{padding-top:84px;padding-bottom:84px}
+.au2-name{font-size:clamp(34px,4.2vw,54px)!important}
+.au2-stats b{font-size:clamp(30px,3vw,40px)!important}
+.au2-stats .wide b{font-size:clamp(40px,4.6vw,60px)!important}
+.final h2{font-size:clamp(30px,4vw,52px)!important}
+.final{padding:130px 0}
+.plan h3{font-size:clamp(20px,2vw,25px)!important}
+.pr-row b,.price b{font-size:clamp(32px,3vw,40px)!important}
+.pr-row s{font-size:clamp(17px,1.6vw,21px)!important}
+.feat li{font-size:14.5px!important}
+.plan{padding:34px}
+.btn{height:48px;font-size:14.5px}
+.btn-s{height:40px}
+.pn p{font-size:14.5px}
+.hc p{font-size:14px}
+.rw-t b{font-size:15.5px}
+.rw-t em{font-size:12.5px}
+.faq summary{font-size:15.5px;padding-top:20px;padding-bottom:20px}
+.faq p{font-size:14.5px}
+.pick-h{font-size:15px}
+.qd-steps .qz legend{font-size:clamp(18px,2.4vw,21px)}
+.sig p,.tgcard p{font-size:14.5px}
+@media(max-width:600px){
+ .hero h1.disp{font-size:clamp(29px,8.4vw,34px)!important}
+ .hero .sub{font-size:14.5px!important}
+ .h2{font-size:clamp(21px,6.4vw,24px)!important}
+ .sub{font-size:14.5px!important}
+ .sec{padding-top:56px;padding-bottom:56px}
+ .au2-name{font-size:34px!important}
+ .au2-stats b{font-size:28px!important}
+ .au2-stats .wide b{font-size:40px!important}
+ .final h2{font-size:29px!important}
+ .final{padding:96px 0}
+ .plan h3{font-size:19px!important}
+ .pr-row b,.price b{font-size:31px!important}
+ .plan{padding:22px}
+ .rw-t b{font-size:14.5px}
+ .rw-t em{font-size:12px}
+ .faq summary{font-size:14.5px;padding-top:16px;padding-bottom:16px}
+ .btn{height:46px}
+ .hc p{font-size:13.5px}
+}
 </style>
 </head>
 <body>
@@ -1729,6 +1777,7 @@ if(fine&&!calm){
 (()=>{
   const cv=document.getElementById('gl');if(!cv||calm)return;
   if(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2)return;
+  const boot=()=>{
   const gl=cv.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,powerPreference:'low-power'});if(!gl)return;
   const vs='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
   const fs='#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nuniform vec2 r;uniform float t;uniform vec2 m;\nfloat h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}\nfloat n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}\nfloat fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}\nvoid main(){vec2 uv=gl_FragCoord.xy/r;float asp=r.x/r.y;vec2 p=vec2(uv.x*asp,uv.y);vec2 mp=vec2(m.x*asp,m.y);float d=length(p-mp);vec2 q=p*3.2;q+=normalize(p-mp+vec2(1e-4))*.10*exp(-d*3.2)*sin(d*20.-t*2.6);vec2 w=vec2(fbm(q+vec2(t*.05,t*.03)),fbm(q.yx+vec2(-t*.04,t*.06)+4.1));float c=fbm(q+w*1.7+t*.02);float line=1.0-smoothstep(0.0,.075,abs(c-.52));line=pow(line,1.6);float fy=smoothstep(.0,.95,uv.y);float rays=pow(max(0.,sin(p.x*6.+t*.15+n(vec2(p.x*3.,t*.1))*4.)),6.)*smoothstep(.35,1.,uv.y)*.10;float glow=exp(-d*4.8)*.16;vec3 col=mix(vec3(.36,.22,.78),vec3(.78,.66,1.),line);float a=line*.15*(.3+.7*fy)+rays*.6+glow*.6;gl_FragColor=vec4(col*a,a);}';
@@ -1747,7 +1796,9 @@ if(fine&&!calm){
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&vis)requestAnimationFrame(frame);});
   let first=true;
   function frame(now){if(dead||!vis||document.hidden)return;requestAnimationFrame(frame);if(prev&&cnt<24){sum+=now-prev;cnt++;if(cnt===24){const avg=sum/cnt;if(avg>42){dead=true;cv.style.display='none';return;}if(avg>26&&scale>.4){scale=.4;W=0;}}}prev=now;if(now-last<(narrow?33:16))return;last=now;size();mx+=(tx-mx)*.06;my+=(ty-my)*.06;gl.uniform2f(U.r,W,H);gl.uniform1f(U.t,(performance.now()-t0)/1000);gl.uniform2f(U.m,mx,my);gl.drawArrays(gl.TRIANGLES,0,3);if(first){first=false;cv.classList.add('on');}}
-  const go=()=>{let done=false;const start=()=>{if(done)return;done=true;setTimeout(()=>requestAnimationFrame(frame),500);};const cards=document.querySelector('.hA-cards');if(cards)cards.addEventListener('animationend',start,{once:true});setTimeout(start,5000);};
+    setTimeout(()=>requestAnimationFrame(frame),300);
+  };
+  const go=()=>{let done=false;const start=()=>{if(done)return;done=true;boot();};const cards=document.querySelector('.hA-cards');if(cards)cards.addEventListener('animationend',start,{once:true});setTimeout(start,5000);};
   if(document.readyState==='complete')go();else addEventListener('load',go);
 })();
 })();
