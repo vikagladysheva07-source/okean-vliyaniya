@@ -706,14 +706,14 @@ footer img{height:30px;width:auto;opacity:.85}
 .v-br2 .r{flex:1;display:grid;gap:6px;padding:8px;border-radius:9px;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.38)}
 .v-br2 .fd{height:10px;border-radius:5px;background:rgba(255,255,255,.2)}
 .v-br2 .nt{position:absolute;right:-6px;top:-8px;font:700 9px var(--f);padding:4px 9px;border-radius:99px;background:#C4A4FF;color:#1d1038;box-shadow:0 6px 16px -4px rgba(155,111,232,.8)}
-.v-fac{width:100%;display:grid;gap:11px;justify-items:center}
-.v-fac .st{display:flex;align-items:center;gap:5px;width:100%}
+.v-fac{width:100%;display:grid;grid-template-columns:minmax(0,1fr);gap:11px;justify-items:stretch}
+.v-fac .st{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}
 .v-fac .st span{font:600 8.5px var(--f);padding:4px 6px;border-radius:99px;border:1px solid rgba(196,164,255,.4);background:rgba(155,111,232,.16);white-space:nowrap}
-.v-fac .st i{flex:1;min-width:3px;border-top:1.5px dashed rgba(196,164,255,.5)}
+.v-fac .st i{flex:none;font-style:normal;font-size:12px;line-height:1;color:#C4A4FF;border:none}
 .v-fac .cl{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;width:100%}
 .v-fac .cl u{height:16px;border-radius:4px;background:rgba(255,255,255,.08)}
 .v-fac .cl u.on{background:linear-gradient(180deg,#C4A4FF,#7C4FD4)}
-.v-fac small{font:10px var(--f);color:var(--muted)}
+.v-fac small{font:10px var(--f);color:var(--muted);text-align:center}
 .v-fun{width:100%;display:grid;gap:5px;justify-items:center}
 .v-fun div{padding:8px 6px;text-align:center;font:700 10.5px var(--f);border-radius:8px;background:linear-gradient(90deg,rgba(124,79,212,calc(var(--o) + .1)),rgba(196,164,255,var(--o)));border:1px solid rgba(196,164,255,.35)}
 .v-sys{display:flex;align-items:center;gap:6px;width:100%}
@@ -912,7 +912,7 @@ const V={
  steps2:()=>`<div class="vz"><div class="v-chev">${[['01','Запрос'],['02','Анализ'],['03','Работа'],['04','Итог']].map(([n,t],k)=>`<div style="--o:${.16+k*.12}"><b>${n}</b><span>${t}</span></div>`).join('')}</div></div>`,
  tiers2:()=>`<div class="vz"><div class="v-tiers2"><div><b>Старт</b><i></i><i></i><u>₽</u></div><div class="m"><em>рекомендуем</em><b>Основной</b><i></i><i></i><i></i><u>₽₽</u></div><div><b>Премиум</b><i></i><i></i><i></i><u>₽₽₽</u></div></div></div>`,
  site2:()=>`<div class="vz"><div class="v-br2"><div class="bt"><i></i><i></i><i></i><span></span></div><div class="bb"><div class="l"><div class="ln v" style="width:88%"></div><div class="ln" style="width:64%"></div><div class="ln" style="width:48%"></div><div class="b2"></div></div><div class="r"><div class="fd"></div><div class="fd"></div><div class="b2 v"></div></div></div><div class="nt">Новая заявка</div></div></div>`,
- factory:()=>`<div class="vz"><div class="v-fac"><div class="st">${['Сценарий','Съёмка','Монтаж','Эфир'].map(x=>`<span>${x}</span>`).join('<i></i>')}</div><div class="cl">${Array.from({length:14},(_,k)=>`<u class="${[0,2,4,7,9,11].includes(k)?'on':''}"></u>`).join('')}</div><small>регулярные выпуски</small></div></div>`,
+ factory:()=>`<div class="vz"><div class="v-fac"><div class="st">${['Сценарий','Съёмка','Монтаж','Эфир'].map(x=>`<span>${x}</span>`).join('<i>›</i>')}</div><div class="cl">${Array.from({length:14},(_,k)=>`<u class="${[0,2,4,7,9,11].includes(k)?'on':''}"></u>`).join('')}</div><small>регулярные выпуски</small></div></div>`,
  funnel:()=>`<div class="vz"><div class="v-fun">${[['Список клиентов',100],['Разговоры',78],['Предложения',56],['Клиенты',36]].map(([t,w],k)=>`<div style="width:${w}%;--o:${.18+k*.12}">${t}</div>`).join('')}</div></div>`,
  sys:()=>`<div class="vz"><div class="v-sys"><div class="a">Ты</div><i></i><div class="b">AI</div><i></i><div class="c"><em>Сценарии</em><em>Монтаж</em><em>Сайт</em><em>Тексты оффера</em></div></div></div>`,
  photo:(src)=>`<div class="vz img ph"><img src="${src}" alt=""></div>`,
