@@ -527,6 +527,11 @@ footer img{height:30px;width:auto;opacity:.85}
 .stg-tools button{background:rgba(255,255,255,.05);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .chipsrow em,.cos em{background:rgba(255,255,255,.05)}
 .wr span{background:rgba(255,255,255,.06)}
+.wkd summary{grid-template-columns:minmax(0,1fr) 22px;gap:14px;padding:14px 20px}
+.wkd .wn{display:block;margin-bottom:5px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--vb)}
+.wkd .tt h4{margin-bottom:6px}
+.bd2{padding:2px 20px 18px 20px}
+@media(max-width:760px){.wkd summary{grid-template-columns:minmax(0,1fr) 18px;padding:13px 14px}.bd2{padding:2px 14px 16px 14px}}
 </style>
 </head>
 <body>
@@ -701,7 +706,7 @@ $('p-indexlead').textContent=N.indexLead; $('p-inote').textContent=N.indexNote;
 $('p-routelead').textContent=N.routeLead;
 const stageOf=w=>Math.floor((w-1)/2);
 $('p-tl').innerHTML=[0,0,1,1,2,2].map(k=>`<i class="${'abc'[k]}"></i>`).join('')+'<div class="tx">'+[1,2,3,4,5,6].map(n=>`<span>нед. ${n}</span>`).join('')+'</div>';
-$('p-stages').innerHTML='<div class="stg-tools rv"><button type="button" id="p-exp">Развернуть всё</button></div>'+N.stages.map((s,si)=>`<div class="stg rv"><div class="stg-h"><span class="bd">Этап ${si+1} · ${s.wk}</span><b>${s.t}</b></div><div class="wks">${s.weeks.map(w=>`<details class="wkd${w.n===6?' fin':''}"${w.n===1?' open':''}><summary><span class="n"><small>НЕДЕЛЯ</small><b>${w.n}</b></span><span class="tt"><h4>${w.t}</h4><span class="rs">${svg('check')}<span>${w.out.t}</span></span></span><i class="chev"></i></summary><div class="bd2"><div><small>Что делаем</small><ul>${w.do.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="why2"><small>Зачем это тебе</small><p>${w.out.v}</p></div></div></details>`).join('')}</div><div class="stg-r"><small>Итог этапа</small>${s.res}</div></div>`).join('');
+$('p-stages').innerHTML='<div class="stg-tools rv"><button type="button" id="p-exp">Развернуть всё</button></div>'+N.stages.map((s,si)=>`<div class="stg rv"><div class="stg-h"><span class="bd">Этап ${si+1} · ${s.wk}</span><b>${s.t}</b></div><div class="wks">${s.weeks.map(w=>`<details class="wkd${w.n===6?' fin':''}"${w.n===1?' open':''}><summary><span class="tt"><span class="wn">Неделя ${w.n}</span><h4>${w.t}</h4><span class="rs">${svg('check')}<span>${w.out.t}</span></span></span><i class="chev"></i></summary><div class="bd2"><div><small>Что делаем</small><ul>${w.do.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="why2"><small>Зачем это тебе</small><p>${w.out.v}</p></div></div></details>`).join('')}</div><div class="stg-r"><small>Итог этапа</small>${s.res}</div></div>`).join('');
 (function(){const b=$('p-exp');b.addEventListener('click',()=>{const ds=[...document.querySelectorAll('.wkd')];const all=ds.every(d=>d.open);ds.forEach(d=>d.open=!all);b.textContent=all?'Развернуть всё':'Свернуть всё'})})();
 
 
