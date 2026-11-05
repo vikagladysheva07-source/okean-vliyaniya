@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><title>Демо платформы</title>
+<style>
+@font-face{font-family:'DM Sans';font-weight:400 900;src:url(fonts/dmsans-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:'DM Sans';font-weight:400 900;src:url(fonts/dmsans-latin-ext.woff2) format('woff2');unicode-range:U+0100-02FF,U+0400-04FF,U+20A0-20C0}
+:root{--ink:#1d1b30;--mut:#a09db4;--ac:#8a7bf2;--ac2:#b9aef8;--line:#ece9f6;--lime:#e3f29c;--org:#ffd6ab}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:900px;font-family:'DM Sans',-apple-system,'Helvetica Neue',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden}
+body{background:radial-gradient(ellipse 50% 60% at 15% 20%,#e6c8e8,transparent 70%),radial-gradient(ellipse 55% 60% at 85% 80%,#b8b0ee,transparent 70%),linear-gradient(135deg,#cdc5ec,#d9d0f1 50%,#c6bdea)}
+.win{position:absolute;left:50px;top:40px;width:1500px;height:820px;border-radius:30px;background:#f7f5fd;box-shadow:0 40px 90px -30px rgba(80,60,160,.45),0 0 0 1px rgba(255,255,255,.7) inset;display:grid;grid-template-columns:208px 1fr 290px;overflow:hidden}
+aside{padding:24px 18px;display:flex;flex-direction:column;background:#f1eefb}
+.lg{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:-.02em;padding:0 8px 26px}
+.lg i{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#a89bf6,#7a6af0)}
+.nv{display:grid;gap:3px}
+.nv div{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;font-size:14.5px;color:#6f6c88;font-weight:500}
+.nv div::before{content:'';width:15px;height:15px;border-radius:5px;border:1.6px solid #b5b0d3}
+.nv div.on{background:#fff;color:var(--ink);box-shadow:0 6px 18px -8px rgba(90,70,170,.35);border-left:3px solid var(--ac)}
+.nv div.on::before{background:var(--ac);border-color:var(--ac)}
+.help{margin-top:auto;padding:18px;border-radius:20px;background:linear-gradient(160deg,#e7e1fc,#d8d0f9);text-align:center}
+.help b{display:block;font-size:14.5px;margin-bottom:4px}.help span{display:block;font-size:12px;color:#6f6c88;line-height:1.35;margin-bottom:12px}
+.help u{text-decoration:none;display:block;padding:9px;border-radius:11px;background:var(--ac);color:#fff;font-weight:600;font-size:12.5px}
+main{padding:24px 26px;display:grid;grid-template-rows:auto auto auto auto;gap:16px;min-width:0;align-content:start}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top h1{font-size:30px;letter-spacing:-.02em}
+.rt{display:flex;align-items:center;gap:12px}
+.srch{width:230px;padding:11px 16px;border-radius:99px;background:#fff;font-size:13px;color:var(--mut);box-shadow:0 4px 14px -8px rgba(90,70,170,.3)}
+.bell{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px -8px rgba(90,70,170,.3)}
+.bell::after{content:'';width:12px;height:12px;border-radius:50% 50% 3px 3px;border:2px solid var(--ac)}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ffcfa0,#f2a67a);display:grid;place-items:center;font-weight:800;color:#fff}
+.sec h2{font-size:17px;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.sec h2 a{font-size:12px;color:var(--ac);font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.c{padding:16px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(90,70,170,.4)}
+.c .hd{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center}
+.ic::after{content:'';width:20px;height:20px;border-radius:6px;border:2px solid rgba(29,27,48,.55)}
+.ic.a{background:#e4defd}.ic.b{background:var(--lime)}.ic.c{background:var(--org)}
+.c b{font-size:15px;display:block}.c .hd span{font-size:12px;color:var(--mut)}
+.chips{display:flex;gap:7px;margin-bottom:12px}
+.chips em{font-style:normal;font-size:11px;padding:4px 9px;border-radius:8px;background:#f4f2fb;color:#6f6c88}
+.pb{height:5px;border-radius:4px;background:#ece9f6}.pb i{display:block;height:100%;border-radius:4px}
+.c small{display:block;font-size:11.5px;color:var(--mut);margin-top:6px}
+.mid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.ch,.gg{padding:18px 20px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(90,70,170,.4)}
+.hd2{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ch b,.gg b{font-size:16px}
+.pill{font-size:11.5px;padding:5px 12px;border-radius:99px;background:#f4f2fb;color:#6f6c88}
+.bars{display:flex;align-items:flex-end;gap:14px;height:118px;margin-top:30px;position:relative}
+.bars div{flex:1;border-radius:9px;background:#e4defd;position:relative}
+.bars div.on{background:var(--ac)}
+.bars div.on span{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;background:#fff;color:var(--ink);padding:3px 8px;border-radius:7px;box-shadow:0 6px 14px -6px rgba(90,70,170,.5);white-space:nowrap}
+.xl{display:flex;gap:14px;margin-top:6px;font-size:11px;color:var(--mut)}.xl span{flex:1;text-align:center}
+.gg{text-align:center}
+.arc{width:190px;height:100px;margin:12px auto 0;position:relative;overflow:hidden}
+.arc::before{content:'';position:absolute;left:0;top:0;width:190px;height:190px;border-radius:50%;background:conic-gradient(from 270deg,var(--ac) 0 140deg,#ece9f6 140deg 180deg,transparent 180deg);-webkit-mask:radial-gradient(circle,transparent 62px,#000 63px);mask:radial-gradient(circle,transparent 62px,#000 63px)}
+.arc b{position:absolute;left:0;right:0;bottom:2px;font-size:30px;letter-spacing:-.02em}
+.arc small{display:block;font-size:11px;color:var(--mut);font-weight:400}
+.gg p{font-size:12px;color:var(--mut);margin-top:8px}
+.tb{padding:14px 18px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(90,70,170,.4)}
+.tb h2{font-size:16px;display:flex;justify-content:space-between;margin-bottom:6px}.tb h2 a{font-size:12px;color:var(--ac);font-weight:600}
+.r{display:grid;grid-template-columns:44px 1.5fr .8fr .9fr 1fr 90px;gap:14px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.r:first-of-type{border-top:none}
+.r .ic{width:36px;height:36px;border-radius:11px}.r .ic::after{width:15px;height:15px}
+.r small{display:block;font-size:10.5px;color:var(--mut)}
+.r b{font-weight:600}
+.pr{display:flex;align-items:center;gap:8px;font-weight:600;font-size:12.5px}.pr .pb{flex:1}
+.btn{text-align:center;padding:7px 0;border-radius:9px;border:1px solid #d6d0f0;font-size:12px;font-weight:600;color:var(--ink)}
+.btn.f{background:var(--ac);color:#fff;border-color:var(--ac)}
+.rp{padding:24px 20px;display:grid;gap:16px;align-content:start;background:#f1eefb}
+.cal{padding:16px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(90,70,170,.4)}
+.cal .mh{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:10px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11.5px;color:#6f6c88}
+.cg i{font-style:normal;padding:5px 0;border-radius:8px}.cg i.h{color:var(--mut);font-size:10px}
+.cg i.on{background:var(--ac);color:#fff;font-weight:700}.cg i.dot{background:#e4defd;font-weight:700;color:var(--ink)}
+.ev{padding:16px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(90,70,170,.4)}
+.ev h3{font-size:15px;display:flex;justify-content:space-between;margin-bottom:8px}.ev h3 a{font-size:11.5px;color:var(--ac);font-weight:600}
+.e{padding:9px 0;border-top:1px solid var(--line);font-size:13px}.e:first-of-type{border-top:none}
+.e b{display:block;font-weight:600}.e small{font-size:11px;color:var(--mut)}
+.demo{position:absolute;left:0;right:0;bottom:11px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(90,75,150,.55)}
+</style></head><body>
+<div class="win">
+<aside>
+  <div class="lg"><i></i>платформа</div>
+  <div class="nv"><div class="on">Обзор</div><div>Объекты</div><div>Ремонт</div><div>Цех</div><div>Сроки</div><div>Бюджет</div><div>Покупатели</div><div>Агенты</div></div>
+  <div class="help"><b>Нужна помощь?</b><span>Агент ответит по смете, срокам и заявкам</span><u>Написать</u></div>
+</aside>
+<main>
+  <div class="top"><h1>С возвращением, Алексей!</h1><div class="rt"><div class="srch">Поиск по объектам и заказам</div><div class="bell"></div><div class="av">А</div></div></div>
+  <div class="sec"><h2>Ваши объекты <a>Все объекты →</a></h2>
+    <div class="cards">
+      <div class="c"><div class="hd"><div class="ic a"></div><div><b>Объект 1 · Ремонт</b><span>2к · 54 м²</span></div></div><div class="chips"><em>бригада 2</em><em>до 28 ноя</em><em>2,1 млн ₽</em></div><div class="pb"><i style="width:70%;background:var(--ac)"></i></div><small>Завершено 70%</small></div>
+      <div class="c"><div class="hd"><div class="ic b"></div><div><b>Объект 2 · Мебель из цеха</b><span>1к · 38 м²</span></div></div><div class="chips"><em>кухня, шкафы</em><em>до 5 дек</em><em>0,9 млн ₽</em></div><div class="pb"><i style="width:45%;background:#b7cf3e"></i></div><small>Завершено 45%</small></div>
+      <div class="c"><div class="hd"><div class="ic c"></div><div><b>Объект 3 · Показ</b><span>3к · 76 м²</span></div></div><div class="chips"><em>показ 14 ноя</em><em>2 заявки</em><em>5,9 млн ₽</em></div><div class="pb"><i style="width:90%;background:#f2a35e"></i></div><small>Завершено 90%</small></div>
+    </div></div>
+  <div class="mid">
+    <div class="ch"><div class="hd2"><b>Расходы по неделям</b><span class="pill">ноябрь</span></div>
+      <div class="bars"><div style="height:42%"></div><div style="height:58%"></div><div style="height:36%"></div><div style="height:50%"></div><div class="on" style="height:82%"><span>480 тыс. ₽</span></div><div style="height:44%"></div><div style="height:56%"></div></div>
+      <div class="xl"><span>нед 1</span><span>нед 2</span><span>нед 3</span><span>нед 4</span><span>нед 5</span><span>нед 6</span><span>нед 7</span></div></div>
+    <div class="gg"><div class="hd2"><b>Прогресс по плану</b><span class="pill">месяц</span></div>
+      <div class="arc"><b>78%<small>плановая маржа</small></b></div>
+      <p>Вы опережаете график на 2 дня</p></div>
+  </div>
+  <div class="tb"><h2>Задачи по объектам <a>Все задачи →</a></h2>
+    <div class="r"><div class="ic a"></div><div><b>Смета объекта 4</b><small>Агент · расчёт</small></div><div><small>Срок</small>15 ноября</div><div><small>Ответственный</small>AI-агент</div><div class="pr">100% <div class="pb"><i style="width:100%;background:var(--ac)"></i></div></div><div class="btn">Готово</div></div>
+    <div class="r"><div class="ic b"></div><div><b>Сводка по бригаде</b><small>Объект 1 · ремонт</small></div><div><small>Срок</small>сегодня</div><div><small>Ответственный</small>AI-агент</div><div class="pr">80% <div class="pb"><i style="width:80%;background:#b7cf3e"></i></div></div><div class="btn f">Открыть</div></div>
+    <div class="r"><div class="ic c"></div><div><b>Кухня из цеха</b><small>Объект 2 · изготовление</small></div><div><small>Срок</small>20 ноября</div><div><small>Ответственный</small>Цех</div><div class="pr">60% <div class="pb"><i style="width:60%;background:#f2a35e"></i></div></div><div class="btn">Открыть</div></div>
+    <div class="r"><div class="ic a"></div><div><b>Описание объекта 3</b><small>Агент · объявление</small></div><div><small>Срок</small>13 ноября</div><div><small>Ответственный</small>AI-агент</div><div class="pr">100% <div class="pb"><i style="width:100%;background:var(--ac)"></i></div></div><div class="btn">Готово</div></div>
+  </div>
+</main>
+<div class="rp">
+  <div class="cal"><div class="mh"><span>‹</span><span>Ноябрь</span><span>›</span></div>
+    <div class="cg"><i class="h">пн</i><i class="h">вт</i><i class="h">ср</i><i class="h">чт</i><i class="h">пт</i><i class="h">сб</i><i class="h">вс</i>
+    <i>27</i><i>28</i><i>29</i><i>30</i><i>31</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i class="on">12</i><i>13</i><i class="dot">14</i><i>15</i><i>16</i><i>17</i><i>18</i><i>19</i><i class="dot">20</i><i>21</i><i>22</i><i>23</i><i>24</i><i>25</i><i>26</i><i>27</i><i class="dot">28</i><i>29</i><i>30</i></div></div>
+  <div class="ev"><h3>События <a>Все →</a></h3>
+    <div class="e"><b>Показ · объект 3</b><small>14 ноября · 12:00</small></div>
+    <div class="e"><b>Доставка кухни · объект 2</b><small>20 ноября · цех</small></div>
+    <div class="e"><b>Сдача ремонта · объект 1</b><small>28 ноября · бригада 2</small></div>
+    <div class="e"><b>Задаток по объекту 3</b><small>ждём от покупателя</small></div>
+    <div class="e"><b>Встреча с бригадой</b><small>еженедельно · пн 09:00</small></div></div>
+</div>
+</div>
+<div class="demo">Демо · условные данные</div>
+</body></html>

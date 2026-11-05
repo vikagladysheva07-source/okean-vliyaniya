@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#07070D">
+<title>Океан влияния · кабинет</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 900;font-display:swap;src:url(../assets/fonts/dmsans-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 900;font-display:swap;src:url(../assets/fonts/dmsans-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--bg:#07070D;--s1:#0F0D17;--s2:#14111F;--v:#9B6FE8;--vb:#C4A4FF;--vd:#5B2FBE;--text:#F2EDE2;--muted:rgba(242,237,226,.58);--line:rgba(196,164,255,.18);--f:'DM Sans',-apple-system,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{font-family:var(--f);background:radial-gradient(ellipse 80% 40% at 50% 0,rgba(91,47,190,.22),transparent 70%),var(--bg);color:var(--text);min-height:100svh;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+a{color:inherit}
+.app{max-width:760px;margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom))}
+[hidden]{display:none!important}
+/* заголовки и общие элементы */
+.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0 14px}
+.brand{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--vb);font-weight:700}
+.who{font-size:13px;color:var(--muted)}
+h1.t{font-size:clamp(26px,6vw,34px);font-weight:900;line-height:1.05;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:6px}
+.app h1.t+.card{margin-top:14px}
+h2.t{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--vb);font-weight:700;margin:26px 0 10px}
+.card{border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012) 60%,rgba(91,47,190,.1)),var(--s1);border:1px solid var(--line);padding:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;border-radius:999px;font-weight:700;font-size:15px;color:#fff;background:linear-gradient(180deg,#B691F8 0%,#8B5CE8 48%,#5B2FBE 100%);border:1px solid rgba(225,208,255,.5);box-shadow:0 14px 36px -14px rgba(155,111,232,.9),inset 0 1px 0 rgba(255,255,255,.4);text-decoration:none}
+.btn.g{background:rgba(255,255,255,.04);border-color:rgba(196,164,255,.3);box-shadow:none}
+.btn.s{height:38px;padding:0 16px;font-size:13.5px}
+.btn:disabled{opacity:.45}
+input[type=text],textarea{width:100%;background:#0B0A12;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px 15px;font-size:16px;outline:none}
+input:focus,textarea:focus{border-color:var(--v)}
+textarea{min-height:90px;resize:vertical}
+small.l{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.28);color:#E4D6FF}
+/* вход */
+.gate{min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:420px;margin:0 auto;padding:24px 16px}
+.gate .code{font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;text-align:center;font-size:20px}
+.err{color:#ff9e9e;font-size:14px;min-height:20px}
+/* путь */
+.hero{padding:6px 0 4px}
+.depth{display:grid;grid-template-columns:96px 1fr;gap:18px;align-items:center;margin-top:18px}
+.ring{position:relative;width:96px;height:96px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:rgba(255,255,255,.07)}
+.ring .fg{stroke:url(#rg);transition:stroke-dashoffset .8s cubic-bezier(.2,.7,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:900}
+.depth .m{font-size:32px;font-weight:900;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.depth .m small{font-size:15px;color:var(--muted);font-weight:600}
+.depth p{font-size:13px;color:var(--muted);margin-top:6px}
+.next{display:block;width:100%;text-align:left;margin-top:16px;padding:16px 18px;border-radius:18px;background:linear-gradient(160deg,rgba(169,131,242,.28),rgba(91,47,190,.16));border:1px solid rgba(225,208,255,.4)}
+.next small{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--vb);font-weight:700;margin-bottom:4px}
+.next b{display:block;font-size:16px;line-height:1.3}
+.path{position:relative;margin-top:6px;padding-left:46px}
+.path::before{content:'';position:absolute;left:19px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,#9B6FE8,rgba(155,111,232,.15))}
+.wk{position:relative;display:block;width:100%;text-align:left;padding:13px 14px;margin-bottom:8px;border-radius:16px;background:var(--s1);border:1px solid var(--line)}
+.wk .n{position:absolute;left:-46px;top:50%;margin-top:-18px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;background:#0B0A12;border:1.5px solid rgba(196,164,255,.45)}
+.wk.done .n{background:#5B2FBE;border-color:#C4A4FF}
+.wk.cur{border-color:rgba(225,208,255,.55);background:linear-gradient(160deg,rgba(169,131,242,.16),rgba(91,47,190,.08)),var(--s1)}
+.wk.lock{opacity:.55}
+.wk .k{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted)}
+.wk b{display:block;font-size:15.5px;margin-top:2px}
+.bar{height:3px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF);border-radius:3px;transition:width .5s}
+/* неделя */
+.back{display:inline-flex;align-items:center;gap:6px;padding:8px 0;color:var(--muted);font-size:14px}
+.goal{font-size:15.5px;line-height:1.5;color:rgba(242,237,226,.9);margin-top:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.task{display:grid;grid-template-columns:28px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer}
+.task:last-child{border-bottom:none}
+.cb{width:26px;height:26px;border-radius:8px;border:1.5px solid rgba(196,164,255,.5);display:grid;place-items:center;transition:background .2s,border-color .2s}
+.cb svg{width:14px;height:14px;opacity:0;transform:scale(.5);transition:.2s;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.task.on .cb{background:#7C4FD4;border-color:#C4A4FF}
+.task.on .cb svg{opacity:1;transform:none}
+.task b{font-size:15px;font-weight:600;line-height:1.35}
+.task.on b{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(196,164,255,.5)}
+.task small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+.mat{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:14px;background:var(--s1);border:1px solid var(--line);margin-bottom:8px;text-decoration:none}
+.mat .ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25);color:var(--vb)}
+.mat .ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mat b{display:block;font-size:14.5px}.mat small{font-size:12.5px;color:var(--muted)}
+.mat.soon{opacity:.55}
+.mat .tag{margin-left:auto;font-size:11px;color:var(--muted)}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--s1);font-size:13px;font-weight:600;line-height:1.25}
+.seg button.on{background:linear-gradient(180deg,rgba(169,131,242,.45),rgba(91,47,190,.35));border-color:rgba(225,208,255,.6)}
+.segd{font-size:12.5px;color:var(--muted);margin-top:8px;min-height:36px}
+.meet{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.meet:last-child{border-bottom:none}
+.meet b{font-size:14.5px;display:block}.meet small{font-size:12.5px;color:var(--muted)}
+.trackbox{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(155,111,232,.1);border:1px solid rgba(196,164,255,.25);font-size:14px}
+.trackbox small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--vb);font-weight:700;margin-bottom:3px}
+/* нижнее меню */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:8px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(7,7,13,.92) 40%)}
+.nav div{max-width:420px;margin:0 auto;display:flex;gap:4px;padding:5px;border-radius:999px;background:rgba(20,17,31,.92);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav button{flex:1;height:42px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted)}
+.nav button.on{color:#fff;background:linear-gradient(180deg,rgba(169,131,242,.5),rgba(91,47,190,.4))}
+.lib li{list-style:none;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14.5px}
+.lib li:last-child{border-bottom:none}
+.idx{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#1b1530;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-size:13.5px;z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.on{opacity:1}
+@media(max-width:520px){.app{padding-left:14px;padding-right:14px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#5B2FBE"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient></defs></svg>
+<script src="data.js"></script>
+<script>
+"use strict";
+const $=s=>document.querySelector(s),root=$('#root');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+let C=null,slot='',S=null;
+const IC={video:'<path d="M5 4h14v16H5z"/><path d="m10 9 5 3-5 3z"/>',file:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>',doc:'<path d="M6 4h12v16H6z"/><path d="M9 9h6M9 13h6"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/>'};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
+/* ---------- доступ ---------- */
+async function unlock(raw){
+  const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(code.length!==12)throw new Error('len');
+  const P=window.OKEAN,w=P.k.find(x=>x.s===code.slice(0,2));if(!w)throw new Error('no');
+  const enc=new TextEncoder(),base=await crypto.subtle.importKey('raw',enc.encode(code),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(w.salt),iterations:P.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+  const kraw=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(w.iv),additionalData:enc.encode('okean')},key,b64d(w.w));
+  const ck=await crypto.subtle.importKey('raw',kraw,'AES-GCM',false,['decrypt']);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(P.iv),additionalData:enc.encode('okean')},ck,b64d(P.c));
+  C=JSON.parse(new TextDecoder().decode(plain));slot=code.slice(0,2);
+  try{localStorage.setItem('okean:code',code)}catch(e){}
+}
+/* ---------- состояние ---------- */
+const key=()=>'okean:'+slot;
+function load(){let s={};try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch(e){}
+  S=Object.assign({name:'',track:'',goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},v:1},s);}
+function save(){try{localStorage.setItem(key(),JSON.stringify(S))}catch(e){toast('Не удалось сохранить на этом устройстве')}}
+const tasksOf=w=>w.tasks,allTasks=()=>C.weeks.flatMap(w=>w.tasks);
+const doneIn=w=>w.tasks.filter(t=>S.done[t.id]).length;
+const wprog=w=>w.tasks.length?doneIn(w)/w.tasks.length:0;
+const total=()=>{const a=allTasks();return a.length?a.filter(t=>S.done[t.id]).length/a.length:0};
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ');
+function depthNow(){ // метры: каждая выполненная задача открывает свою часть глубины недели
+  let m=0;C.weeks.forEach((w,i)=>{const prev=i?C.weeks[i-1].depth:0;m+=(w.depth-prev)*wprog(w)});return m}
+function curWeek(){return C.weeks.find(w=>doneIn(w)<w.tasks.length)||C.weeks[C.weeks.length-1]}
+/* ---------- экраны ---------- */
+let view='home',wn=0,tab='home';
+function nav(){return `<nav class="nav"><div><button data-go="home" class="${tab==='home'?'on':''}">Путь</button><button data-go="lib" class="${tab==='lib'?'on':''}">Материалы</button><button data-go="me" class="${tab==='me'?'on':''}">Я</button></div></nav>`}
+function head(){return `<div class="top"><span class="brand">Океан влияния</span><span class="who">${esc(S.name||'')}</span></div>`}
+function render(){
+  if(!S.name||!S.track){return setup()}
+  if(view==='week')return weekView();
+  if(tab==='lib')return libView();
+  if(tab==='me')return meView();
+  return home();
+}
+function gate(msg){
+  root.innerHTML=`<div class="gate"><span class="brand">Океан влияния</span><h1 class="t">Твой кабинет</h1><p style="color:var(--muted);font-size:15px">Введи личный код доступа, который я прислала в личные сообщения.</p><input class="code" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="00-XXXXX-XXXXX" maxlength="16"><div class="err" id="err">${msg||''}</div><button class="btn" id="go">Войти</button></div>`;
+  const inp=$('#code');inp.focus();
+  const go=async()=>{const b=$('#go');b.disabled=true;$('#err').textContent='';
+    try{await unlock(inp.value);load();view='home';tab='home';render()}catch(e){b.disabled=false;$('#err').textContent='Код не подошёл. Проверь, нет ли опечатки.'}};
+  $('#go').onclick=go;inp.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
+}
+function setup(){
+  root.innerHTML=`<div class="app">${head()}<h1 class="t">Давай знакомиться</h1><p class="goal">Эти данные хранятся только на твоём устройстве. Имя можно любое, хоть псевдоним.</p>
+  <h2 class="t">Как тебя называть</h2><input type="text" id="nm" placeholder="Имя или псевдоним" value="${esc(S.name)}" autocomplete="off">
+  <h2 class="t">Твоя траектория</h2><div id="trk">${C.tracks.map(t=>`<button class="card" data-t="${t.id}" style="display:block;width:100%;text-align:left;margin-bottom:8px;${S.track===t.id?'border-color:rgba(225,208,255,.7);background:linear-gradient(160deg,rgba(169,131,242,.3),rgba(91,47,190,.2))':''}"><b>${t.name}</b><br><small style="color:var(--muted)">${t.d}</small></button>`).join('')}</div>
+  <h2 class="t">Твоя точка Б через 3 месяца</h2><textarea id="gl" placeholder="Например: 5 клиентов по 80 000 ₽">${esc(S.goal)}</textarea>
+  <div style="margin-top:18px"><button class="btn" id="ok" style="width:100%">Начать</button></div></div>`;
+  $('#trk').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;S.track=b.dataset.t;save();S.name=$('#nm').value;S.goal=$('#gl').value;setup()};
+  $('#ok').onclick=()=>{S.name=$('#nm').value.trim();S.goal=$('#gl').value.trim();if(!S.name||!S.track){toast('Укажи имя и выбери траекторию');return}save();tab='home';view='home';render()};
+}
+function home(){
+  const p=total(),m=depthNow(),cw=curWeek(),nt=cw.tasks.find(t=>!S.done[t.id]);
+  const R=2*Math.PI*44;
+  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${esc(S.name)}, ты на глубине</h1>
+  <div class="depth"><div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-p)}"/></svg><b>${Math.round(p*100)}%</b></div>
+  <div><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Каждое выполненное задание опускает тебя глубже. Так выглядит твой путь по программе.</p></div></div>
+  ${nt?`<button class="next" data-w="${cw.n}"><small>Следующий шаг · ${cw.n===0?'подготовка':cw.n>6?'сопровождение':'неделя '+cw.n}</small><b>${esc(nt.text)}</b></button>`:`<div class="next"><small>Программа пройдена</small><b>Все задания выполнены. Ты молодец, расскажи мне, как всё прошло.</b></div>`}
+  </div><h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const pr=wprog(w),d=w.tasks.length&&pr===1;return `<button class="wk ${d?'done':''} ${w===cw&&!d?'cur':''}" data-w="${w.n}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${w.dates}</span><span>${doneIn(w)} из ${w.tasks.length}</span></span><b>${esc(w.title)}</b><div class="bar"><i style="width:${pr*100}%"></i></div></button>`}).join('')}</div></div>${nav()}`;
+  bind();
+}
+function weekView(){
+  const w=C.weeks.find(x=>x.n===wn),tn=(C.tracks.find(t=>t.id===S.track)||{}).name,tx=w.tracks&&w.tracks[S.track];
+  const sc=S.scale[w.n]||0;
+  root.innerHTML=`<div class="app">${head()}<button class="back" id="bk">← Все недели</button>
+  <span class="pill">${w.dates}${w.n===0?'':' · глубина '+fmt(w.depth)+' м'}</span><h1 class="t" style="margin-top:10px">${w.n===0?'':(w.n>6?'':'Неделя '+w.n+'. ')}${esc(w.title)}</h1><p class="goal">${esc(w.goal)}</p>
+  ${w.topics.length?`<div class="chips">${w.topics.map(t=>`<span class="pill" style="font-weight:600">${esc(t)}</span>`).join('')}</div>`:''}
+  ${tx?`<div class="trackbox"><small>Для твоей траектории · ${esc(tn)}</small>${esc(tx)}</div>`:''}
+  <h2 class="t">Задания · ${doneIn(w)} из ${w.tasks.length}</h2><div class="card" style="padding:4px 18px">${w.tasks.map(t=>`<div class="task ${S.done[t.id]?'on':''}" data-t="${t.id}"><span class="cb"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></span><div><b>${esc(t.text)}</b>${t.hint?`<small>${esc(t.hint)}</small>`:''}</div></div>`).join('')}</div>
+  ${w.meetings.length?`<h2 class="t">Живые встречи</h2><div class="card" style="padding:4px 18px">${w.meetings.map(m=>`<div class="meet"><div><b>${esc(m.t)}</b><small>${esc(m.d)}. Время и ссылку присылаю в чате группы.</small></div></div>`).join('')}</div>`:''}
+  ${w.materials.length?`<h2 class="t">Материалы</h2>${w.materials.map(m=>m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`).join('')}`:''}
+  <h2 class="t">Оценка твоего результата недели</h2><div class="seg" id="sc">${C.scale.map(s=>`<button data-n="${s.n}" class="${sc===s.n?'on':''}">${s.n}. ${s.t}</button>`).join('')}</div><div class="segd" id="scd">${sc?esc(C.scale[sc-1].d):'Оцени честно: к следующему разбору черновик доводится до «Работает».'}</div>
+  <h2 class="t">Мои заметки</h2><textarea id="nt" placeholder="Что получилось, что мешает, что спросить на разборе">${esc(S.notes[w.n]||'')}</textarea>
+  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn" id="rep" style="flex:1">Отправить отчёт мне</button></div></div>${nav()}`;
+  $('#bk').onclick=()=>{view='home';render();scrollTo(0,0)};
+  document.querySelectorAll('.task').forEach(el=>el.onclick=()=>{const id=el.dataset.t;S.done[id]=!S.done[id];save();weekView()});
+  document.querySelectorAll('#sc button').forEach(b=>b.onclick=()=>{S.scale[w.n]=+b.dataset.n;save();weekView()});
+  $('#nt').oninput=e=>{S.notes[w.n]=e.target.value;save()};
+  $('#rep').onclick=()=>{const done=w.tasks.filter(t=>S.done[t.id]).map(t=>'✓ '+t.text),open=w.tasks.filter(t=>!S.done[t.id]).map(t=>'○ '+t.text);
+    const txt=`Отчёт по неделе ${w.n}: ${w.title}\nМеня зовут: ${S.name}. Траектория: ${tn}\nВыполнено ${done.length} из ${w.tasks.length}\n${done.concat(open).join('\n')}${sc?'\nМоя оценка результата: '+sc+' ('+C.scale[sc-1].t+')':''}${S.notes[w.n]?'\nЗаметка: '+S.notes[w.n]:''}`;
+    window.open('https://t.me/'+C.telegram+'?text='+encodeURIComponent(txt),'_blank')};
+  scrollTo(0,0);
+}
+function libView(){
+  root.innerHTML=`<div class="app">${head()}<h1 class="t">Материалы</h1>
+  <h2 class="t">Бонусы</h2>${C.library.map(m=>m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24">${IC.file}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic"><svg viewBox="0 0 24 24">${IC.file}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`).join('')}
+  <h2 class="t">Правила игры</h2><div class="card lib"><ul>${C.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
+  <h2 class="t">Как оценивать результат недели</h2><div class="card lib"><ul>${C.scale.map(s=>`<li><b>${s.n}. ${s.t}.</b> ${esc(s.d)}</li>`).join('')}</ul></div>
+  <h2 class="t">Поддержка</h2><div class="card lib"><ul>${C.support.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
+  <div style="margin-top:16px"><a class="btn" style="width:100%" href="https://t.me/${C.telegram}" target="_blank" rel="noopener">Написать мне</a></div></div>${nav()}`;bind();
+}
+function meView(){
+  const tn=(C.tracks.find(t=>t.id===S.track)||{}).name;
+  root.innerHTML=`<div class="app">${head()}<h1 class="t">Я</h1>
+  <div class="card"><small class="l">Имя</small><b>${esc(S.name)}</b><small class="l" style="margin-top:12px">Траектория</small><b>${esc(tn)}</b><small class="l" style="margin-top:12px">Точка Б</small><div>${esc(S.goal||'не указана')}</div><div style="margin-top:14px"><button class="btn g s" id="ed">Изменить</button></div></div>
+  <h2 class="t">Индекс влияния</h2><div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="numeric" id="i1" placeholder="из 50" value="${esc(S.idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="numeric" id="i2" placeholder="из 50" value="${esc(S.idx.final)}"></div></div>
+  <p style="font-size:13px;color:var(--muted);margin-top:10px">Тест на странице программы. ${S.idx.start&&S.idx.final?'Рост: <b style="color:#fff">'+(+S.idx.final-+S.idx.start>=0?'+':'')+(+S.idx.final-+S.idx.start)+'</b>':''}</p><div style="margin-top:10px"><a class="btn g s" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a></div></div>
+  <h2 class="t">Перенос на другое устройство</h2><div class="card"><p style="font-size:13.5px;color:var(--muted)">Прогресс хранится только на этом устройстве. Скопируй код переноса и вставь его на другом, под тем же личным кодом доступа.</p><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn g s" id="ex">Скопировать код переноса</button><button class="btn g s" id="im">Вставить код</button></div></div>
+  <div style="margin-top:18px"><button class="btn g s" id="out">Выйти из кабинета</button></div></div>${nav()}`;bind();
+  $('#ed').onclick=()=>{S.track='';save();render()};
+  $('#i1').oninput=e=>{S.idx.start=e.target.value.replace(/[^0-9]/g,'');save()};$('#i2').oninput=e=>{S.idx.final=e.target.value.replace(/[^0-9]/g,'');save()};
+  $('#ex').onclick=async()=>{const t=btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(t);toast('Код переноса скопирован')}catch(e){prompt('Скопируй код переноса:',t)}};
+  $('#im').onclick=()=>{const t=prompt('Вставь код переноса');if(!t)return;try{S=Object.assign(S,JSON.parse(decodeURIComponent(escape(atob(t.trim())))));save();toast('Прогресс перенесён');render()}catch(e){toast('Код не подошёл')}};
+  $('#out').onclick=()=>{try{localStorage.removeItem('okean:code')}catch(e){};C=null;gate()};
+}
+function bind(){
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;view='home';render();scrollTo(0,0)});
+  document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wn=+b.dataset.w;view='week';render()});
+}
+/* ---------- старт ---------- */
+(async()=>{
+  let saved='';try{saved=localStorage.getItem('okean:code')||''}catch(e){}
+  if(saved){try{await unlock(saved);load();return render()}catch(e){}}
+  gate();
+})();
+</script>
+</body>
+</html>
