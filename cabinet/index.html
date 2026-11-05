@@ -142,6 +142,8 @@ function load(){let s={};try{s=JSON.parse(localStorage.getItem(key())||'{}')}cat
   S=Object.assign({goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},v:1},s);S.name=PR.name||'';S.track=PR.track||'';S.plan=PR.plan||'';}
 function save(){try{localStorage.setItem(key(),JSON.stringify(S))}catch(e){toast('Не удалось сохранить на этом устройстве')}}
 const tasksOf=w=>w.tasks,allTasks=()=>C.weeks.flatMap(w=>w.tasks);
+const trIds=()=>(S.track||'').split('+').filter(Boolean);
+const trNames=()=>trIds().map(i=>(C.tracks.find(t=>t.id===i)||{}).name).filter(Boolean).join(' + ');
 const doneIn=w=>w.tasks.filter(t=>S.done[t.id]).length;
 const wprog=w=>w.tasks.length?doneIn(w)/w.tasks.length:0;
 const total=()=>{const a=allTasks();return a.length?a.filter(t=>S.done[t.id]).length/a.length:0};
@@ -169,7 +171,7 @@ function gate(msg){
 function home(){
   const p=total(),m=depthNow(),cw=curWeek(),nt=cw.tasks.find(t=>!S.done[t.id]);
   const R=2*Math.PI*44;
-  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${S.name?esc(S.name)+', ты':'Ты'} на глубине</h1>
+  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${S.name?esc(S.name)+', '+(/\sи\s/.test(S.name)?'вы':'ты'):'Ты'} на глубине</h1>
   <div class="depth"><div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-p)}"/></svg><b>${Math.round(p*100)}%</b></div>
   <div><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Каждое выполненное задание опускает тебя глубже. Так выглядит твой путь по программе.</p></div></div>
   ${nt?`<button class="next" data-w="${cw.n}"><small>Следующий шаг · ${cw.n===0?'подготовка':cw.n>6?'сопровождение':'неделя '+cw.n}</small><b>${esc(nt.text)}</b></button>`:`<div class="next"><small>Программа пройдена</small><b>Все задания выполнены. Ты молодец, расскажи мне, как всё прошло.</b></div>`}
@@ -177,12 +179,12 @@ function home(){
   bind();
 }
 function weekView(){
-  const w=C.weeks.find(x=>x.n===wn),tn=(C.tracks.find(t=>t.id===S.track)||{}).name,tx=w.tracks&&w.tracks[S.track];
+  const w=C.weeks.find(x=>x.n===wn),tn=trNames(),txs=trIds().map(i=>w.tracks&&w.tracks[i]).filter(Boolean);
   const sc=S.scale[w.n]||0;
   root.innerHTML=`<div class="app">${head()}<button class="back" id="bk">← Все недели</button>
   <span class="pill">${w.dates}${w.n===0?'':' · глубина '+fmt(w.depth)+' м'}</span><h1 class="t" style="margin-top:10px">${w.n===0?'':(w.n>6?'':'Неделя '+w.n+'. ')}${esc(w.title)}</h1><p class="goal">${esc(w.goal)}</p>
   ${w.topics.length?`<div class="chips">${w.topics.map(t=>`<span class="pill" style="font-weight:600">${esc(t)}</span>`).join('')}</div>`:''}
-  ${tx?`<div class="trackbox"><small>Для твоей траектории · ${esc(tn)}</small>${esc(tx)}</div>`:''}
+  ${txs.length?`<div class="trackbox"><small>Для твоей траектории · ${esc(tn)}</small>${txs.map(esc).join('<br>')}</div>`:''}
   <h2 class="t">Задания · ${doneIn(w)} из ${w.tasks.length}</h2><div class="card" style="padding:4px 18px">${w.tasks.map(t=>`<div class="task ${S.done[t.id]?'on':''}" data-t="${t.id}"><span class="cb"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></span><div><b>${esc(t.text)}</b>${t.hint?`<small>${esc(t.hint)}</small>`:''}</div></div>`).join('')}</div>
   ${w.meetings.length?`<h2 class="t">Живые встречи</h2><div class="card" style="padding:4px 18px">${w.meetings.map(m=>`<div class="meet"><div><b>${esc(m.t)}</b><small>${esc(m.d)}. Время и ссылку присылаю в чате группы.</small></div></div>`).join('')}</div>`:''}
   ${w.materials.length?`<h2 class="t">Материалы</h2>${w.materials.map(m=>m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`).join('')}`:''}
@@ -207,7 +209,7 @@ function libView(){
   <div style="margin-top:16px"><a class="btn" style="width:100%" href="https://t.me/${C.telegram}" target="_blank" rel="noopener">Написать мне</a></div></div>${nav()}`;bind();
 }
 function meView(){
-  const tn=(C.tracks.find(t=>t.id===S.track)||{}).name;
+  const tn=trNames();
   root.innerHTML=`<div class="app">${head()}<h1 class="t">Я</h1>
   <div class="card">${S.name?`<small class="l">Имя</small><b>${esc(S.name)}</b>`:''}${tn?`<small class="l" style="margin-top:12px">Траектория</small><b>${esc(tn)}</b>`:''}${S.plan?`<small class="l" style="margin-top:12px">Программа</small><b>${esc(S.plan)}</b>`:''}<small class="l" style="margin-top:12px">Моя точка Б через 3 месяца</small><textarea id="gl" placeholder="Например: 5 клиентов по 80 000 ₽">${esc(S.goal)}</textarea></div>
   <h2 class="t">Индекс влияния</h2><div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="numeric" id="i1" placeholder="из 50" value="${esc(S.idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="numeric" id="i2" placeholder="из 50" value="${esc(S.idx.final)}"></div></div>
