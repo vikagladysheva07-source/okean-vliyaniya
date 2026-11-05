@@ -119,7 +119,7 @@ small.l{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 const $=s=>document.querySelector(s),root=$('#root');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-let C=null,slot='',S=null;
+let C=null,slot='',S=null,PR={};
 const IC={video:'<path d="M5 4h14v16H5z"/><path d="m10 9 5 3-5 3z"/>',file:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>',doc:'<path d="M6 4h12v16H6z"/><path d="M9 9h6M9 13h6"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/>'};
 const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
 /* ---------- доступ ---------- */
@@ -129,8 +129,9 @@ async function unlock(raw){
   const P=window.OKEAN,w=P.k.find(x=>x.s===code.slice(0,2));if(!w)throw new Error('no');
   const enc=new TextEncoder(),base=await crypto.subtle.importKey('raw',enc.encode(code),'PBKDF2',false,['deriveKey']);
   const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(w.salt),iterations:P.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
-  const kraw=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(w.iv),additionalData:enc.encode('okean')},key,b64d(w.w));
-  const ck=await crypto.subtle.importKey('raw',kraw,'AES-GCM',false,['decrypt']);
+  const wd=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(w.iv),additionalData:enc.encode('okean')},key,b64d(w.w))));
+  PR=wd.p||{};
+  const ck=await crypto.subtle.importKey('raw',b64d(wd.k),'AES-GCM',false,['decrypt']);
   const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(P.iv),additionalData:enc.encode('okean')},ck,b64d(P.c));
   C=JSON.parse(new TextDecoder().decode(plain));slot=code.slice(0,2);
   try{localStorage.setItem('okean:code',code)}catch(e){}
@@ -138,7 +139,7 @@ async function unlock(raw){
 /* ---------- состояние ---------- */
 const key=()=>'okean:'+slot;
 function load(){let s={};try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch(e){}
-  S=Object.assign({name:'',track:'',goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},v:1},s);}
+  S=Object.assign({goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},v:1},s);S.name=PR.name||'';S.track=PR.track||'';S.plan=PR.plan||'';}
 function save(){try{localStorage.setItem(key(),JSON.stringify(S))}catch(e){toast('Не удалось сохранить на этом устройстве')}}
 const tasksOf=w=>w.tasks,allTasks=()=>C.weeks.flatMap(w=>w.tasks);
 const doneIn=w=>w.tasks.filter(t=>S.done[t.id]).length;
@@ -153,7 +154,6 @@ let view='home',wn=0,tab='home';
 function nav(){return `<nav class="nav"><div><button data-go="home" class="${tab==='home'?'on':''}">Путь</button><button data-go="lib" class="${tab==='lib'?'on':''}">Материалы</button><button data-go="me" class="${tab==='me'?'on':''}">Я</button></div></nav>`}
 function head(){return `<div class="top"><span class="brand">Океан влияния</span><span class="who">${esc(S.name||'')}</span></div>`}
 function render(){
-  if(!S.name||!S.track){return setup()}
   if(view==='week')return weekView();
   if(tab==='lib')return libView();
   if(tab==='me')return meView();
@@ -166,19 +166,10 @@ function gate(msg){
     try{await unlock(inp.value);load();view='home';tab='home';render()}catch(e){b.disabled=false;$('#err').textContent='Код не подошёл. Проверь, нет ли опечатки.'}};
   $('#go').onclick=go;inp.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 }
-function setup(){
-  root.innerHTML=`<div class="app">${head()}<h1 class="t">Давай знакомиться</h1><p class="goal">Эти данные хранятся только на твоём устройстве. Имя можно любое, хоть псевдоним.</p>
-  <h2 class="t">Как тебя называть</h2><input type="text" id="nm" placeholder="Имя или псевдоним" value="${esc(S.name)}" autocomplete="off">
-  <h2 class="t">Твоя траектория</h2><div id="trk">${C.tracks.map(t=>`<button class="card" data-t="${t.id}" style="display:block;width:100%;text-align:left;margin-bottom:8px;${S.track===t.id?'border-color:rgba(225,208,255,.7);background:linear-gradient(160deg,rgba(169,131,242,.3),rgba(91,47,190,.2))':''}"><b>${t.name}</b><br><small style="color:var(--muted)">${t.d}</small></button>`).join('')}</div>
-  <h2 class="t">Твоя точка Б через 3 месяца</h2><textarea id="gl" placeholder="Например: 5 клиентов по 80 000 ₽">${esc(S.goal)}</textarea>
-  <div style="margin-top:18px"><button class="btn" id="ok" style="width:100%">Начать</button></div></div>`;
-  $('#trk').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;S.track=b.dataset.t;save();S.name=$('#nm').value;S.goal=$('#gl').value;setup()};
-  $('#ok').onclick=()=>{S.name=$('#nm').value.trim();S.goal=$('#gl').value.trim();if(!S.name||!S.track){toast('Укажи имя и выбери траекторию');return}save();tab='home';view='home';render()};
-}
 function home(){
   const p=total(),m=depthNow(),cw=curWeek(),nt=cw.tasks.find(t=>!S.done[t.id]);
   const R=2*Math.PI*44;
-  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${esc(S.name)}, ты на глубине</h1>
+  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${S.name?esc(S.name)+', ты':'Ты'} на глубине</h1>
   <div class="depth"><div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-p)}"/></svg><b>${Math.round(p*100)}%</b></div>
   <div><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Каждое выполненное задание опускает тебя глубже. Так выглядит твой путь по программе.</p></div></div>
   ${nt?`<button class="next" data-w="${cw.n}"><small>Следующий шаг · ${cw.n===0?'подготовка':cw.n>6?'сопровождение':'неделя '+cw.n}</small><b>${esc(nt.text)}</b></button>`:`<div class="next"><small>Программа пройдена</small><b>Все задания выполнены. Ты молодец, расскажи мне, как всё прошло.</b></div>`}
@@ -203,7 +194,7 @@ function weekView(){
   document.querySelectorAll('#sc button').forEach(b=>b.onclick=()=>{S.scale[w.n]=+b.dataset.n;save();weekView()});
   $('#nt').oninput=e=>{S.notes[w.n]=e.target.value;save()};
   $('#rep').onclick=()=>{const done=w.tasks.filter(t=>S.done[t.id]).map(t=>'✓ '+t.text),open=w.tasks.filter(t=>!S.done[t.id]).map(t=>'○ '+t.text);
-    const txt=`Отчёт по неделе ${w.n}: ${w.title}\nМеня зовут: ${S.name}. Траектория: ${tn}\nВыполнено ${done.length} из ${w.tasks.length}\n${done.concat(open).join('\n')}${sc?'\nМоя оценка результата: '+sc+' ('+C.scale[sc-1].t+')':''}${S.notes[w.n]?'\nЗаметка: '+S.notes[w.n]:''}`;
+    const txt=`Отчёт по неделе ${w.n}: ${w.title}\n${S.name?'Меня зовут: '+S.name+'. ':''}${tn?'Траектория: '+tn:''}\nВыполнено ${done.length} из ${w.tasks.length}\n${done.concat(open).join('\n')}${sc?'\nМоя оценка результата: '+sc+' ('+C.scale[sc-1].t+')':''}${S.notes[w.n]?'\nЗаметка: '+S.notes[w.n]:''}`;
     window.open('https://t.me/'+C.telegram+'?text='+encodeURIComponent(txt),'_blank')};
   scrollTo(0,0);
 }
@@ -218,12 +209,12 @@ function libView(){
 function meView(){
   const tn=(C.tracks.find(t=>t.id===S.track)||{}).name;
   root.innerHTML=`<div class="app">${head()}<h1 class="t">Я</h1>
-  <div class="card"><small class="l">Имя</small><b>${esc(S.name)}</b><small class="l" style="margin-top:12px">Траектория</small><b>${esc(tn)}</b><small class="l" style="margin-top:12px">Точка Б</small><div>${esc(S.goal||'не указана')}</div><div style="margin-top:14px"><button class="btn g s" id="ed">Изменить</button></div></div>
+  <div class="card">${S.name?`<small class="l">Имя</small><b>${esc(S.name)}</b>`:''}${tn?`<small class="l" style="margin-top:12px">Траектория</small><b>${esc(tn)}</b>`:''}${S.plan?`<small class="l" style="margin-top:12px">Программа</small><b>${esc(S.plan)}</b>`:''}<small class="l" style="margin-top:12px">Моя точка Б через 3 месяца</small><textarea id="gl" placeholder="Например: 5 клиентов по 80 000 ₽">${esc(S.goal)}</textarea></div>
   <h2 class="t">Индекс влияния</h2><div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="numeric" id="i1" placeholder="из 50" value="${esc(S.idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="numeric" id="i2" placeholder="из 50" value="${esc(S.idx.final)}"></div></div>
   <p style="font-size:13px;color:var(--muted);margin-top:10px">Тест на странице программы. ${S.idx.start&&S.idx.final?'Рост: <b style="color:#fff">'+(+S.idx.final-+S.idx.start>=0?'+':'')+(+S.idx.final-+S.idx.start)+'</b>':''}</p><div style="margin-top:10px"><a class="btn g s" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a></div></div>
   <h2 class="t">Перенос на другое устройство</h2><div class="card"><p style="font-size:13.5px;color:var(--muted)">Прогресс хранится только на этом устройстве. Скопируй код переноса и вставь его на другом, под тем же личным кодом доступа.</p><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn g s" id="ex">Скопировать код переноса</button><button class="btn g s" id="im">Вставить код</button></div></div>
   <div style="margin-top:18px"><button class="btn g s" id="out">Выйти из кабинета</button></div></div>${nav()}`;bind();
-  $('#ed').onclick=()=>{S.track='';save();render()};
+  $('#gl').oninput=e=>{S.goal=e.target.value;save()};
   $('#i1').oninput=e=>{S.idx.start=e.target.value.replace(/[^0-9]/g,'');save()};$('#i2').oninput=e=>{S.idx.final=e.target.value.replace(/[^0-9]/g,'');save()};
   $('#ex').onclick=async()=>{const t=btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(t);toast('Код переноса скопирован')}catch(e){prompt('Скопируй код переноса:',t)}};
   $('#im').onclick=()=>{const t=prompt('Вставь код переноса');if(!t)return;try{S=Object.assign(S,JSON.parse(decodeURIComponent(escape(atob(t.trim())))));save();toast('Прогресс перенесён');render()}catch(e){toast('Код не подошёл')}};
