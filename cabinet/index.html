@@ -106,6 +106,34 @@ small.l{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .idx{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#1b1530;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-size:13.5px;z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
 .toast.on{opacity:1}
+
+/* v2: ритм, обратная связь, сроки */
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;background:rgba(155,111,232,.12);border:1px solid rgba(196,164,255,.28);color:#E4D6FF}
+.chip.warn{background:rgba(255,158,158,.1);border-color:rgba(255,158,158,.4);color:#ffc6c6}
+.chip.ok{background:rgba(120,220,170,.1);border-color:rgba(120,220,170,.35);color:#c5f2de}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.today{margin-top:16px;padding:18px;border-radius:20px;background:linear-gradient(160deg,rgba(169,131,242,.28),rgba(91,47,190,.16));border:1px solid rgba(225,208,255,.4)}
+.today .d{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--vb);font-weight:700}
+.today b{display:block;font-size:17px;line-height:1.3;margin-top:6px}
+.today .go{margin-top:14px}
+.news{margin-top:14px;padding:14px 16px;border-radius:16px;background:rgba(155,111,232,.12);border:1px solid rgba(196,164,255,.4)}
+.news small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--vb);font-weight:700;margin-bottom:4px}
+.news p{font-size:14.5px;line-height:1.45;white-space:pre-wrap}
+.news button{margin-top:10px;font-size:13px;font-weight:700;color:var(--vb)}
+.late{margin-top:12px;padding:14px 16px;border-radius:16px;background:rgba(255,158,158,.08);border:1px solid rgba(255,158,158,.35);font-size:14px}
+.late a{display:inline-block;margin-top:8px;font-weight:700;color:#ffc6c6}
+.wk.lock{opacity:.5}
+.wk.lock .n{border-style:dashed}
+.fbk{margin-top:14px;padding:16px;border-radius:18px;background:linear-gradient(160deg,rgba(169,131,242,.2),rgba(91,47,190,.1));border:1px solid rgba(225,208,255,.45)}
+.fbk small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--vb);font-weight:700;margin-bottom:6px}
+.fbk p{font-size:15px;line-height:1.5;white-space:pre-wrap}
+.acc{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(120,220,170,.14);border:1px solid rgba(120,220,170,.35);color:#c5f2de;vertical-align:2px}
+.lk{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--vb);text-decoration:underline;text-underline-offset:3px}
+.lk.has{color:#E4D6FF}
+.refl small.l{margin-top:12px}
+.refl textarea{min-height:64px}
+.cal{font-size:12.5px;font-weight:700;color:var(--vb);text-decoration:underline;text-underline-offset:3px;margin-left:10px}
+.adm{margin-top:10px;font-size:12.5px;color:var(--muted)}
 @media(max-width:520px){.app{padding-left:14px;padding-right:14px}}
 </style>
 </head>
@@ -139,7 +167,24 @@ async function unlock(raw){
 /* ---------- состояние ---------- */
 const key=()=>'okean:'+slot;
 function load(){let s={};try{s=JSON.parse(localStorage.getItem(key())||'{}')}catch(e){}
-  S=Object.assign({goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},v:1},s);S.name=PR.name||'';S.track=PR.track||'';S.plan=PR.plan||'';}
+  S=Object.assign({goal:'',done:{},notes:{},scale:{},wdone:{},idx:{start:'',final:''},refl:{},links:{},log:{},seen:{},v:2},s);S.name=PR.name||'';S.track=PR.track||'';S.plan=PR.plan||'';}
+/* ---- даты, сроки, серия ---- */
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+function today(){const q=new URLSearchParams(location.search).get('d');if(slot==='00'&&/^\d{4}-\d\d-\d\d$/.test(q||''))return q;return ymd(new Date())}
+const dnum=s=>Math.round(Date.UTC(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10))/864e5);
+const MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const WD=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+const fdate=s=>(+s.slice(8,10))+' '+MON[+s.slice(5,7)-1];
+const isOpen=w=>slot==='00'||(PR.unlock||[]).includes(w.n)||dnum(today())>=dnum(w.opens);
+const left=k=>k>2?'':k===0?' · сегодня последний день':k===1?' · остался 1 день':' · осталось '+k+' дня';
+const wdone=w=>w.tasks.length&&doneIn(w)===w.tasks.length;
+function dueInfo(w){if(wdone(w))return null;const k=dnum(w.due)-dnum(today());return k<0?{late:-k}:{left:k}}
+function touch(){const t=today();S.log[t]=(S.log[t]||0)+1}
+function streak(){let n=0,d=dnum(today());if(!S.log[ymdOf(d)])d--;while(S.log[ymdOf(d)]){n++;d--}return n}
+function ymdOf(n){const d=new Date(n*864e5);return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())}
+const isAcc=t=>(PR.ok||[]).includes(t.id);
+function lateWeeks(){return C.weeks.filter(w=>isOpen(w)&&w.tasks.length&&dueInfo(w)&&dueInfo(w).late>=2)}
 function save(){try{localStorage.setItem(key(),JSON.stringify(S))}catch(e){toast('Не удалось сохранить на этом устройстве')}}
 const tasksOf=w=>w.tasks,allTasks=()=>C.weeks.flatMap(w=>w.tasks);
 const trIds=()=>(S.track||'').split('+').filter(Boolean);
@@ -150,7 +195,7 @@ const total=()=>{const a=allTasks();return a.length?a.filter(t=>S.done[t.id]).le
 const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ');
 function depthNow(){ // метры: каждая выполненная задача открывает свою часть глубины недели
   let m=0;C.weeks.forEach((w,i)=>{const prev=i?C.weeks[i-1].depth:0;m+=(w.depth-prev)*wprog(w)});return m}
-function curWeek(){return C.weeks.find(w=>doneIn(w)<w.tasks.length)||C.weeks[C.weeks.length-1]}
+function curWeek(){return C.weeks.find(w=>isOpen(w)&&doneIn(w)<w.tasks.length)||C.weeks.filter(isOpen).pop()||C.weeks[0]}
 /* ---------- экраны ---------- */
 let view='home',wn=0,tab='home';
 function nav(){return `<nav class="nav"><div><button data-go="home" class="${tab==='home'?'on':''}">Путь</button><button data-go="lib" class="${tab==='lib'?'on':''}">Материалы</button><button data-go="me" class="${tab==='me'?'on':''}">Я</button></div></nav>`}
@@ -169,34 +214,49 @@ function gate(msg){
   $('#go').onclick=go;inp.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 }
 function home(){
-  const p=total(),m=depthNow(),cw=curWeek(),nt=cw.tasks.find(t=>!S.done[t.id]);
-  const R=2*Math.PI*44;
-  root.innerHTML=`<div class="app">${head()}<div class="hero"><h1 class="t">${S.name?esc(S.name)+', '+(/\sи\s/.test(S.name)?'вы':'ты'):'Ты'} на глубине</h1>
+  const p=total(),m=depthNow(),cw=curWeek(),nt=cw.tasks.find(t=>!S.done[t.id]),di=dueInfo(cw),st=streak(),lw=lateWeeks();
+  const R=2*Math.PI*44,t=today(),dt=new Date(dnum(t)*864e5),dow=WD[dt.getUTCDay()];
+  const news=(PR.news||[]).filter(n=>!S.seen[n.id]);
+  const label=cw.n===0?'подготовка':cw.n>6?'сопровождение':'неделя '+cw.n;
+  root.innerHTML=`<div class="app">${head()}
+  ${news.map(n=>`<div class="news"><small>Сообщение от меня</small><p>${esc(n.text)}</p><button data-seen="${n.id}">Прочитано</button></div>`).join('')}
+  <div class="hero"><h1 class="t">${S.name?esc(S.name)+', '+(/\sи\s/.test(S.name)?'вы':'ты'):'Ты'} на глубине</h1>
   <div class="depth"><div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-p)}"/></svg><b>${Math.round(p*100)}%</b></div>
-  <div><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Каждое выполненное задание опускает тебя глубже. Так выглядит твой путь по программе.</p></div></div>
-  ${nt?`<button class="next" data-w="${cw.n}"><small>Следующий шаг · ${cw.n===0?'подготовка':cw.n>6?'сопровождение':'неделя '+cw.n}</small><b>${esc(nt.text)}</b></button>`:`<div class="next"><small>Программа пройдена</small><b>Все задания выполнены. Ты молодец, расскажи мне, как всё прошло.</b></div>`}
-  </div><h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const pr=wprog(w),d=w.tasks.length&&pr===1;return `<button class="wk ${d?'done':''} ${w===cw&&!d?'cur':''}" data-w="${w.n}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${w.dates}</span><span>${doneIn(w)} из ${w.tasks.length}</span></span><b>${esc(w.title)}</b><div class="bar"><i style="width:${pr*100}%"></i></div></button>`}).join('')}</div></div>${nav()}`;
+  <div><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Каждое выполненное задание опускает тебя глубже. Так выглядит твой путь по программе.</p></div></div></div>
+  <div class="today"><span class="d">Сегодня · ${dow}, ${fdate(t)}</span>
+  ${nt?`<b>${esc(nt.text)}</b><div class="row"><span class="chip">${label}</span>${di?(di.late?`<span class="chip warn">срок прошёл ${di.late} дн. назад</span>`:`<span class="chip">до ${fdate(cw.due)}${left(di.left)}</span>`):''}${st?`<span class="chip ok">серия ${st} дн.</span>`:''}</div><button class="btn go" data-w="${cw.n}">Открыть неделю</button>`:`<b>Все открытые задания выполнены. Отличная работа! Следующая неделя откроется по расписанию.</b>${st?`<div class="row"><span class="chip ok">серия ${st} дн.</span></div>`:''}`}</div>
+  ${lw.length?`<div class="late">Есть хвосты по прошлым неделям (${lw.map(w=>w.n===0?'подготовка':'неделя '+w.n).join(', ')}). Напиши мне, и мы составим план, как наверстать.<br><a href="https://t.me/${C.telegram}?text=${encodeURIComponent('Привет! Есть хвосты по программе, нужен план, как наверстать.')}" target="_blank" rel="noopener">Написать мне</a></div>`:''}
+  <h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const op=isOpen(w),pr=wprog(w),d=wdone(w);return `<button class="wk ${d?'done':''} ${w===cw&&!d?'cur':''} ${op?'':'lock'}" data-w="${w.n}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${op?w.dates:'откроется '+fdate(w.opens)}</span><span>${op?doneIn(w)+' из '+w.tasks.length:''}</span></span><b>${esc(w.title)}</b><div class="bar"><i style="width:${op?pr*100:0}%"></i></div></button>`}).join('')}</div>${slot==='00'?'<p class="adm">Режим Виктории: все недели открыты. Дата для проверки: добавь ?d=2026-11-10 в адрес.</p>':''}</div>${nav()}`;
   bind();
+  document.querySelectorAll('[data-seen]').forEach(b=>b.onclick=()=>{S.seen[b.dataset.seen]=true;save();home()});
 }
+function icsFor(m,w){const d=new Date(m.when);if(isNaN(d))return '';const z=x=>x.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');const e=new Date(d.getTime()+90*6e4);
+  return 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Okean//RU\r\nBEGIN:VEVENT\r\nUID:'+w.n+m.t+'@okean\r\nDTSTAMP:'+z(new Date())+'\r\nDTSTART:'+z(d)+'\r\nDTEND:'+z(e)+'\r\nSUMMARY:Океан влияния: '+m.t+'\r\nDESCRIPTION:'+(m.url||'')+'\r\nEND:VEVENT\r\nEND:VCALENDAR'}
+function whenTxt(m){const d=new Date(m.when);if(isNaN(d))return '';return d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
 function weekView(){
   const w=C.weeks.find(x=>x.n===wn),tn=trNames(),txs=trIds().map(i=>w.tracks&&w.tracks[i]).filter(Boolean);
-  const sc=S.scale[w.n]||0;
+  const sc=S.scale[w.n]||0,di=dueInfo(w),fb=(PR.fb||{})[w.n],rf=S.refl[w.n]||{};
   root.innerHTML=`<div class="app">${head()}<button class="back" id="bk">← Все недели</button>
-  <span class="pill">${w.dates}${w.n===0?'':' · глубина '+fmt(w.depth)+' м'}</span><h1 class="t" style="margin-top:10px">${w.n===0?'':(w.n>6?'':'Неделя '+w.n+'. ')}${esc(w.title)}</h1><p class="goal">${esc(w.goal)}</p>
+  <div class="row" style="margin-top:0"><span class="pill">${w.dates}${w.n===0?'':' · глубина '+fmt(w.depth)+' м'}</span>${di?(di.late?`<span class="chip warn">срок прошёл ${di.late} дн. назад</span>`:`<span class="chip">до ${fdate(w.due)}${left(di.left)}</span>`):(w.tasks.length?'<span class="chip ok">неделя выполнена</span>':'')}</div>
+  <h1 class="t" style="margin-top:10px">${w.n===0?'':(w.n>6?'':'Неделя '+w.n+'. ')}${esc(w.title)}</h1><p class="goal">${esc(w.goal)}</p>
+  ${fb?`<div class="fbk"><small>Комментарий от меня</small><p>${esc(fb)}</p></div>`:''}
   ${w.topics.length?`<div class="chips">${w.topics.map(t=>`<span class="pill" style="font-weight:600">${esc(t)}</span>`).join('')}</div>`:''}
   ${txs.length?`<div class="trackbox"><small>Для твоей траектории · ${esc(tn)}</small>${txs.map(esc).join('<br>')}</div>`:''}
-  <h2 class="t">Задания · ${doneIn(w)} из ${w.tasks.length}</h2><div class="card" style="padding:4px 18px">${w.tasks.map(t=>`<div class="task ${S.done[t.id]?'on':''}" data-t="${t.id}"><span class="cb"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></span><div><b>${esc(t.text)}</b>${t.hint?`<small>${esc(t.hint)}</small>`:''}</div></div>`).join('')}</div>
-  ${w.meetings.length?`<h2 class="t">Живые встречи</h2><div class="card" style="padding:4px 18px">${w.meetings.map(m=>`<div class="meet"><div><b>${esc(m.t)}</b><small>${esc(m.d)}. Время и ссылку присылаю в чате группы.</small></div></div>`).join('')}</div>`:''}
+  <h2 class="t">Задания · ${doneIn(w)} из ${w.tasks.length}</h2><div class="card" style="padding:4px 18px">${w.tasks.map(t=>`<div class="task ${S.done[t.id]?'on':''}" data-t="${t.id}"><span class="cb"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></span><div><b>${esc(t.text)}${isAcc(t)?'<span class="acc">принято</span>':''}</b>${t.hint?`<small>${esc(t.hint)}</small>`:''}<span class="lk ${S.links[t.id]?'has':''}" data-lk="${t.id}">${S.links[t.id]?'Результат: '+esc(S.links[t.id].replace(/^https?:\/\//,'').slice(0,34)):'Прикрепить ссылку на результат'}</span></div></div>`).join('')}</div>
+  ${w.meetings.length?`<h2 class="t">Живые встречи</h2><div class="card" style="padding:4px 18px">${w.meetings.map((m,k)=>`<div class="meet"><div><b>${esc(m.t)}</b><small>${m.when?esc(whenTxt(m)):esc(m.d)+'. Время и ссылку присылаю в чате группы.'}</small>${m.when?`<div style="margin-top:6px">${m.url?`<a class="lk" href="${esc(m.url)}" target="_blank" rel="noopener">Ссылка на встречу</a>`:''}<span class="cal" data-ics="${k}">В календарь</span></div>`:''}</div></div>`).join('')}</div>`:''}
   ${w.materials.length?`<h2 class="t">Материалы</h2>${w.materials.map(m=>m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic"><svg viewBox="0 0 24 24">${IC[m.kind]||IC.link}</svg></span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`).join('')}`:''}
   <h2 class="t">Оценка твоего результата недели</h2><div class="seg" id="sc">${C.scale.map(s=>`<button data-n="${s.n}" class="${sc===s.n?'on':''}">${s.n}. ${s.t}</button>`).join('')}</div><div class="segd" id="scd">${sc?esc(C.scale[sc-1].d):'Оцени честно: к следующему разбору черновик доводится до «Работает».'}</div>
-  <h2 class="t">Мои заметки</h2><textarea id="nt" placeholder="Что получилось, что мешает, что спросить на разборе">${esc(S.notes[w.n]||'')}</textarea>
+  <h2 class="t">Итоги недели</h2><div class="card refl"><small class="l" style="margin-top:0">Что получилось</small><textarea data-r="a" placeholder="Главный результат недели">${esc(rf.a||'')}</textarea><small class="l">Что мешало</small><textarea data-r="b" placeholder="Что тормозило, где застрял">${esc(rf.b||'')}</textarea><small class="l">Что беру на следующую неделю</small><textarea data-r="c" placeholder="Один главный шаг">${esc(rf.c||'')}</textarea></div>
   <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn" id="rep" style="flex:1">Отправить отчёт мне</button></div></div>${nav()}`;
   $('#bk').onclick=()=>{view='home';render();scrollTo(0,0)};
-  document.querySelectorAll('.task').forEach(el=>el.onclick=()=>{const id=el.dataset.t;S.done[id]=!S.done[id];save();weekView()});
-  document.querySelectorAll('#sc button').forEach(b=>b.onclick=()=>{S.scale[w.n]=+b.dataset.n;save();weekView()});
-  $('#nt').oninput=e=>{S.notes[w.n]=e.target.value;save()};
-  $('#rep').onclick=()=>{const done=w.tasks.filter(t=>S.done[t.id]).map(t=>'✓ '+t.text),open=w.tasks.filter(t=>!S.done[t.id]).map(t=>'○ '+t.text);
-    const txt=`Отчёт по неделе ${w.n}: ${w.title}\n${S.name?'Меня зовут: '+S.name+'. ':''}${tn?'Траектория: '+tn:''}\nВыполнено ${done.length} из ${w.tasks.length}\n${done.concat(open).join('\n')}${sc?'\nМоя оценка результата: '+sc+' ('+C.scale[sc-1].t+')':''}${S.notes[w.n]?'\nЗаметка: '+S.notes[w.n]:''}`;
+  document.querySelectorAll('.task').forEach(el=>el.onclick=e=>{if(e.target.closest('[data-lk]'))return;const id=el.dataset.t;S.done[id]=!S.done[id];if(S.done[id])touch();save();const y=scrollY;weekView();scrollTo(0,y)});
+  document.querySelectorAll('[data-lk]').forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.lk,v=prompt('Вставь ссылку на результат (документ, сайт, папка). Пусто, чтобы убрать:',S.links[id]||'');if(v===null)return;if(v.trim())S.links[id]=v.trim();else delete S.links[id];touch();save();const y=scrollY;weekView();scrollTo(0,y)});
+  document.querySelectorAll('[data-ics]').forEach(el=>el.onclick=()=>{const m=w.meetings[+el.dataset.ics],s=icsFor(m,w);if(!s)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/calendar'}));a.download='okean-'+w.n+'.ics';a.click()});
+  document.querySelectorAll('#sc button').forEach(b=>b.onclick=()=>{S.scale[w.n]=+b.dataset.n;save();const y=scrollY;weekView();scrollTo(0,y)});
+  document.querySelectorAll('[data-r]').forEach(el=>el.oninput=e=>{S.refl[w.n]=Object.assign(S.refl[w.n]||{},{[el.dataset.r]:e.target.value});save()});
+  $('#rep').onclick=()=>{const L=w.tasks.map(t=>(S.done[t.id]?'✓ ':'○ ')+t.text+(S.links[t.id]?'\n   '+S.links[t.id]:''));
+    const r=S.refl[w.n]||{};
+    const txt=`Отчёт: ${w.n===0?'подготовка':'неделя '+w.n}. ${w.title}\n${S.name?'Меня зовут: '+S.name+'. ':''}${tn?'Траектория: '+tn:''}\nВыполнено ${doneIn(w)} из ${w.tasks.length}\n${L.join('\n')}${sc?'\nМоя оценка результата: '+sc+' ('+C.scale[sc-1].t+')':''}${r.a?'\nПолучилось: '+r.a:''}${r.b?'\nМешало: '+r.b:''}${r.c?'\nДальше: '+r.c:''}`;
     window.open('https://t.me/'+C.telegram+'?text='+encodeURIComponent(txt),'_blank')};
   scrollTo(0,0);
 }
@@ -224,7 +284,7 @@ function meView(){
 }
 function bind(){
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;view='home';render();scrollTo(0,0)});
-  document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wn=+b.dataset.w;view='week';render()});
+  document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{const w=C.weeks.find(x=>x.n===+b.dataset.w);if(!isOpen(w)){toast('Эта неделя откроется '+fdate(w.opens));return}wn=w.n;view='week';render()});
 }
 /* ---------- старт ---------- */
 (async()=>{
