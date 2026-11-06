@@ -624,7 +624,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .sxhd h1{font-size:clamp(28px,4.6vw,42px);font-weight:500;letter-spacing:-.025em;line-height:1.05;margin:0}.sxhd h1 b{font-weight:500;background:linear-gradient(90deg,#C4A4FF,#9B6FE8);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sxh3{display:flex;gap:22px;flex-wrap:wrap}.sxh3>div{display:flex;align-items:center;gap:11px}.sxic{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.22);flex:none}.sxic svg{width:19px;height:19px}
 .sxh3 b{display:block;font-size:30px;font-weight:500;line-height:1;letter-spacing:-.02em}.sxh3 small{display:block;font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap}
-.sxcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:640px;margin:18px 0 22px}
+.sxcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:440px;margin:18px 0 22px}
 .sxc span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.sxct{height:30px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(196,164,255,.14);overflow:hidden}
 .sxct i{display:flex;align-items:center;height:100%;padding:0 12px;border-radius:999px;font-style:normal;font-size:12.5px;font-weight:600;color:#fff;white-space:nowrap;background:linear-gradient(90deg,#4B2AA6,#6A3FD0)}
 .sxct.a i{background:linear-gradient(90deg,#7C4FD4,#B28CFF);box-shadow:0 0 18px -6px rgba(155,111,232,.9)}.sxct.o i{background:repeating-linear-gradient(135deg,rgba(255,255,255,.09) 0 6px,rgba(255,255,255,.02) 6px 12px)}
@@ -1002,7 +1002,7 @@ function homeV(){
   const cap=(l,v,w,cls)=>`<div class="sxc"><span>${l}</span><div class="sxct ${cls||''}"><i style="width:${Math.max(18,w)}%">${v}</i></div></div>`;
   /* фото */
   const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${as?'':`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
-   <div class="sxpc"><b>${esc(nm)}</b><div class="sxbd">${iv!=null?`<b>${fx(iv)}</b><span>индекс из 50</span>`:'<b>—</b><span>индекс</span>'}</div></div></div>`;
+   <div class="sxpc"><b>${esc(nm)}</b></div></div>`;
   /* индекс влияния (тест из 50) */
   const bar=(v,l,k)=>`<div class="sxb ${k}"><span class="sxbv">${v===null?'':fx(v)}</span><div class="sxbt"><i style="height:${v===null?100:Math.max(6,v/50*100)}%"></i></div><span class="sxbl">${l}</span></div>`;
   const idxT=`<div class="sx sxi"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
@@ -1038,7 +1038,7 @@ function homeV(){
    <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('tasks')}</span><div><b>${c.done}</b><small>принято из ${N}</small></div></div><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
-  <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}${cap('Индекс',iv!=null?fx(iv)+' из 50':'тест',iv!=null?iv/50*100:100,'o')}</div>
+  <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}</div>
   <div class="sxg">${photo}${idxT}${ring}${works}${prog}${tasks}</div>`;
 }
 function stTasks(adm){
