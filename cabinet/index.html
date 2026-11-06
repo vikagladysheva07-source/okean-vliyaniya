@@ -343,6 +343,22 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .cc2 .top{display:flex;align-items:center;gap:12px}.cc2 .x{flex:1;min-width:0}.cc2 .x b{display:block;font-size:17px;font-weight:500}.cc2 .x small{color:var(--muted);font-size:12.5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .dt2 summary{cursor:pointer;font-size:17px;font-weight:500;list-style:none}.dt2 summary::-webkit-details-marker{display:none}.dt2 summary:before{content:"+ ";color:var(--vb)}.dt2[open] summary{margin-bottom:14px}.dt2[open] summary:before{content:"− "}
+.sm2{padding:7px 14px;font-size:12.5px}
+.asb{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:10px 18px;background:rgba(155,111,232,.16);border-bottom:1px solid rgba(196,164,255,.4);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:13.5px}
+.plh{display:flex;align-items:center;gap:10px}.plh input{flex:1;font-size:17px;font-weight:500}
+.tkl{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.tk2{display:grid;grid-template-columns:auto 1fr auto 150px auto;gap:8px;align-items:center}
+.tk2 input{padding:9px 12px;font-size:14.5px}
+.tkst{width:24px;height:24px;border-radius:50%;border:2px solid rgba(196,164,255,.5);flex:none;display:inline-block;padding:0}
+.tkst.doing{border-color:var(--vb);background:linear-gradient(90deg,var(--v) 50%,transparent 50%)}.tkst.done{background:var(--v);border-color:var(--v)}
+.who2{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid rgba(196,164,255,.3);color:var(--muted);font-style:normal;white-space:nowrap}.who2.client{color:#FFB3B3;border-color:rgba(255,163,163,.4)}
+.rbt{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);color:var(--muted);text-align:center}
+.stg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:14px}
+.stc{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(196,164,255,.12)}
+.stc .top2{display:flex;justify-content:space-between;gap:8px;font-size:15px;margin-bottom:8px}.stc .top2 span{color:var(--muted);font-size:12.5px}
+.stc .tr2{height:5px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden;margin-bottom:10px}.stc .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
+.tkv{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px}.tkv .tkst{width:16px;height:16px;border-width:1.5px}.tkv span{flex:1}.tkv .dn{color:var(--muted);text-decoration:line-through}.tkv small{color:var(--muted);font-size:11.5px}
+@media(max-width:700px){.tk2{grid-template-columns:auto 1fr auto}.tk2 input[type=date]{grid-column:2/3}}
 </style>
 </head>
 <body>
@@ -501,9 +517,8 @@ function gate(msg){
   const inp=$('#code');inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter')A.login()});
 }
 /* ================= маршрутизатор ================= */
-function render(keep){
-  const y=scrollY;hash=location.hash||'#/';
-  const [_,r,a,b]=hash.split('/');
+function route(h){
+  hash=h;const [_,r,a,b]=hash.split('/');
   let html;
   if(ME.role==='client'){
     if(r==='approve')html=shell(clList('content'));
@@ -537,6 +552,24 @@ function render(keep){
     else if(r==='me')html=shell(meV(),false);
     else html=shell(homeV(),true);
   }
+  return html;
+}
+function asView(slot,rest){
+  const u=(AD.users||[]).find(x=>x.slot===slot);
+  if(!u||u.role==='admin')return '<a class="back" href="#/">← Назад</a><p class="sub">Кабинет не найден.</p>';
+  const real={ME,ST,CI};let html;
+  ME=Object.assign({},u,{h:real.ME.h});ST={p:pmap(slot),meta:mmap(slot),days:daysOf(slot)};CI=AI.filter(i=>i.slot===slot);
+  window.ASPFX='#/as/'+slot+'/';
+  try{html=route('#/'+String(rest||'').replace(/^\//,''))}finally{ME=real.ME;ST=real.ST;CI=real.CI}
+  html=html.replace(/(href|data-h)="#\//g,'$1="#/as/'+slot+'/').replace(/<button[^>]*data-a="out"[^>]*>[^<]*<\/button>/g,'');
+  const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
+  hash='#/as/'+slot+(rest||'');
+  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Менять здесь ничего нельзя.</span><a class="bt2" href="${back}">Выйти из просмотра</a></div>${html}`;
+}
+function render(keep){
+  const y=scrollY;hash=location.hash||'#/';window.ASPFX='';
+  const m=hash.match(/^#\/as\/([^/]+)(\/.*)?$/);
+  let html=(ME.role==='admin'&&m)?asView(m[1],m[2]):route(hash);
   root.innerHTML=html;
   if(keep)scrollTo(0,y);else scrollTo(0,0);
   if(window.AFTER){window.AFTER();window.AFTER=null}
@@ -569,7 +602,7 @@ function placeNodes(list){
   const p=document.getElementById('prd');if(!p)return;const L=p.getTotalLength();let h='';
   list.forEach((x,k)=>{const pt=p.getPointAtLength(L*(.03+.94*k/(list.length-1))),up=k%2===0;
     const body=`<g transform="translate(${pt.x} ${pt.y})">${x.cur?'<circle r="22" fill="#9B6FE8" opacity=".3"/>':''}<circle r="${x.cur?15:12}" fill="${x.done?'#9B6FE8':x.cur?'#fff':'#2A2445'}" stroke="${x.cur?'#9B6FE8':'#0C0A17'}" stroke-width="${x.cur?4:3}"/>${x.done?'<path d="M-4.5 0l3 3 6-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':`<text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="${x.cur?'#5B2FBE':'#8F8AA8'}">${x.n}</text>`}<text class="n" y="${up?-24:34}" text-anchor="middle">${x.l}</text></g>`;
-    h+=x.open?`<a href="#/week/${x.w}">${body}</a>`:body});
+    h+=x.open?`<a href="${window.ASPFX||'#/'}week/${x.w}">${body}</a>`:body});
   document.getElementById('pnd').innerHTML=h;
 }
 function homeV(){
@@ -582,7 +615,7 @@ function homeV(){
   const today3=cw.tasks.filter(t=>stOf(t.id)!=='done').slice(0,3);
   window.AFTER=()=>placeNodes(C.weeks.map(w=>({w:w.n,n:w.n===0?'0':w.n>6?'+':w.n,l:w.n===0?'Старт':w.n>6?'+'+(w.n-6):'Нед. '+w.n,done:wfull(w),cur:w===cw&&!wfull(w),open:isOpen(w)})));
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  ${hd2(`Привет, <b>${esc(firstName(nm)||'друг')}</b>`,`${esc(wlabel(cw))}: ${esc(cw.title)}${cw.tasks.length&&!wfull(cw)?(lk<0?' · срок прошёл':' · до '+fdate(cw.due)+leftTxt(lk)):''}`,[[ico('tasks'),c.done+'<span style="display:inline;font-size:15px;color:var(--muted)"> / '+N+'</span>','задач принято'],[SV.flag,st,'дней подряд']])}
+  ${hd2(`Привет, <b>${esc(firstName(nm)||'друг')}</b>`,`${wlabel(cw)===cw.title?esc(cw.title):esc(wlabel(cw))+': '+esc(cw.title)}${cw.tasks.length&&!wfull(cw)?(lk<0?' · срок прошёл':' · до '+fdate(cw.due)+leftTxt(lk)):''}`,[[ico('tasks'),c.done+'<span style="display:inline;font-size:15px;color:var(--muted)"> / '+N+'</span>','задач принято'],[SV.flag,st,'дней подряд']])}
   <div class="g12">
    <div class="t2 pmap c8"><div class="tt"><h3>Твой путь</h3></div><div class="sc">${pathSvg()}</div></div>
    <div class="t2 dk2 c4"><h3>Сегодня <span class="pl2 d">${esc(wlabel(cw))}</span></h3>
@@ -692,7 +725,7 @@ function adOverview(){
     ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}
     <a class="it2" href="#/learn" style="margin-top:16px"><div class="tp">${ico('book')}</div><div class="x"><p>Открыть обучение</p><small>участники, проверка, программа, воронка</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px"')}</a></div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
-   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
+   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}<button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button></div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
   </div>`;
 }
 function adLearn(){
@@ -712,13 +745,13 @@ function adLearn(){
    <div class="t2 c3"><h3>Прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'средний по участникам'}</div></div>
    ${lt('#/people','users','Участники','коды, траектории, добавить')}${lt('#/prog','book','Программа','недели, задания, материалы')}${lt('#/funnel','chart','Воронка заданий','где застревают')}${lt('#/nudge','inbox','Кого поддержать','тексты для напоминаний')}
    <div class="t2 c12"><h3>Участники <a class="go" href="#/people">${SV.arrow}</a></h3>
-    <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
+    <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
    <div class="t2 c12"><h3>Карта потока <span class="mu2">строки: участники, столбцы: недели</span></h3><div class="tblw" style="margin-top:12px"><div class="heat" style="grid-template-columns:130px repeat(11,minmax(34px,1fr));min-width:560px"><span></span>${C.weeks.map(w=>`<span class="h">${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span>`).join('')}
    ${S.map(x=>`<a class="nm" href="#/u/${x.u.slot}" style="text-decoration:none">${esc(x.u.name)}</a>${C.weeks.map(w=>{if(!w.tasks.length)return '<span></span>';const op=isOpen(w,x.M),cc=wcount(w,x.P),v=(cc.done+cc.review*.5)/w.tasks.length;return op?`<a href="#/u/${x.u.slot}" class="cell" style="background:rgba(155,111,232,${(.1+v*.8).toFixed(2)});text-decoration:none">${Math.round(cc.done/w.tasks.length*100)}${cc.review?'<span class="dot"></span>':''}</a>`:'<span class="cell lk0">·</span>'}).join('')}`).join('')}</div></div></div>
   </div>`;
 }
 function peopleTable(S){
-  return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Участник</th><th>Прогресс</th><th>Проверка</th><th>Активность</th><th></th></tr></thead><tbody>${S.map(x=>`<tr class="lnk" data-a="go" data-h="#/u/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(trNames(x.u.track)||'траектория не задана')}</small></td><td><div class="mini"><i style="width:${x.c.done/x.N*100}%"></i><i class="r" style="width:${x.c.review/x.N*100}%"></i></div><small style="color:var(--muted);font-size:12px">${x.c.done} из ${x.N}</small></td><td>${x.c.review?`<span class="st st-review">${x.c.review} на проверке</span>`:''}${x.c.revision?` <span class="st st-revision">${x.c.revision} возвр.</span>`:''}</td><td>${actStrip(daysOf(x.u.slot))}<br><small style="color:var(--muted);font-size:12px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td><td>${x.risk?`<span class="risk" title="${esc(x.reasons.join('; '))}">риск</span>`:''}</td></tr>`).join('')}</tbody></table></div></div>`;
+  return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Участник</th><th>Прогресс</th><th>Проверка</th><th>Активность</th><th></th><th></th></tr></thead><tbody>${S.map(x=>`<tr class="lnk" data-a="go" data-h="#/u/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(trNames(x.u.track)||'траектория не задана')}</small></td><td><div class="mini"><i style="width:${x.c.done/x.N*100}%"></i><i class="r" style="width:${x.c.review/x.N*100}%"></i></div><small style="color:var(--muted);font-size:12px">${x.c.done} из ${x.N}</small></td><td>${x.c.review?`<span class="st st-review">${x.c.review} на проверке</span>`:''}${x.c.revision?` <span class="st st-revision">${x.c.revision} возвр.</span>`:''}</td><td>${actStrip(daysOf(x.u.slot))}<br><small style="color:var(--muted);font-size:12px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td><td>${x.risk?`<span class="risk" title="${esc(x.reasons.join('; '))}">риск</span>`:''}</td><td><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button></td></tr>`).join('')}</tbody></table></div></div>`;
 }
 function adPeople(){return `<h1 class="t">Участники</h1><p class="sub">Программа «${esc(PT)}». Открой участника, чтобы увидеть его кабинет целиком.</p>${invCard()}<div style="margin-top:14px">${students().length?peopleTable(students().map(stat)):'<div class="card">Участников пока нет. Добавь первого ниже.</div>'}</div><h2 class="t">Добавить участника</h2>${addForm('student')}`}
 function adQueue(){
@@ -737,7 +770,7 @@ function adUser(slot){
   const x=stat(u),P=x.P,M=x.M,days=daysOf(slot),N=TK.length,cw=curWeek(P,M);
   const open=window.OPEN||{};if(open[slot]===undefined)open[slot]=cw.n;window.OPEN=open;
   return `<a class="back" href="#/people">← Участники</a>${invCard()}
-  <h1 class="t" style="margin-top:6px">${esc(u.name)}</h1><p class="sub">${esc(trNames(u.track)||'траектория не задана')}${u.plan?' · '+esc(u.plan):''}</p>
+  <h1 class="t" style="margin-top:6px">${esc(u.name)}</h1><p class="sub">${esc(trNames(u.track)||'траектория не задана')}${u.plan?' · '+esc(u.plan):''}</p><div style="margin-top:12px"><a class="bt2 v" href="#/as/${slot}">Открыть кабинет как у ${esc(firstName(u.name))}</a></div>
   <div class="tiles f4"><div class="tile good"><b>${x.c.done}<span style="display:inline;font-size:15px;color:var(--muted)"> / ${N}</span></b><span>принято</span></div><div class="tile vio"><b>${x.c.review}</b><span>на проверке</span></div><div class="tile ${x.c.revision?'hot':''}"><b>${x.c.revision}</b><span>на доработке</span></div><div class="tile"><b>${fmt(depthOf(P))}<span style="display:inline;font-size:15px;color:var(--muted)"> м</span></b><span>глубина из 5 000</span></div></div>
   ${x.risk?`<div class="att" style="margin-top:12px"><b style="font-size:14px">Зона риска:</b> ${esc(x.reasons.join('; '))}. <a href="https://t.me/${C.telegram}" style="display:none"></a></div>`:''}
   <div class="card" style="margin-top:12px"><small class="l">Активность за 14 дней · серия ${streak(days)} дн. · ${x.ls?'был(а) '+fdt(x.ls):'ещё не заходил(а)'}</small>${actStrip(days)}</div>
@@ -821,6 +854,7 @@ function clHome(){
   <div class="g12">
    <div class="t2 dk2 c7"><h3>Ждёт вашего решения <span class="big2" style="font-size:30px">${pend.length}</span></h3>${pend.length?pend.map(row).join(''):'<p class="mu2" style="padding:14px 0">Всё согласовано. Новые материалы появятся здесь.</p>'}</div>
    <div class="t2 c5"><h3>Показатели</h3>${kpi.length?`<div class="kp2">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div>`:'<p class="mu2" style="margin-top:12px">Цифры появятся после первого отчёта.</p>'}</div>
+   ${planView(ST.meta.plan)}
    <div class="t2 c6"><h3>Запросы команды</h3><p class="mu2" style="margin-top:8px">${pr?pr+' '+plur(pr,'запрос ждёт','запроса ждут','запросов ждут')+' вашего ответа.':'Новых запросов нет.'}</p><div style="margin-top:14px"><a class="bt2 v" href="#/requests">Открыть запросы</a></div></div>
    <div class="t2 c6"><h3>Последний отчёт</h3>${rep?`<a class="it2" href="#/item/${rep.id}"><div class="tp">${ico('doc')}</div><div class="x"><p>${esc(rep.title)}</p><small>${fdate(rep.created_at)}</small></div></a>`:'<p class="mu2" style="margin-top:8px">Отчётов пока нет.</p>'}</div>
   </div>
@@ -854,10 +888,32 @@ function cform(slot){
 }
 function clientStat(u){
   const it=AI.filter(i=>i.slot===u.slot),ls=lastSeen(u.slot);
-  return {u,pc:it.filter(i=>i.kind==='content'&&i.status==='pending').length,ch:it.filter(i=>i.status==='changes').length,pr:it.filter(i=>i.kind==='request'&&i.status==='pending').length,ls,idle:ls?Math.floor((Date.now()-ls)/864e5):99};
+  const pl=planStat(mmap(u.slot).plan);return {u,tp:pl.n,td:pl.d,pc:it.filter(i=>i.kind==='content'&&i.status==='pending').length,ch:it.filter(i=>i.status==='changes').length,pr:it.filter(i=>i.kind==='request'&&i.status==='pending').length,ls,idle:ls?Math.floor((Date.now()-ls)/864e5):99};
 }
 function clientsTable(L){
   return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Клиент</th><th>Ждём клиента</th><th>Вернул на правки</th><th>Последний вход</th></tr></thead><tbody>${L.map(x=>`<tr class="lnk" data-a="go" data-h="#/c/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'')}</small></td><td>${x.pc+x.pr?`<span class="st st-review">${x.pc} контента · ${x.pr} запросов</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td>${x.ch?`<span class="st st-revision">${x.ch}</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td><small style="color:var(--muted);font-size:12.5px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+/* ===== траектория работы с клиентом ===== */
+function planStat(pl){let n=0,d=0;((pl&&pl.stages)||[]).forEach(st=>(st.tasks||[]).forEach(t=>{n++;if(t.status==='done')d++}));return {n,d}}
+const PLST={todo:'К выполнению',doing:'В работе',done:'Готово'};
+const PLTPL=['Диагностика и стратегия','Упаковка и рубрики','Производство контента','Дистрибуция и аналитика','Масштабирование'];
+function planEd(slot,M){
+  if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:clone(M.plan||{stages:[]})};
+  const P=PLD.plan;P.stages=P.stages||[];
+  if(!P.stages.length)return `<div class="t2"><h3>Траектория работы с клиентом</h3><p class="mu2" style="margin-top:8px">Этапы и задачи, которые ты ведёшь вместе с клиентом. Клиент видит их на своей главной.</p><div class="row"><button class="bt2 v" data-a="pltpl">Создать из шаблона</button><button class="bt2" data-a="pladd">Пустую траекторию</button></div></div>`;
+  return `<div style="display:flex;flex-direction:column;gap:14px">${P.stages.map((st,si)=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
+   return `<div class="t2"><div class="plh"><input type="text" data-pl="stages.${si}.title" value="${esc(st.title)}" placeholder="Название этапа"><span class="pl2">${d}/${n}</span><button class="rbt" data-a="pldelst" data-s="${si}" title="Удалить этап">✕</button></div>
+   <div class="tkl">${(st.tasks||[]).map((t,ti)=>`<div class="tk2"><button class="tkst ${t.status}" data-a="plst" data-s="${si}" data-t="${ti}" title="${PLST[t.status]}: нажми, чтобы сменить"></button><input type="text" data-pl="stages.${si}.tasks.${ti}.text" value="${esc(t.text)}" placeholder="Задача"><button class="who2 ${t.who}" data-a="plwho" data-s="${si}" data-t="${ti}">${t.who==='client'?'Клиент':'Команда'}</button><input type="date" data-pl="stages.${si}.tasks.${ti}.due" value="${esc(t.due||'')}"><button class="rbt" data-a="pldel" data-s="${si}" data-t="${ti}" title="Удалить">✕</button></div>`).join('')}</div>
+   <div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pltask" data-s="${si}">+ Задача</button></div></div>`}).join('')}</div>
+  <div class="row" style="margin-top:14px"><button class="bt2" data-a="pladd">+ Этап</button><button class="bt2 v" data-a="plsave" data-u="${slot}">Сохранить траекторию</button></div>
+  <p class="mu2" style="margin-top:8px">Кружок слева: нажми, чтобы сменить статус (к выполнению, в работе, готово). Пока не нажмёшь «Сохранить», клиент изменений не видит.</p>`;
+}
+function planView(pl){
+  const st=(pl&&pl.stages)||[];if(!st.length)return '';
+  const tot=planStat(pl),pc=tot.n?Math.round(tot.d/tot.n*100):0;
+  return `<div class="t2 c12"><h3>Траектория работы <span class="pl2">${tot.d} из ${tot.n} задач</span></h3>
+   <div class="stg">${st.map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(t=>t.status==='done').length;return `<div class="stc"><div class="top2"><b>${esc(s.title)}</b><span>${d}/${n}</span></div><div class="tr2"><i style="width:${n?d/n*100:0}%"></i></div>${(s.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'команда'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>`}).join('')}</div></div>`;
 }
 function adClients(){
   const L=(AD.users||[]).filter(u=>u.role==='client').map(clientStat);
@@ -867,8 +923,8 @@ function adClients(){
    <div class="t2 c4"><h3>Ждут ответа клиента</h3><div class="big2" style="margin-top:12px">${wait}</div><div class="mu2" style="margin-top:4px">материалов и запросов</div></div>
    <div class="t2 c4"><h3>Вернули на правки</h3><div class="big2" style="margin-top:12px">${chg}</div><div class="mu2" style="margin-top:4px">${chg?'нужно доработать':'всё в порядке'}</div></div>
    <div class="t2 c4"><h3>Клиентов</h3><div class="big2" style="margin-top:12px">${L.length}</div><div class="mu2" style="margin-top:4px">с отдельным кабинетом</div></div>
-   ${L.map(x=>`<a class="t2 cc2 c6" href="#/c/${x.u.slot}"><div class="top"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'Клиент компании')}</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px;color:var(--muted)"')}</div>
-    <div class="chips" style="margin-top:14px">${x.pc?`<span class="pl2 w">${x.pc} на согласовании</span>`:''}${x.pr?`<span class="pl2 w">${x.pr} ${plur(x.pr,'запрос','запроса','запросов')}</span>`:''}${x.ch?`<span class="pl2 w">правки: ${x.ch}</span>`:''}${x.pc+x.pr+x.ch?'':'<span class="pl2 g">всё согласовано</span>'}<span class="pl2">${x.ls?(x.idle===0?'вход сегодня':'вход '+x.idle+' дн. назад'):'ещё не заходил(а)'}</span></div></a>`).join('')}
+   ${L.map(x=>`<div class="t2 cc2 c6" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="top"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'Клиент компании')}</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px;color:var(--muted)"')}</div>
+    <div class="chips" style="margin-top:14px">${x.pc?`<span class="pl2 w">${x.pc} на согласовании</span>`:''}${x.pr?`<span class="pl2 w">${x.pr} ${plur(x.pr,'запрос','запроса','запросов')}</span>`:''}${x.ch?`<span class="pl2 w">правки: ${x.ch}</span>`:''}${x.pc+x.pr+x.ch?'':'<span class="pl2 g">всё согласовано</span>'}<span class="pl2">${x.ls?(x.idle===0?'вход сегодня':'вход '+x.idle+' дн. назад'):'ещё не заходил(а)'}</span>${x.tp?`<span class="pl2">траектория ${x.td}/${x.tp}</span>`:''}</div><div style="margin-top:14px"><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Открыть кабинет клиента</button></div></div>`).join('')}
    <details class="t2 c12 dt2" ${L.length?'':'open'}><summary>Добавить клиента</summary>${addForm('client')}</details>
   </div>`;
 }
@@ -876,14 +932,15 @@ window.CTAB=window.CTAB||{};
 function adClient(slot){
   const u=(AD.users||[]).find(x=>x.slot===slot&&x.role==='client');if(!u)return '<a class="back" href="#/clients">← Клиенты</a><p class="sub">Клиент не найден.</p>';
   const items=AI.filter(i=>i.slot===slot),M=mmap(slot),st=clientStat(u),kpi=(M.kpi||[]).map(k=>[k.l,k.v,k.d||''].join(' | ')).join('\n');
-  const tab=window.CTAB[slot]||'content',open=window.CF&&window.CF.slot===slot;
-  const TABS=[['content','Материалы'],['request','Запросы'],['report','Отчёты'],['set','Настройки']];
+  const tab=window.CTAB[slot]||'plan',open=window.CF&&window.CF.slot===slot;
+  const TABS=[['plan','Траектория'],['content','Материалы'],['request','Запросы'],['report','Отчёты'],['set','Настройки']];
   const cnt=k=>items.filter(i=>i.kind===k).length;
   const ORD={pending:0,changes:1,info:2,approved:3,done:3};
   const card=i=>`<div class="t2"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><h3 style="display:block;font-size:16px">${esc(i.title)}</h3>${ibd(i,true)}</div><div class="mu2" style="margin-top:4px">${fdate(i.created_at)}${i.due&&i.status==='pending'?' · срок '+fdate(i.due):''}</div>${i.body?`<div class="ans" style="margin-top:12px">${esc(i.body)}</div>`:''}${safeUrl(i.link)?`<div style="margin-top:10px"><a class="lk" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}${i.reply?`<div class="fbk ${i.status==='changes'?'bad':''}" style="margin:12px 0 0"><small>Ответ клиента${i.decided_at?' · '+fdt(i.decided_at):''}</small><p>${esc(i.reply)}</p></div>`:''}<div class="row"><button class="btn g s" data-a="cedit" data-u="${slot}" data-id="${i.id}">Изменить</button><button class="btn wr s" data-a="cdel" data-id="${i.id}">Удалить</button></div></div>`;
   const NM={content:['Новый материал','Материалов пока нет. Добавь первый на согласование.'],request:['Новый запрос','Запросов пока нет.'],report:['Новый отчёт','Отчётов пока нет.']};
   let body;
-  if(tab==='set'){
+  if(tab==='plan'){body=planEd(slot,M)}
+  else if(tab==='set'){
     body=`<div class="two"><div><h2 class="t">Цифры на главной клиента</h2><div class="card"><small class="l">По строке на показатель: название | значение | динамика (необязательно)</small><textarea id="kpiT" style="min-height:96px" placeholder="Охват | 124 000 | +18%&#10;Заявки | 37 | +6">${esc(kpi)}</textarea><div class="row"><button class="btn g s" data-a="kpisave" data-u="${slot}">Сохранить</button></div></div></div>
   <div><h2 class="t">Сообщение на главную</h2><div class="card"><textarea id="newsT" style="min-height:80px" placeholder="Клиент увидит это на обзоре до нажатия «Прочитано»"></textarea><div class="row"><button class="btn s" data-a="news" data-u="${slot}">Отправить</button></div>${((M.news||[]).length)?`<div style="margin-top:12px">${M.news.map(n=>`<p class="sub" style="font-size:13px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:8px">${esc(n.text)} <span style="color:${(M.seen||{})[n.id]?'var(--ok)':'var(--muted)'}">${(M.seen||{})[n.id]?'· прочитано':'· не прочитано'}</span> <button class="lk" data-a="newsdel" data-u="${slot}" data-id="${n.id}">убрать</button></p>`).join('')}</div>`:''}</div></div></div>
   <div class="two"><div><h2 class="t">Заметка (только тебе)</h2><div class="card"><textarea id="noteT" style="min-height:80px">${esc(M.notes||'')}</textarea><div class="row"><button class="btn g s" data-a="note" data-u="${slot}">Сохранить</button></div></div></div>
@@ -895,7 +952,8 @@ function adClient(slot){
   }
   return `<a class="back" href="#/clients">← Клиенты</a>${invCard()}
   ${hd2(esc(u.name),esc(u.plan||'Клиент компании'),[[ico('tasks'),st.pc,'ждут решения'],[ico('chat'),st.pr,plur(st.pr,'запрос','запроса','запросов')+' без ответа'],[SV.flag,st.ch,'на правках']])}
-  <div class="flt" style="margin:16px 0 14px">${TABS.map(t=>`<button data-a="ctab" data-u="${slot}" data-t="${t[0]}" class="${t[0]===tab?'on':''}">${t[1]}${t[0]!=='set'?` <em>${cnt(t[0])}</em>`:''}</button>`).join('')}</div>
+  <div style="margin-top:12px"><a class="bt2 v" href="#/as/${slot}">Открыть кабинет клиента</a></div>
+  <div class="flt" style="margin:16px 0 14px">${TABS.map(t=>`<button data-a="ctab" data-u="${slot}" data-t="${t[0]}" class="${t[0]===tab?'on':''}">${t[1]}${t[0]!=='set'&&t[0]!=='plan'?` <em>${cnt(t[0])}</em>`:''}</button>`).join('')}</div>
   ${body}`;
 }
 /* ================= управление: люди ================= */
@@ -992,6 +1050,14 @@ const A={
  ckind(el){readCF(el.dataset.u);window.CF=Object.assign({},window.CF||{slot:el.dataset.u,id:null,title:'',body:'',link:'',due:''},{slot:el.dataset.u,kind:el.dataset.k});render(true)},
  cedit(el){const i=AI.find(x=>x.id===+el.dataset.id);window.CTAB[el.dataset.u]=i.kind;window.CF={slot:el.dataset.u,id:i.id,kind:i.kind,title:i.title,body:i.body,link:i.link,due:i.due||''};render()},
  ccancel(el){window.CF=null;render(true)},
+ pladd(){PLD.plan.stages.push({title:'Новый этап',tasks:[]});render(true)},
+ pltpl(){PLD.plan.stages=PLTPL.map(t=>({title:t,tasks:[]}));render(true)},
+ pltask(el){PLD.plan.stages[+el.dataset.s].tasks.push({text:'',status:'todo',who:'team',due:''});render(true)},
+ plst(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';render(true)},
+ plwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';render(true)},
+ pldel(el){PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);render(true)},
+ pldelst(el){if(!confirm('Удалить этап вместе с задачами?'))return;PLD.plan.stages.splice(+el.dataset.s,1);render(true)},
+ async plsave(el){await setM(el.dataset.u,'plan',PLD.plan);window.PLD=null;toast('Траектория сохранена, клиент её видит');render(true)},
  cadd(el){window.CF={slot:el.dataset.u,id:null,kind:el.dataset.k,title:'',body:'',link:'',due:''};render(true)},
  ctab(el){window.CTAB[el.dataset.u]=el.dataset.t;window.CF=null;render(true)},
  async csave(el){const slot=el.dataset.u;readCF(slot);const f=window.CF;
@@ -1059,12 +1125,15 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&el0.dataset.a!=='go'){e.preventDefault();toast('Режим просмотра: менять здесь нельзя');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
 root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 let sv={};
 root.addEventListener('input',e=>{const t=e.target;
+  if(location.hash.startsWith('#/as/'))return;
+  if(t.dataset.pl&&window.PLD){setPath(PLD.plan,t.dataset.pl,t.value);return}
   if(t.id==='ans'||t.id==='lnk'){const id=location.hash.split('/')[2];try{localStorage.setItem('okean:d:'+ME.slot+':'+id,JSON.stringify({a:$('#ans').value,l:$('#lnk').value}))}catch(x){}return}
   if(t.dataset.ed&&PD){let v=t.value;if(t.type==='datetime-local')v=v?v+':00+03:00':'';if(t.type==='number')v=+v||0;setPath(PD,t.dataset.ed,v);return}
   if(t.dataset.edl&&PD){setPath(PD,t.dataset.edl,t.value.split('\n').map(x=>x.trim()).filter(Boolean));return}
