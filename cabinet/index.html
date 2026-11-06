@@ -375,6 +375,43 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 @media(max-width:900px){.kb{grid-template-columns:1fr}}
 .cl2{transition:border-color .15s}.cl2:hover{border-color:rgba(196,164,255,.45);box-shadow:0 0 30px -14px rgba(155,111,232,.7)}
 .stk{display:flex;gap:3px;height:10px;border-radius:9px;overflow:hidden}.stk i{display:block;min-width:0}
+.hr{display:flex;flex-direction:column}.hrg{display:flex;justify-content:center;margin:18px 0 16px}.hrg .rg2 b{font-size:36px!important}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;text-align:center}.trio b{display:block;font-size:26px;font-weight:600}.trio span{font-size:12px;color:var(--muted)}
+.pth{display:flex;flex-direction:column}.stps{display:flex;align-items:center;justify-content:space-between;margin:18px 0;position:relative;flex:1}
+.stps::before{content:"";position:absolute;left:5%;right:5%;top:calc(50% - 15px);height:2px;background:rgba(255,255,255,.1)}
+.stp{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:var(--muted);flex:1;min-width:0}
+.stp .nd{width:46px;height:46px;border-radius:50%;background:#1B1730;border:2px solid #2A2445;display:grid;place-items:center;font-size:13px;font-weight:700;position:relative;z-index:1}
+.stp .nd svg.i{width:18px;height:18px;stroke:#fff}.stp.ok .nd{background:#9B6FE8;border-color:#9B6FE8}
+.stp.cur .nd{background:#241C52;border-color:transparent;color:#fff;box-shadow:0 0 22px rgba(155,111,232,.65)}.stp .arc{position:absolute;inset:-2px;width:46px;height:46px}
+.stp small{font-size:11px;text-align:center;line-height:1.2}.stp.cur small{color:var(--text)}
+.cnow{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:end;padding-top:16px;border-top:1px solid rgba(196,164,255,.14)}.cnow small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.cnow p{margin:2px 0 0;font-size:15px}.cnow em{font-style:normal;font-size:18px;font-weight:600}.cnow .sgb{grid-column:1/3;height:6px}.sgb{height:6px}
+.chp{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.chp span{padding:9px 14px;border-radius:14px;background:rgba(255,255,255,.05);font-size:13px;color:var(--muted)}.chp b{font-size:18px;color:var(--text);margin-right:4px}
+.bgt{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--text)}.bgt .ib{width:42px;height:42px;border-radius:14px;background:rgba(155,111,232,.18);display:grid;place-items:center;margin-bottom:10px}.bgt.b .ib{background:rgba(196,164,255,.1)}
+.bgt .ib svg{width:20px;height:20px;stroke:#C9A8FF;fill:none;stroke-width:1.8}.bgt b{font-size:44px;font-weight:600;line-height:1;letter-spacing:-.02em}.bgt span{font-size:13px;color:var(--muted);margin-top:4px}
+.dts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
+.dtx{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.04);text-decoration:none;color:var(--text)}
+.dt .cal{width:50px;flex:none;text-align:center;border-radius:12px;background:rgba(155,111,232,.18);padding:6px 0}.dt .cal b{display:block;font-size:20px;line-height:1.1}.dt .cal small{font-size:11px;color:#C9A8FF;text-transform:uppercase}
+.dt p{flex:1;min-width:0;font-size:13px;line-height:1.3;margin:0}
+@media(max-width:1100px){.c3.bgt{grid-column:span 6}}
+@media(max-width:640px){.stp small{font-size:9px}.stp .nd{width:30px;height:30px}.stps::before{top:15px}.stp .arc{width:30px;height:30px}.bgt b{font-size:34px}}
+.wkst input{position:absolute;opacity:0;pointer-events:none;width:0;height:0}.wdr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:16px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid transparent;cursor:pointer;min-height:96px}.wd small{font-size:11px;color:var(--muted);letter-spacing:.06em}.wd b{font-size:22px;font-weight:600}
+.wd.td{border-color:rgba(196,164,255,.35)}.wd.td small{color:#C9A8FF}.wdd{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:auto;min-height:10px}.wdd em{font-style:normal;font-size:11px;color:var(--text);font-weight:600;line-height:9px}.wdd{flex-wrap:nowrap!important;max-width:100%;overflow:hidden}
+.wkst i.me,.wdd i.me{display:inline-block;width:9px;height:9px;border-radius:50%;background:#9B6FE8}.wkst i.we{display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #C9A8FF;box-sizing:border-box}
+.lgd{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;color:var(--muted)}.lgd i{margin-left:8px}.lt{margin-left:12px;padding:3px 10px;border-radius:10px;background:rgba(255,120,120,.14);color:#FFB3B3;font-weight:500}
+.wpl .wpn{display:none;flex-direction:column;gap:8px;margin-top:14px}.wpn a span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wpn a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-size:14px}.wpn a i{flex:none}.wpn a.mr{color:#C9A8FF;justify-content:center}.wpn p{margin:0;color:var(--muted);font-size:13px;padding:6px 2px}
+.wkst input:nth-of-type(1):checked ~ .wdr .wd:nth-child(1){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(1):checked ~ .wpl .wpn:nth-child(1){display:flex}
+.wkst input:nth-of-type(2):checked ~ .wdr .wd:nth-child(2){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(2):checked ~ .wpl .wpn:nth-child(2){display:flex}
+.wkst input:nth-of-type(3):checked ~ .wdr .wd:nth-child(3){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(3):checked ~ .wpl .wpn:nth-child(3){display:flex}
+.wkst input:nth-of-type(4):checked ~ .wdr .wd:nth-child(4){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(4):checked ~ .wpl .wpn:nth-child(4){display:flex}
+.wkst input:nth-of-type(5):checked ~ .wdr .wd:nth-child(5){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(5):checked ~ .wpl .wpn:nth-child(5){display:flex}
+.wkst input:nth-of-type(6):checked ~ .wdr .wd:nth-child(6){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(6):checked ~ .wpl .wpn:nth-child(6){display:flex}
+.wkst input:nth-of-type(7):checked ~ .wdr .wd:nth-child(7){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(7):checked ~ .wpl .wpn:nth-child(7){display:flex}
+@media(max-width:640px){.wdr{gap:4px}.wd{min-height:84px;padding:10px 2px 8px}.wd b{font-size:18px}.lgd{font-size:11px}}
+.rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
+.sgl{display:flex;flex-direction:column;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,164,255,.14)}
+.sgr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:12.5px;color:var(--muted)}.sgr em{font-style:normal;font-variant-numeric:tabular-nums}
+.sgr.cur{color:var(--text)}.sgr.ok .sgn{opacity:.6}.sgb{grid-column:1/3;height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}.sgb i{display:block;height:100%;background:#9B6FE8;border-radius:4px}
 .lg2{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--muted)}.lg2 i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .sbr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;font-size:13.5px}.sbr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sbr em{font-style:normal;color:var(--muted);font-size:12px}
 .sbr .tr2{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden}.sbr .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
@@ -1065,18 +1102,28 @@ function clHome(){
   const cw=T.wait.length,ct=T.all.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length;
   const cs=curI>=0?stg[curI]:null;
   const gantt=ps.n?`<div class="t2 c12"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${ganttHtml(stg,curI,short,pc)||roadmap(stg,curI,short)}</div>`:'';
-  const charts=ps.n?`   <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
-   ${weekTile(pl)}`:'';
-  const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
+  const totalD=ps.n?Math.max(0,Math.round((dnum('2026-12-18')-dnum(today()))) ):0;
+  const steps=stg.map((x,i)=>{const w=x.n?x.d/x.n:0,cls=x.done?'ok':i===curI?'cur':'';
+    return `<a class="stp ${cls}" href="#/plan"><div class="nd">${x.done?SV.check:`<span>${i+1}</span>`}${i===curI?`<svg class="arc" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#9B6FE8" stroke-width="3" stroke-linecap="round" stroke-dasharray="${107*w} 107" transform="rotate(-90 20 20)"/></svg>`:''}</div><small>${esc(short(x.st.title,x.st).replace(/^Сопров.*/,'Сопр.'))}</small></a>`}).join('');
+  const heroPath=ps.n?`<div class="t2 c7 pth"><h3>Путь проекта <a class="go" href="#/plan">${SV.arrow}</a></h3><div class="stps">${steps}</div>${cs?`<div class="cnow"><div><small>Сейчас</small><p>${esc(cs.st.title.replace(/^Неделя (\d+)\.\s*/,'Неделя $1 · '))}</p></div><em>${cs.d}/${cs.n}</em><div class="sgb"><i style="width:${cs.n?Math.round(cs.d/cs.n*100):0}%"></i></div></div>`:''}</div>`:'';
+  const hero=ps.n?`<div class="t2 c5 hr"><h3>Общий прогресс</h3><div class="hrg">${rg2(pc,150,16)}</div><div class="trio"><div><b style="color:#B58CFF">${dn}</b><span>готово</span></div><div><b style="color:#D9C5FF">${dg}</b><span>в работе</span></div><div><b style="color:#8F8AA8">${td}</b><span>впереди</span></div></div></div>`:'';
+  const tile=(h,ic,n,cap,tone)=>`<a class="t2 bgt c3 ${tone||''}" href="${h}"><div class="ib">${ic}</div><b>${n}</b><span>${cap}</span></a>`;
+  const td0=today(),wdn=['ВС','ПН','ВТ','СР','ЧТ','ПТ','СБ'],days=[0,1,2,3,4,5,6].map(i=>ymdOf(dnum(td0)+i)),byD=d=>T.all.filter(x=>x.t.due===d&&x.t.status!=='done'),lateN=T.all.filter(x=>x.t.due&&x.t.due<td0&&x.t.status!=='done').length;
+  const selD=Math.max(0,days.findIndex(d=>byD(d).length));
+  const dots=l=>l.length>3?`<i class="${l.some(x=>x.t.who==='client')?'me':'we'}"></i><em>${l.length}</em>`:l.map(x=>`<i class="${x.t.who==='client'?'me':'we'}"></i>`).join('');
+  const nxtB=`<div class="t2 c12 wkst"><h3>Ближайшие сроки <span class="lgd"><i class="me"></i>вы<i class="we"></i>мы${lateN?`<b class="lt">просрочено ${lateN}</b>`:''}</span></h3>${days.map((d,i)=>`<input type="radio" name="wkd" id="wkd${i}" ${i===selD?'checked':''}>`).join('')}
+   <div class="wdr">${days.map((d,i)=>{const l=byD(d),dd=new Date(d+'T12:00:00');return `<label for="wkd${i}" class="wd ${i===0?'td':''}"><small>${wdn[dd.getDay()]}</small><b>${dd.getDate()}</b><div class="wdd">${dots(l)}</div></label>`}).join('')}</div>
+   <div class="wpl">${days.map(d=>{const l=byD(d);return `<div class="wpn">${l.length?l.slice(0,5).map(x=>`<a href="#/tasks"><i class="${x.t.who==='client'?'me':'we'}"></i><span>${esc(x.t.text)}</span></a>`).join('')+(l.length>5?`<a href="#/tasks" class="mr">Ещё ${l.length-5}: открыть все задачи</a>`:''):'<p>В этот день сроков нет</p>'}</div>`}).join('')}</div></div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN: этапы, задачи, отчёты и важные моменты в одном месте.',[])}
+  ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN',[])}
   <div class="g12">
-   ${charts}
-   ${cell('#/plan','Траектория',ps.n?`<div style="display:flex;align-items:center;gap:14px;margin-top:14px">${rg2(pc,78,9)}<div><div class="mu2">${ps.d} из ${ps.n} задач</div><div style="font-size:14px;margin-top:4px">${cur?esc(cur.title):'Все этапы завершены'}</div></div></div>`:'<p class="mu2" style="margin-top:12px">Траектория скоро появится.</p>')}
-   ${cell('#/tasks','Задачи',`<div class="big2" style="margin-top:12px">${T.wait.length}</div><div class="mu2" style="margin-top:6px">${T.wait.length?'ждут вас'+(T.wait[0].t.due?', ближайший срок '+fdate(T.wait[0].t.due):''):'от вас сейчас ничего не нужно'}</div><div class="mu2" style="margin-top:2px">у Виктории в работе: ${T.work.length}</div>`)}
-   ${cell('#/approve','Согласования и запросы',`<div class="big2" style="margin-top:12px">${pend.length}</div><div class="mu2" style="margin-top:6px">${pend.length?'ждут вашего решения':'всё согласовано'}</div>`)}
-   ${cell('#/reports','Отчёты',rep?`<div style="margin-top:14px;font-size:15px">${esc(rep.title)}</div><div class="mu2" style="margin-top:4px">${fdate(rep.created_at)} · всего ${reps.length}</div>`:'<p class="mu2" style="margin-top:12px">Первый отчёт будет после старта.</p>')}
-   <a class="t2 lk2 c8 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.length?key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join(''):'<p class="mu2" style="margin-top:12px">Здесь будут решения, договорённости и риски по проекту.</p>'}</a>
+   ${hero}${heroPath}
+   ${tile('#/tasks',ico('tasks'),T.wait.length,'ждут вас')}
+   ${tile('#/tasks',ico('users'),ct,'у команды','b')}
+   ${tile('#/approve',SV.check,pend.length,'на согласовании')}
+   ${tile('#/reports',ico('chart'),reps.length,'отчётов')}
+   ${nxtB}
+   ${key.length?`<a class="t2 lk2 c12 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join('')}</a>`:''}
    ${kpi.length?`<div class="t2 c12"><h3>Показатели</h3><div class="kp2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div></div>`:''}
    ${gantt}
   </div>
