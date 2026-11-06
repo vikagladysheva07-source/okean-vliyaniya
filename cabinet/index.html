@@ -372,6 +372,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .kempty{padding:22px 10px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(196,164,255,.2);border-radius:14px}
 @media(max-width:900px){.kb{grid-template-columns:1fr}}
 .cl2{transition:border-color .15s}.cl2:hover{border-color:rgba(196,164,255,.45);box-shadow:0 0 30px -14px rgba(155,111,232,.7)}
+.stk{display:flex;gap:3px;height:10px;border-radius:9px;overflow:hidden}.stk i{display:block;min-width:0}
+.lg2{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--muted)}.lg2 i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.sbr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;font-size:13.5px}.sbr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sbr em{font-style:normal;color:var(--muted);font-size:12px}
+.sbr .tr2{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden}.sbr .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
+.ball{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.ball b{display:block;font-size:42px;font-weight:500;letter-spacing:-.04em;line-height:1}.ball span{font-size:12.5px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -871,10 +876,23 @@ function clHome(){
   const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=ST.meta.plan||{stages:[]},ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),reps=CI.filter(i=>i.kind==='report'),rep=reps[0],key=(ST.meta.key||[]).slice().reverse();
   const T=cltasks(),cur=(pl.stages||[]).find(st=>(st.tasks||[]).some(t=>t.status!=='done'));
+  const stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}});
+  const curI=stg.findIndex(x=>!x.done);
+  const short=t=>{const m=t.match(/^Неделя (\d+)/);return m?'Нед. '+m[1]:t.replace(/:.*$/,'').split(' ').slice(0,2).join(' ').slice(0,14)};
+  if(stg.length>1)window.AFTER=()=>placeNodes(stg.map((x,i)=>({w:i,n:i+1,l:short(x.st.title),done:x.done,cur:i===curI,open:false})));
+  const dn=T.done.length,dg=T.all.filter(x=>x.t.status==='doing').length,td=T.all.filter(x=>x.t.status==='todo').length,tot=T.all.length||1;
+  const upc=T.all.filter(x=>x.t.due&&x.t.status!=='done').sort((a,b)=>a.t.due<b.t.due?-1:1).slice(0,3);
+  const cw=T.wait.length,ct=T.all.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length;
+  const charts=ps.n?`<div class="t2 pmap c8"><div class="tt"><h3>Путь проекта</h3></div><div class="sc">${pathSvg()}</div></div>
+   <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
+   <div class="t2 c6"><h3>Прогресс по этапам</h3><div style="margin-top:10px">${stg.map(x=>`<div class="sbr"><span>${esc(x.st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</span><div class="tr2"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div><em>${x.d}/${x.n}</em></div>`).join('')}</div></div>
+   <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у команды</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#FFB3B3"></i><i style="flex:${ct||0.001};background:#9B6FE8"></i></div>
+    ${upc.length?`<div class="mu2" style="margin:16px 0 4px">Ближайшие сроки</div>${upc.map(x=>`<div class="tkv"><i class="tkst ${x.t.status}"></i><span>${esc(x.t.text.slice(0,60))}</span><small>${fdate(x.t.due)}</small></div>`).join('')}`:''}</div>`:'';
   const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN: этапы, задачи, отчёты и важные моменты в одном месте.',[])}
   <div class="g12">
+   ${charts}
    ${cell('#/plan','Траектория',ps.n?`<div style="display:flex;align-items:center;gap:14px;margin-top:14px">${rg2(pc,78,9)}<div><div class="mu2">${ps.d} из ${ps.n} задач</div><div style="font-size:14px;margin-top:4px">${cur?esc(cur.title):'Все этапы завершены'}</div></div></div>`:'<p class="mu2" style="margin-top:12px">Траектория скоро появится.</p>')}
    ${cell('#/tasks','Задачи',`<div class="big2" style="margin-top:12px">${T.wait.length}</div><div class="mu2" style="margin-top:6px">${T.wait.length?'ждут вас'+(T.wait[0].t.due?', ближайший срок '+fdate(T.wait[0].t.due):''):'от вас сейчас ничего не нужно'}</div><div class="mu2" style="margin-top:2px">у команды в работе: ${T.work.length}</div>`)}
    ${cell('#/approve','Согласования и запросы',`<div class="big2" style="margin-top:12px">${pend.length}</div><div class="mu2" style="margin-top:6px">${pend.length?'ждут вашего решения':'всё согласовано'}</div>`)}
