@@ -979,8 +979,8 @@ function clHome(){
   const upc=T.all.filter(x=>x.t.due&&x.t.status!=='done').sort((a,b)=>a.t.due<b.t.due?-1:1).slice(0,3);
   const cw=T.wait.length,ct=T.all.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length;
   const cs=curI>=0?stg[curI]:null;
-  const charts=ps.n?`<div class="t2 c12"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${ganttHtml(stg,curI,short,pc)||roadmap(stg,curI,short)}</div>
-   <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
+  const gantt=ps.n?`<div class="t2 c12"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${ganttHtml(stg,curI,short,pc)||roadmap(stg,curI,short)}</div>`:'';
+  const charts=ps.n?`   <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
    <div class="t2 c8"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#E4D6FF"></i><i style="flex:${ct||0.001};background:#7C4FD4"></i></div>
     ${upc.length?`<div class="mu2" style="margin:16px 0 4px">Ближайшие сроки</div>${upc.map(x=>`<div class="tkv up2"><i class="tkst ${x.t.status}"></i><span>${esc(x.t.text)}</span><small>${fdate(x.t.due)}</small></div>`).join('')}`:''}</div>`:'';
   const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
@@ -994,6 +994,7 @@ function clHome(){
    ${cell('#/reports','Отчёты',rep?`<div style="margin-top:14px;font-size:15px">${esc(rep.title)}</div><div class="mu2" style="margin-top:4px">${fdate(rep.created_at)} · всего ${reps.length}</div>`:'<p class="mu2" style="margin-top:12px">Первый отчёт будет после старта.</p>')}
    <a class="t2 lk2 c8 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.length?key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join(''):'<p class="mu2" style="margin-top:12px">Здесь будут решения, договорённости и риски по проекту.</p>'}</a>
    ${kpi.length?`<div class="t2 c12"><h3>Показатели</h3><div class="kp2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div></div>`:''}
+   ${gantt}
   </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
