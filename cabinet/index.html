@@ -522,7 +522,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .fdates{display:flex;align-items:center;gap:8px}.fdates input{width:auto;padding:8px 10px;font-size:13px}
 .cms{margin-top:18px;padding-top:14px;border-top:1px solid rgba(196,164,255,.2)}.cms>b{font-size:14px;font-weight:500}
 .cmi{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(196,164,255,.12)}.cmi.client{background:rgba(155,111,232,.1)}.cmi small{color:var(--muted);font-size:11.5px}.cmi p{margin-top:4px;font-size:14px;white-space:pre-wrap;line-height:1.4}
-.kb .tc{cursor:grab}
+.kb .tc{cursor:grab}.kb4{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:1100px){.kb4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.kb4{grid-template-columns:1fr}}
 .fbar{align-items:center}
 .ftg{display:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--s1);font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
 .fbar.open .ftg{color:#fff;background:linear-gradient(180deg,rgba(169,131,242,.42),rgba(91,47,190,.32));border-color:rgba(225,208,255,.5)}
@@ -880,14 +880,15 @@ function homeV(){
   </div>`;
 }
 function stTasks(adm){
-  const f=window.FLT||'all',c=totals(ST.p);
-  const fl=[['all','Все',TK.length],['todo','К выполнению',c.todo],['revision','Доработка',c.revision],['review','На проверке',c.review],['done','Принято',c.done]];
-  const wk=C.weeks.filter(w=>w.tasks.length).map(w=>{
-    if(!isOpen(w))return `<div class="wh"><b>${esc(wt(w))}</b><span>откроется ${fdate(w.opens)}</span></div>`;
-    const ts=w.tasks.filter(t=>f==='all'||stOf(t.id)===f);if(!ts.length)return '';
-    return `<div class="wh"><b>${esc(wt(w))}</b><span>${wcount(w).done} из ${w.tasks.length} · до ${fdate(w.due)}</span></div><div class="card p0">${ts.map(t=>{const s=stOf(t.id);return `<a class="tr ${s}" href="#/task/${t.id}"><div><b>${esc(t.text)}</b>${s==='revision'?`<small>Комментарий: ${esc((ST.p[t.id].feedback||'').slice(0,90))}</small>`:t.hint?`<small>${esc(t.hint.slice(0,90))}</small>`:''}</div>${badge(s)}</a>`}).join('')}</div>`}).join('');
-  return `<h1 class="t">${adm?'Программа':'Задания'}</h1><p class="sub">${adm?'Как видят программу участники. У тебя открыты все недели.':'Открой задание, напиши ответ или добавь ссылку и отправь на проверку.'}</p>
-  <div class="flt" style="margin-top:14px">${fl.map(x=>`<button data-a="flt" data-f="${x[0]}" class="${f===x[0]?'on':''}">${x[1]}<em>${x[2]}</em></button>`).join('')}</div>${wk||'<div class="card" style="margin-top:14px">В этом разделе пока пусто.</div>'}`;
+  const COLS=[['todo','К выполнению'],['revision','Доработка'],['review','На проверке'],['done','Принято']],cards={todo:[],revision:[],review:[],done:[]},locked=[];
+  C.weeks.filter(w=>w.tasks.length).forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>cards[stOf(t.id)||'todo'].push({w,t}))});
+  const ac=cards[window.PBC]?window.PBC:(cards.revision.length?'revision':'todo');
+  const card=({w,t})=>{const s=stOf(t.id),late=s!=='done'&&s!=='review'&&dnum(w.due)<dnum(today());
+    return `<a class="tc ${s==='done'?'done':''}" href="#/task/${t.id}" style="cursor:pointer;text-decoration:none;color:inherit"><span class="tcb ${s==='done'?'done':''}" style="pointer-events:none"></span><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,30))}</span></div><p>${esc(t.text)}</p>${s==='revision'&&ST.p[t.id].feedback?`<div class="tm"><small>${esc(ST.p[t.id].feedback.slice(0,90))}</small></div>`:`<div class="tm"><small class="${late?'late':''}">${late?'срок прошёл · ':'до '}${fdate(w.due)}</small></div>`}</div></a>`};
+  return `<h1 class="t">${adm?'Программа':'Задания'}</h1><p class="sub">${adm?'Как видят программу участники. У тебя открыты все недели.':'Открой карточку, напиши ответ или добавь ссылку и отправь на проверку.'}</p>
+  <div class="ktabs" style="margin-top:14px">${COLS.map(([k,n])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${n} <em>${cards[k].length}</em></button>`).join('')}</div>
+  <div class="kb kb4" style="margin-top:14px">${COLS.map(([k,n])=>`<div class="kcol ${ac===k?'act':''}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div><div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">Пусто</div>'}</div></div>`).join('')}</div>
+  ${locked.length?`<p class="mu2" style="margin-top:12px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}`;
 }
 function taskV(id){
   const t=TM[id];if(!t)return '<p class="sub">Задание не найдено.</p>';
