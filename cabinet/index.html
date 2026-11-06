@@ -834,6 +834,7 @@ async function unlock(raw){
   if(ME.role==='student'&&!C)throw new Error('no');
   try{localStorage.setItem('okean:code',code)}catch(e){}
 }
+const PROGC={};
 async function loadProgram(id){
   C=null;TK=[];TM={};
   if(ME.role==='client')return;
@@ -842,7 +843,7 @@ async function loadProgram(id){
   else id=ME.program;
   const g=id?await rpc('okean_program',{p_slot:ME.slot,p_h:ME.h,p_id:id}):null;
   if(!g||!g.content||!g.content.weeks)return;
-  C=g.content;CURP=g.id;PT=g.title;PD=null;rebuildTK();
+  C=g.content;CURP=g.id;PT=g.title;PD=null;PROGC[g.id]={content:g.content,title:g.title};rebuildTK();
   if(ME.role==='admin')try{localStorage.setItem('okean:prog',CURP)}catch(e){}
 }
 async function refresh(){
@@ -943,10 +944,12 @@ function route(h){
 function asView(slot,rest){
   const u=(AD.users||[]).find(x=>x.slot===slot);
   if(!u||u.role==='admin')return '<a class="back" href="#/">← Назад</a><p class="sub">Кабинет не найден.</p>';
-  const real={ME,ST,CI};let html;
+  const real={ME,ST,CI,C,PT,CURP};let html;
+  const pg=u.role==='student'&&u.program&&u.program!==CURP&&PROGC[u.program];
+  if(pg){C=pg.content;PT=pg.title;CURP=u.program;rebuildTK()}
   ME=Object.assign({},u,{h:real.ME.h});ST={p:pmap(slot),meta:mmap(slot),days:daysOf(slot)};CI=AI.filter(i=>i.slot===slot);
   window.ASPFX='#/as/'+slot+'/';
-  try{html=route('#/'+String(rest||'').replace(/^\//,''))}finally{ME=real.ME;ST=real.ST;CI=real.CI}
+  try{html=route('#/'+String(rest||'').replace(/^\//,''))}finally{ME=real.ME;ST=real.ST;CI=real.CI;if(pg){C=real.C;PT=real.PT;CURP=real.CURP;rebuildTK()}}
   html=html.replace(/(href|data-h)="#\//g,'$1="#/as/'+slot+'/').replace(/<button[^>]*data-a="out"[^>]*>[^<]*<\/button>/g,'');
   const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
   hash='#/as/'+slot+(rest||'');
@@ -955,6 +958,10 @@ function asView(slot,rest){
 function render(keep){
   const y=scrollY;hash=location.hash||'#/';window.ASPFX='';
   const m=hash.match(/^#\/as\/([^/]+)(\/.*)?$/);
+  if(ME.role==='admin'&&m){const uu=(AD.users||[]).find(x=>x.slot===m[1]);
+    if(uu&&uu.role==='student'&&uu.program&&uu.program!==CURP&&!PROGC[uu.program]){
+      root.innerHTML='<p class="sub" style="margin-top:40px">Загружаю кабинет…</p>';
+      rpc('okean_program',{p_slot:ME.slot,p_h:ME.h,p_id:uu.program}).then(g=>{PROGC[uu.program]=g&&g.content?{content:g.content,title:g.title}:{content:C,title:PT};render(keep)});return}}
   let html=(ME.role==='admin'&&m)?asView(m[1],m[2]):route(hash);
   root.innerHTML=html;
   if(keep)scrollTo(0,y);else scrollTo(0,0);
@@ -1023,7 +1030,7 @@ function homeV(){
   const prog=`<div class="sx sxa0"><div class="sxh">Программа</div><div class="sxwg">${wb}</div></div>`;
   /* задачи: один список (задания недели + свои), листание недель */
   const VT=V.filter(w=>w.tasks.length);let ti=VT.findIndex(w=>w.n===window.TKW);if(ti<0)ti=Math.max(0,VT.findIndex(w=>wcur(w,cw)));
-  const TW=VT[ti]||cw,top=isOpen(TW),parts2=TW.sup?TW.parts:[TW],isCW=TW===V.find(w=>wcur(w,cw)),nid=nt&&isCW?nt.id:null;
+  const TW=VT[ti]||cw;window.TKCUR=TW.n;const top=isOpen(TW),parts2=TW.sup?TW.parts:[TW],isCW=TW===V.find(w=>wcur(w,cw)),nid=nt&&isCW?nt.id:null;
   const TD=Array.isArray(ST.meta.todo)?ST.meta.todo:[];
   const own=TD.filter(x=>x.w===undefined?isCW:x.w===TW.n);
   let items=[].concat(...parts2.map(q=>q.tasks.map(t=>({k:'p',t,o:isOpen(q),s:stOf(t.id)})))).concat(own.map(x=>({k:'m',x,s:x.done?'done':'todo'})));
@@ -1747,7 +1754,7 @@ const A={
  async todoadd(){const i=$('#td-i'),v=(i&&i.value||'').trim();if(!v)return;const a=(ST.meta.todo||[]).slice();if(a.length>=60){toast('Список полон, удали выполненные задачи.');return}a.unshift({id:Math.random().toString(36).slice(2,9),text:v.slice(0,140),done:false,w:+(i.dataset.w)});window.AFTER=()=>{const x=$('#td-i');if(x)x.focus()};await A.todosave(a)},
  async todotg(el){const a=(ST.meta.todo||[]).map(x=>x.id===el.dataset.id?Object.assign({},x,{done:!x.done}):x);await A.todosave(a)},
  async tododel(el){await A.todosave((ST.meta.todo||[]).filter(x=>x.id!==el.dataset.id))},
- tkw(el){const V0=wview().filter(w=>w.tasks.length),cur=V0.findIndex(w=>w.n===window.TKW),c0=cur<0?V0.findIndex(w=>wcur(w,curWeek(ST.p))):cur,n=Math.min(V0.length-1,Math.max(0,c0+(+el.dataset.d)));window.TKW=V0[n].n;render(true)},
+ tkw(el){const V0=wview().filter(w=>w.tasks.length),cur=V0.findIndex(w=>w.n===window.TKCUR),n=Math.min(V0.length-1,Math.max(0,(cur<0?0:cur)+(+el.dataset.d)));window.TKW=V0[n].n;render(true)},
  psel(el){window.PSEL=+el.dataset.n;render(true)},
  pbc(el){window.PBC=el.dataset.c;render(true)},
  pbopen(el){const k=el.dataset.s+':'+el.dataset.t,t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];window.PLE=k;window.PEF={key:k,status:t.status,pri:t.pri||'',who:t.who,stage:+el.dataset.s,x:t.text,d:t.due||''};window.DDO=null;render(true)},
