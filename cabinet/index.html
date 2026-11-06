@@ -473,6 +473,13 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .gtd b{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:600;color:#14111F;background:#fff;padding:2px 8px;border-radius:8px;white-space:nowrap}
 .glg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--muted)}.glg i{display:inline-block;width:14px;height:8px;border-radius:4px;margin-right:6px;vertical-align:middle}.glg .a{background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}.glg .b{background:rgba(155,111,232,.25);border:1px solid rgba(196,164,255,.4)}.glg .m{width:9px;height:9px;background:#fff;border:2px solid #9B6FE8;transform:rotate(45deg);border-radius:2px}
 @media(max-width:700px){.gax,.gr{grid-template-columns:104px 1fr}.gbody:before,.gov{left:116px}.gin{min-width:600px}.gl{font-size:12px}}
+.side.nome .me{display:none}
+.pri{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}.pri.high{background:#fff;color:#2a1b63}.pri.mid{background:rgba(155,111,232,.3);color:#fff;border:1px solid rgba(196,164,255,.5)}.pri.low{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(196,164,255,.18)}
+.tm .late{color:#E4D6FF;font-weight:600}.cmn{display:inline-flex;align-items:center;gap:4px}.cmn svg{width:13px;height:13px}
+.fdates{display:flex;align-items:center;gap:8px}.fdates input{width:auto;padding:8px 10px;font-size:13px}
+.cms{margin-top:18px;padding-top:14px;border-top:1px solid rgba(196,164,255,.2)}.cms>b{font-size:14px;font-weight:500}
+.cmi{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(196,164,255,.12)}.cmi.client{background:rgba(155,111,232,.1)}.cmi small{color:var(--muted);font-size:11.5px}.cmi p{margin-top:4px;font-size:14px;white-space:pre-wrap;line-height:1.4}
+.kb .tc{cursor:grab}
 </style>
 </head>
 <body>
@@ -623,7 +630,7 @@ function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
-  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side"><div class="logo2"><i><svg viewBox="0 0 24 24"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div>${cur==='#/'||cur===''?'':progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
+  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side ${ME.role==='client'?'nome':''}"><div class="logo2"><i><svg viewBox="0 0 24 24"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div>${cur==='#/'||cur===''?'':progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
   <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span></div>${inner}</div>
   <nav class="tabbar"><div>${it.map(link).join('')}</div></nav></div>`;
 }
@@ -963,13 +970,13 @@ const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
 const itemRow=(it,href,adm)=>`<a class="tr ${it.status}" href="${href}"><div><b>${esc(it.title)}</b><small>${esc(IK[it.kind])}${it.due&&it.status==='pending'?' · до '+fdate(it.due):''} · ${fdate(it.created_at)}</small></div>${ibd(it,adm)}</a>`;
 const KT={decision:'Решение',agree:'Договорённость',risk:'Риск',info:'Важно'};
 function cltasks(){
-  const pl=(ST&&ST.meta&&ST.meta.plan)||{stages:[]},all=[];
+  const pl=planOf(ST&&ST.meta),all=[];
   (pl.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>all.push({st,t})));
   const by=(a,b)=>(a.t.due||'9')<(b.t.due||'9')?-1:1;
   return {all,wait:all.filter(x=>x.t.who==='client'&&x.t.status!=='done').sort(by),work:all.filter(x=>x.t.who!=='client'&&x.t.status==='doing'),next:all.filter(x=>x.t.who!=='client'&&x.t.status==='todo'),done:all.filter(x=>x.t.status==='done')};
 }
 function clHome(){
-  const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=ST.meta.plan||{stages:[]},ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
+  const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=planOf(ST.meta),ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),reps=CI.filter(i=>i.kind==='report'),rep=reps[0],key=(ST.meta.key||[]).slice().reverse();
   const T=cltasks(),cur=(pl.stages||[]).find(st=>(st.tasks||[]).some(t=>t.status!=='done'));
   const stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}});
@@ -998,13 +1005,6 @@ function clHome(){
   </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
-function planBoardRO(pl){
-  const P=pl;
-  const COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]};
-  (pl.stages||[]).forEach((st,si)=>(st.tasks||[]).forEach(t=>{if(pbPass(P,si,t))cards[t.status||'todo'].push({st,t})}));
-  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div>${cards[k].map(c=>`<div class="kc" style="cursor:default"><span class="pl2 kst">${esc(c.st.title.slice(0,34))}</span><p>${esc(c.t.text)}</p><div class="kf"><span class="who2 ${c.t.who}">${c.t.who==='client'?'Вы':'Виктория'}</span>${c.t.due&&k!=='done'?`<small>до ${fdate(c.t.due)}</small>`:''}</div></div>`).join('')||'<div class="kempty">Пусто</div>'}</div>`).join('')}</div>`;
-}
-
 function ganttHtml(stg,curI,short,pc){
   const D=x=>x?dnum(x):null,dated=stg.filter(x=>x.st.start&&x.st.end);
   if(!dated.length)return '';
@@ -1030,7 +1030,7 @@ function roadmap(stg,curI,short){
   return `<div class="rmw"><div class="rm">${stg.map((x,i)=>`<div class="rn ${x.done?'d':i===curI?'c':''}"><div class="dot">${x.done?SV.check:i+1}</div><b>${esc(short(x.st.title,x.st))}</b><small>${esc((x.st.period||'').replace(' ноября','.11').replace(' декабря','.12'))}</small></div>`).join('')}</div></div>`;
 }
 function clPlan(){
-  const pl=ST.meta.plan||{stages:[]},ps=planStat(pl),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
+  const pl=planOf(ST.meta),ps=planStat(pl),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
   if(!stg.length)return `${hd2('Траектория','План работы по проекту',[])}<div class="g12"><div class="t2 c12"><p class="mu2">План работы скоро появится.</p></div></div>`;
   return `${hd2('Траектория','План работы: этапы, сроки и что происходит на каждом',[])}
   <div class="tl">${stg.map((x,i)=>`<div class="ts ${x.done?'d':i===curI?'c':''}"><div class="tdot">${x.done?SV.check:i+1}</div>
@@ -1041,9 +1041,9 @@ function clPlan(){
    </details></div>`).join('')}</div>`;
 }
 function clTasks(){
-  const pl=ST.meta.plan||{stages:[]};
-  return `${hd2('Задачи','Все задачи проекта на доске',[])}
-  ${(pl.stages||[]).length?`<div style="margin:14px 0">${boardBar(pl,false)}</div>${pbView()==='status'?planBoardRO(pl):planListsRO(pl)}`:'<div class="t2"><p class="mu2">Задач пока нет.</p></div>'}`;
+  const pl=planOf(ST.meta);window.PLD={slot:ME.slot,plan:pl};
+  return `${hd2('Задачи','Доска задач проекта',[])}
+  ${(pl.stages||[]).length?(pbView()==='status'?taskBoard():`<div style="margin:14px 0">${boardBar(pl,false)}</div>${planListsRO(pl)}`):'<div class="t2"><p class="mu2">Задач пока нет.</p></div>'}`;
 }
 function clKey(){
   const key=(ST.meta.key||[]).slice().reverse();
@@ -1057,7 +1057,7 @@ function clDecide(){
 }
 const weekNo=t=>{const m=String(t||'').match(/^Неделя\s+(\d+)/);return m?+m[1]:0};
 function clReports(){
-  const pl=ST.meta.plan||{stages:[]},R=CI.filter(i=>i.kind==='report'),used=new Set();
+  const pl=planOf(ST.meta),R=CI.filter(i=>i.kind==='report'),used=new Set();
   const weeks=(pl.stages||[]).map(st=>({st,n:weekNo(st.title)})).filter(x=>x.n);
   const curI=(pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done')),curN=curI>=0?weekNo(pl.stages[curI].title):99;
   const cards=weeks.map(w=>{const r=R.find(i=>weekNo(i.title)===w.n);if(r)used.add(r.id);
@@ -1094,7 +1094,7 @@ function cform(slot){
 }
 function clientStat(u){
   const it=AI.filter(i=>i.slot===u.slot),ls=lastSeen(u.slot);
-  const pl=planStat(mmap(u.slot).plan);return {u,tp:pl.n,td:pl.d,pc:it.filter(i=>i.kind==='content'&&i.status==='pending').length,ch:it.filter(i=>i.status==='changes').length,pr:it.filter(i=>i.kind==='request'&&i.status==='pending').length,ls,idle:ls?Math.floor((Date.now()-ls)/864e5):99};
+  const pl=planStat(planOf(mmap(u.slot)));return {u,tp:pl.n,td:pl.d,pc:it.filter(i=>i.kind==='content'&&i.status==='pending').length,ch:it.filter(i=>i.status==='changes').length,pr:it.filter(i=>i.kind==='request'&&i.status==='pending').length,ls,idle:ls?Math.floor((Date.now()-ls)/864e5):99};
 }
 function clientsTable(L){
   return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Клиент</th><th>Ждём клиента</th><th>Вернул на правки</th><th>Последний вход</th></tr></thead><tbody>${L.map(x=>`<tr class="lnk" data-a="go" data-h="#/c/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'')}</small></td><td>${x.pc+x.pr?`<span class="st st-review">${x.pc} контента · ${x.pr} запросов</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td>${x.ch?`<span class="st st-revision">${x.ch}</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td><small style="color:var(--muted);font-size:12.5px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td></tr>`).join('')}</tbody></table></div></div>`;
@@ -1103,7 +1103,7 @@ function clientsTable(L){
 /* ===== траектория работы с клиентом ===== */
 function planStat(pl){let n=0,d=0;((pl&&pl.stages)||[]).forEach(st=>(st.tasks||[]).forEach(t=>{n++;if(t.status==='done')d++}));return {n,d}}
 const PLST={todo:'К выполнению',doing:'В работе',done:'Готово'};
-const T=(text,who,due)=>({text,status:'todo',who:who||'team',due:due||''});
+const T=(text,who,due)=>({id:Math.random().toString(36).slice(2,10),text,status:'todo',who:who||'team',due:due||''});
 const PLTPLS={
  content:{name:'Контент-маркетинг',stages:['Диагностика и стратегия','Упаковка и рубрики','Производство контента','Дистрибуция и аналитика','Масштабирование'].map(t=>({title:t,period:'',desc:'',tasks:[]}))},
  sewing:{name:'Швейная платформа: 6 недель + 4 сопровождение',stages:[
@@ -1118,7 +1118,7 @@ const PLTPLS={
   {title:'После запуска: следующие блоки',period:'дальше',start:'2027-01-15',end:'2027-02-11',later:true,desc:'Остальные блоки подключаем по порядку пользы: сначала материалы и Wildberries и Ozon, затем планирование и поставки, затем реклама, карточки, маркировка и финансы.',tasks:[T('Материалы и закупка, подключение Wildberries и Ozon','team',''),T('Планирование мощности и поставки','team',''),T('Реклама, карточки, маркировка, финансы','team','')]}]}
 };
 function planEd(slot,M){
-  if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:clone(M.plan||{stages:[]})};
+  if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:ensureIds(planOf(M))};
   const P=PLD.plan;P.stages=P.stages||[];
   if(!P.stages.length)return `<div class="t2"><h3>Траектория работы с клиентом</h3><p class="mu2" style="margin-top:8px">Этапы и задачи, которые ты ведёшь вместе с клиентом. Клиент видит их на своей главной.</p><div class="row">${Object.keys(PLTPLS).map(k=>`<button class="bt2 v" data-a="pltpl" data-t="${k}">Шаблон: ${PLTPLS[k].name}</button>`).join('')}<button class="bt2" data-a="pladd">Пустая траектория</button></div></div>`;
   const v=window.PLV||'board';
@@ -1136,21 +1136,32 @@ function planEd(slot,M){
 
 
 function pbCur(pl){return (pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done'))}
-function pbPass(pl,si,t){const f=window.PBF||{st:'all',who:'all'};
-  if(f.st==='cur'&&si!==pbCur(pl))return false;
-  if(f.st!=='all'&&f.st!=='cur'&&si!==+f.st)return false;
+const uid=()=>Math.random().toString(36).slice(2,10);
+function ensureIds(P){(P.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>{if(!t.id)t.id=uid()}));return P}
+function effPlan(base,ov){const P=clone(base||{stages:[]});ov=ov||{};(P.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>{const o=t.id&&ov[t.id];if(!o)return;if((o.at||0)>(t.at||0)){['status','text','due','pri'].forEach(k=>{if(k in o)t[k]=o[k]})}const seen=new Set((t.cm||[]).map(c=>c.id));t.cm=(t.cm||[]).concat((o.cm||[]).filter(c=>!seen.has(c.id)))}));return P}
+const planOf=m=>effPlan((m||{}).plan,(m||{}).ptasks);
+const PRI={high:'Высокая',mid:'Средняя',low:'Низкая'},PRK={high:0,mid:1,low:2};
+const pbEff=(pl,si,t)=>t.due||((pl.stages[si]||{}).end)||'';
+function pbPass(pl,si,t){const f=Object.assign({st:'all',who:'all',mode:'all'},window.PBF);
+  if(f.st!=='all'&&si!==+f.st)return false;
   if(f.who==='client'&&t.who!=='client')return false;
   if(f.who==='team'&&t.who==='client')return false;
+  if(f.mode!=='all'){const d=pbEff(pl,si,t),td=today();let a,b;
+    if(f.mode==='week'){a=td;b=ymdOf(dnum(td)+6);if(t.status!=='done'&&d&&d<td)return true}else{a=f.from||'0000-00-00';b=f.to||'9999-99-99'}
+    if(!d||d<a||d>b)return false}
   return true}
+function pbSort(arr){return (window.PBF&&PBF.sort==='pri')?arr.slice().sort((x,y)=>((PRK[x.t.pri]!=null?PRK[x.t.pri]:3)-(PRK[y.t.pri]!=null?PRK[y.t.pri]:3))):arr}
 function boardBar(pl,adm){
-  const f=window.PBF||{st:'all',who:'all'};
+  const f=Object.assign({v:'status',st:'all',who:'all',mode:'all',from:'',to:'',sort:''},window.PBF);
   const ch=(k,v,t)=>`<button data-a="pbf" data-k="${k}" data-v="${v}" class="${String(f[k])===String(v)?'on':''}">${t}</button>`;
-  const vw=(window.PBF&&PBF.v)||'stages';
-  return `<div class="fbar"><div class="flt" style="margin:0"><button data-a="pbf" data-k="v" data-v="stages" class="${vw==='stages'?'on':''}">Этапы</button><button data-a="pbf" data-k="v" data-v="status" class="${vw==='status'?'on':''}">Статусы</button></div><div class="flt" style="margin:0">${ch('st','all','Все задачи')}${ch('st','cur','Эта неделя')}</div>
-  <select class="sel" id="pf-s" style="width:auto;margin:0">${['<option value="all"'+(f.st==='all'||f.st==='cur'?' selected':'')+'>Любой этап</option>'].concat((pl.stages||[]).map((st,i)=>`<option value="${i}" ${String(f.st)===String(i)?'selected':''}>${esc(st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</option>`)).join('')}</select>
-  <div class="flt" style="margin:0">${ch('who','all','Все')}${ch('who','client',adm?'Клиент':'Мои')}${ch('who','team',adm?'Я':'У Виктории')}</div></div>`;
+  return `<div class="fbar"><div class="flt" style="margin:0">${ch('v','status','Статусы')}${ch('v','stages','Этапы')}</div>
+  <div class="flt" style="margin:0">${ch('mode','all','Весь период')}${ch('mode','week','Эта неделя')}${ch('mode','range','Свой срок')}</div>
+  ${f.mode==='range'?`<div class="fdates"><input type="date" id="pf-a" value="${esc(f.from)}"><span class="mu2">до</span><input type="date" id="pf-b" value="${esc(f.to)}"></div>`:''}
+  <select class="sel" id="pf-s" style="width:auto;margin:0"><option value="all">Любой этап</option>${(pl.stages||[]).map((st,i)=>`<option value="${i}" ${String(f.st)===String(i)?'selected':''}>${esc(st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</option>`).join('')}</select>
+  <div class="flt" style="margin:0">${ch('who','all','Все')}${ch('who','client',adm?'Клиент':'Мои')}${ch('who','team',adm?'Я':'У Виктории')}</div>
+  <div class="flt" style="margin:0"><button data-a="pbf" data-k="sort" data-v="${f.sort==='pri'?'':'pri'}" class="${f.sort==='pri'?'on':''}">По важности</button></div></div>`;
 }
-const pbView=()=>(window.PBF&&PBF.v)||'stages';
+const pbView=()=>(window.PBF&&PBF.v)||'status';
 function pbCardHtml(si,ti,t,ro){
   const tx=esc(t.text||'Без названия');
   return `<div class="tc ${t.status}" ${ro?'':`draggable="true" data-a="pbopen"`} data-s="${si}" data-t="${ti}"><button class="tcb ${t.status}" ${ro?'tabindex="-1" style="pointer-events:none"':`data-a="pbtoggle" data-s="${si}" data-t="${ti}" title="Отметить выполненной"`}></button><div class="tx"><p>${tx}</p><div class="tm"><span class="who2 ${t.who}">${t.who==='client'?(ro?'Вы':'Клиент'):(ro?'Виктория':'Я')}</span>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}${t.status==='doing'?'<small class="dg">в работе</small>':''}</div></div></div>`;
@@ -1158,9 +1169,8 @@ function pbCardHtml(si,ti,t,ro){
 function planLists(slot){
   const P=PLD.plan,f=window.PBF||{st:'all',who:'all'},curI=pbCur(P);
   const lists=P.stages.map((st,si)=>({st,si})).filter(x=>f.st==='all'||(f.st==='cur'?x.si===curI:x.si===+f.st));
-  const m=window.PLE&&window.PLE.split(':').map(Number),mt=m&&P.stages[m[0]]&&P.stages[m[0]].tasks[m[1]];
-  const modal=mt?`<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:90px;margin-bottom:10px">${esc(mt.text)}</textarea><small class="l">Список (этап)</small><select id="pe-s" class="sel" style="margin:0 0 10px">${P.stages.map((st,i)=>`<option value="${i}" ${i===m[0]?'selected':''}>${esc(st.title)}</option>`).join('')}</select><div class="idx"><div><small class="l">Кто делает</small><select id="pe-w" class="sel" style="margin:0"><option value="team" ${mt.who!=='client'?'selected':''}>Я</option><option value="client" ${mt.who==='client'?'selected':''}>Клиент</option></select></div><div><small class="l">Статус</small><select id="pe-st" class="sel" style="margin:0"><option value="todo" ${mt.status==='todo'?'selected':''}>К выполнению</option><option value="doing" ${mt.status==='doing'?'selected':''}>В работе</option><option value="done" ${mt.status==='done'?'selected':''}>Готово</option></select></div></div><small class="l" style="margin-top:10px">Срок</small><input type="date" id="pe-d" value="${esc(mt.due||'')}"><div class="row" style="margin-top:16px"><button class="bt2 v" data-a="pbsave" data-s="${m[0]}" data-t="${m[1]}">Сохранить</button><button class="btn wr s" data-a="pbdel" data-s="${m[0]}" data-t="${m[1]}">Удалить</button></div></div></div>`:'';
-  return `${boardBar(P,true)}<div class="tb">${lists.map(({st,si})=>{const vis=(st.tasks||[]).map((t,ti)=>({t,ti})).filter(x=>pbPass(P,si,x.t));const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
+  const modal=taskModal();
+  return `${boardBar(P,true)}<div class="tb">${lists.map(({st,si})=>{const vis=pbSort((st.tasks||[]).map((t,ti)=>({t,ti})).filter(x=>pbPass(P,si,x.t)));const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
    return `<div class="tlist" data-si="${si}"><div class="tlh"><input type="text" data-pl="stages.${si}.title" data-plsave="1" value="${esc(st.title)}"><span class="pl2">${d}/${n}</span><button class="rbt" data-a="pstmv" data-s="${si}" data-d="-1" title="Левее">‹</button><button class="rbt" data-a="pstmv" data-s="${si}" data-d="1" title="Правее">›</button><button class="rbt" data-a="pldelst" data-s="${si}" title="Удалить список">✕</button></div>
     ${st.period?`<div class="mu2" style="padding:0 4px 8px">${esc(st.period)}</div>`:''}
     <div class="tcards">${vis.map(x=>pbCardHtml(si,x.ti,x.t,false)).join('')}</div>
@@ -1170,19 +1180,42 @@ function planLists(slot){
 function planListsRO(pl){
   const f=window.PBF||{st:'all',who:'all'},curI=pbCur(pl);
   const lists=(pl.stages||[]).map((st,si)=>({st,si})).filter(x=>f.st==='all'||(f.st==='cur'?x.si===curI:x.si===+f.st));
-  return `<div class="tb">${lists.map(({st,si})=>{const vis=(st.tasks||[]).map((t,ti)=>({t,ti})).filter(x=>pbPass(pl,si,x.t));const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
+  return `<div class="tb">${lists.map(({st,si})=>{const vis=pbSort((st.tasks||[]).map((t,ti)=>({t,ti})).filter(x=>pbPass(pl,si,x.t)));const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
    return `<div class="tlist"><div class="tlh"><b>${esc(st.title)}</b><span class="pl2">${d}/${n}</span></div>${st.period?`<div class="mu2" style="padding:0 4px 8px">${esc(st.period)}</div>`:''}<div class="tcards">${vis.map(x=>pbCardHtml(si,x.ti,x.t,true)).join('')||'<div class="kempty">Нет задач</div>'}</div></div>`}).join('')}</div>`;
 }
-function planBoard(slot){return pbView()==='status'?planBoardStatus(slot):planLists(slot)}
-function planBoardStatus(slot){
-  const P=PLD.plan,COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']];
-  const cards={todo:[],doing:[],done:[]};
-  P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>{if(pbPass(P,si,t))cards[t.status||'todo'].push({st,si,t,ti})}));
-  const edit=c=>`<div class="kc kadd"><textarea id="pe-x" style="min-height:70px;margin-bottom:8px">${esc(c.t.text)}</textarea><small class="l">Этап</small><select id="pe-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,i)=>`<option value="${i}" ${i===c.si?'selected':''}>${esc(st.title)}</option>`).join('')}</select><div class="idx"><div><small class="l">Кто делает</small><select id="pe-w" class="sel" style="margin:0"><option value="team" ${c.t.who!=='client'?'selected':''}>Я</option><option value="client" ${c.t.who==='client'?'selected':''}>Клиент</option></select></div><div><small class="l">Статус</small><select id="pe-st" class="sel" style="margin:0">${COLS.map(([k,n])=>`<option value="${k}" ${c.t.status===k?'selected':''}>${n}</option>`).join('')}</select></div></div><small class="l" style="margin-top:8px">Срок</small><input type="date" id="pe-d" value="${esc(c.t.due||'')}"><div class="row"><button class="bt2 sm2 v" data-a="pbsave" data-s="${c.si}" data-t="${c.ti}">Сохранить</button><button class="bt2 sm2" data-a="pbeditx">Отмена</button><button class="btn wr s" data-a="pbdel" data-s="${c.si}" data-t="${c.ti}">Удалить</button></div></div>`;
-  const card=c=>window.PLE===c.si+':'+c.ti?edit(c):`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Я'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="rbt ked" data-a="pbedit" data-s="${c.si}" data-t="${c.ti}" title="Редактировать">✎</button><button class="tkst ${c.t.status}" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
-  return `${boardBar(P,true)}<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span><button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button></div>
-   ${window.PLADD===k?`<div class="kc kadd"><select id="pa-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,si)=>`<option value="${si}">${esc(st.title)}</option>`).join('')}</select><input type="text" id="pa-t" placeholder="Что нужно сделать" autofocus><div class="row" style="margin-top:8px"><button class="bt2 sm2 v" data-a="pbaddok" data-c="${k}">Добавить</button><button class="bt2 sm2" data-a="pbaddx">Отмена</button></div></div>`:''}
-   ${cards[k].map(card).join('')||(window.PLADD===k?'':'<div class="kempty">Перетащи сюда</div>')}</div>`).join('')}</div><p class="mu2" style="margin-top:10px">Перетаскивай карточки между колонками или нажимай кружок справа внизу. Изменения сохраняются сразу и видны клиенту.</p>`;
+function planBoard(slot){return pbView()==='status'?taskBoard():planLists(slot)}
+function whoTxt(t){return ME.role==='client'?(t.who==='client'?'Вы':'Виктория'):(t.who==='client'?'Клиент':'Я')}
+function taskCard(P,si,ti,t){
+  const ro=!!window.ASPFX||!t.id,n=(t.cm||[]).length,d=pbEff(P,si,t),late=t.status!=='done'&&d&&d<today();
+  const sn=P.stages[si].title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ');
+  return `<div class="tc ${t.status}" ${ro?'':`draggable="true" data-a="pbopen"`} data-s="${si}" data-t="${ti}"><button class="tcb ${t.status}" ${ro?'tabindex="-1" style="pointer-events:none"':`data-a="pbtoggle" data-s="${si}" data-t="${ti}" title="Отметить выполненной"`}></button><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(sn.slice(0,30))}</span>${t.pri?`<span class="pri ${t.pri}">${PRI[t.pri]}</span>`:''}</div><p>${esc(t.text||'Без названия')}</p><div class="tm"><span class="who2 ${t.who}">${whoTxt(t)}</span>${d&&t.status!=='done'?`<small class="${late?'late':''}">${late?'просрочено · ':'до '}${fdate(d)}</small>`:''}${n?`<small class="cmn">${ico('chat')} ${n}</small>`:''}</div></div></div>`;
+}
+function taskModal(){
+  const P=window.PLD&&PLD.plan;if(!P||!window.PLE||window.ASPFX)return '';
+  const m=PLE.split(':').map(Number),mt=P.stages[m[0]]&&P.stages[m[0]].tasks[m[1]];if(!mt)return '';
+  const adm=ME.role==='admin',cms=(mt.cm||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0));
+  return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(mt.text)}</textarea>
+  ${adm?`<small class="l">Список (этап)</small><select id="pe-s" class="sel" style="margin:0 0 10px">${P.stages.map((st,i)=>`<option value="${i}" ${i===m[0]?'selected':''}>${esc(st.title)}</option>`).join('')}</select>`:''}
+  <div class="idx">${adm?`<div><small class="l">Кто делает</small><select id="pe-w" class="sel" style="margin:0"><option value="team" ${mt.who!=='client'?'selected':''}>Я</option><option value="client" ${mt.who==='client'?'selected':''}>Клиент</option></select></div>`:''}<div><small class="l">Статус</small><select id="pe-st" class="sel" style="margin:0"><option value="todo" ${mt.status==='todo'?'selected':''}>Не начато</option><option value="doing" ${mt.status==='doing'?'selected':''}>В процессе</option><option value="done" ${mt.status==='done'?'selected':''}>Выполнено</option></select></div><div><small class="l">Важность</small><select id="pe-p" class="sel" style="margin:0"><option value="">Не задана</option>${Object.keys(PRI).map(k=>`<option value="${k}" ${mt.pri===k?'selected':''}>${PRI[k]}</option>`).join('')}</select></div></div>
+  <small class="l" style="margin-top:10px">Срок</small><input type="date" id="pe-d" value="${esc(mt.due||'')}">
+  <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbsave" data-s="${m[0]}" data-t="${m[1]}">Сохранить</button>${adm?`<button class="btn wr s" data-a="pbdel" data-s="${m[0]}" data-t="${m[1]}">Удалить</button>`:''}</div>
+  <div class="cms"><b>Комментарии</b>${cms.map(c=>`<div class="cmi ${c.by}"><small>${esc(c.name||(c.by==='client'?'Клиент':'Виктория'))} · ${fdt(new Date(c.at||0).toISOString())}</small><p>${esc(c.text)}</p></div>`).join('')||'<p class="mu2">Пока нет.</p>'}<textarea id="pe-c" placeholder="Написать комментарий" style="min-height:60px;margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pbcm" data-s="${m[0]}" data-t="${m[1]}">Отправить</button></div></div></div></div>`;
+}
+function taskBoard(){
+  const P=PLD.plan,adm=ME.role==='admin',COLS=[['todo','Не начато'],['doing','В процессе'],['done','Выполнено']],cards={todo:[],doing:[],done:[]};
+  P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>{if(pbPass(P,si,t))cards[t.status||'todo'].push({si,ti,t})}));
+  return `${boardBar(P,adm)}<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span>${adm?`<button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button>`:''}</div>
+   ${window.PLADD===k&&adm?`<div class="kc kadd"><select id="pa-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,si)=>`<option value="${si}">${esc(st.title)}</option>`).join('')}</select><input type="text" id="pa-t" placeholder="Что нужно сделать" autofocus><div class="row" style="margin-top:8px"><button class="bt2 sm2 v" data-a="pbaddok" data-c="${k}">Добавить</button><button class="bt2 sm2" data-a="pbaddx">Отмена</button></div></div>`:''}
+   <div class="tcards" style="max-height:none">${pbSort(cards[k]).map(c=>taskCard(P,c.si,c.ti,c.t)).join('')||'<div class="kempty">Перетащи сюда</div>'}</div></div>`).join('')}</div>${taskModal()}<p class="mu2" style="margin-top:10px">Перетаскивай карточки между колонками, нажимай на карточку, чтобы править, менять важность и писать комментарии.</p>`;
+}
+async function tkCommit(si,ti){
+  const t=PLD.plan.stages[si].tasks[ti];
+  if(ME.role==='client'){
+    const patch={status:t.status,text:t.text,due:t.due||'',pri:t.pri||'',cm:(t.cm||[]).filter(c=>c.by==='client')};
+    const ok=await call(()=>rpc('okean_task_set',{p_slot:ME.slot,p_h:ME.h,p_id:t.id,p_patch:patch}));
+    if(!ok){render(true);return}
+    const ov=Object.assign({},ST.meta.ptasks);ov[t.id]=Object.assign({},ov[t.id],patch,{at:Date.now()});ST.meta.ptasks=ov;render(true);
+  }else{t.at=Date.now();await planQuick()}
 }
 async function planQuick(){const ok=await setM(PLD.slot,'plan',PLD.plan);render(true)}
 function planView(pl){
@@ -1346,24 +1379,27 @@ const A={
  noop(){},
  pbopen(el){window.PLE=el.dataset.s+':'+el.dataset.t;render(true)},
  pbclose(){window.PLE=null;render(true)},
- async pbtoggle(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status=t.status==='done'?'todo':'done';await planQuick()},
+ async pbtoggle(el){const si=+el.dataset.s,ti=+el.dataset.t,t=PLD.plan.stages[si].tasks[ti];t.status=t.status==='done'?'todo':'done';await tkCommit(si,ti)},
  pqopen(el){window.PLQ=+el.dataset.s;window.AFTER=()=>{const x=$('#pq-t');if(x)x.focus()};render(true)},
  pqx(){window.PLQ=null;render(true)},
- async pqok(el){const x=$('#pq-t'),tx=x?x.value.trim():'';if(!tx){toast('Напиши задачу');return}const st=PLD.plan.stages[+el.dataset.s];st.tasks=st.tasks||[];st.tasks.push({text:tx,status:'todo',who:'team',due:''});window.AFTER=()=>{const y=$('#pq-t');if(y)y.focus()};await planQuick()},
+ async pqok(el){const x=$('#pq-t'),tx=x?x.value.trim():'';if(!tx){toast('Напиши задачу');return}const st=PLD.plan.stages[+el.dataset.s];st.tasks=st.tasks||[];st.tasks.push({id:uid(),text:tx,status:'todo',who:'team',due:'',at:Date.now()});window.AFTER=()=>{const y=$('#pq-t');if(y)y.focus()};await planQuick()},
  async stadd(){PLD.plan.stages.push({title:'Новый список',period:'',desc:'',tasks:[]});await planQuick()},
  async pstmv(el){const a=PLD.plan.stages,i=+el.dataset.s,j=i+(+el.dataset.d);if(j<0||j>=a.length)return;const t=a[i];a[i]=a[j];a[j]=t;await planQuick()},
  pbedit(el){window.PLE=el.dataset.s+':'+el.dataset.t;render(true)},
  pbeditx(){window.PLE=null;render(true)},
- async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti];t.text=tx;t.who=$('#pe-w').value;t.status=$('#pe-st').value;t.due=$('#pe-d').value||'';const ns=+$('#pe-s').value;if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено')},
- async pbdel(el){if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
- pbf(el){window.PBF=Object.assign({st:'all',who:'all',v:'stages'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
+ async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti];t.text=tx;t.status=$('#pe-st').value;t.pri=$('#pe-p').value;t.due=$('#pe-d').value||'';
+  if(ME.role==='admin'){t.who=$('#pe-w').value;const ns=+$('#pe-s').value;t.at=Date.now();if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено');return}
+  window.PLE=null;await tkCommit(si,ti);toast('Сохранено')},
+ async pbcm(el){const si=+el.dataset.s,ti=+el.dataset.t,x=$('#pe-c'),tx=x?x.value.trim():'';if(!tx){toast('Напиши комментарий');return}const t=PLD.plan.stages[si].tasks[ti];t.cm=t.cm||[];t.cm.push({id:uid(),by:ME.role==='admin'?'admin':'client',name:ME.role==='admin'?'Виктория':(ME.name||'Клиент'),text:tx,at:Date.now()});await tkCommit(si,ti)},
+ async pbdel(el){if(ME.role!=='admin')return;if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
+ pbf(el){window.PBF=Object.assign({st:'all',who:'all',v:'status',mode:'all'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
- async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({text:tx,status:el.dataset.c,who:'team',due:''});window.PLADD=null;await planQuick();toast('Задача добавлена')},
+ async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({id:uid(),text:tx,status:el.dataset.c,who:'team',due:'',at:Date.now()});window.PLADD=null;await planQuick();toast('Задача добавлена')},
  async pbmove(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';await planQuick()},
  async pbwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';await planQuick()},
  pladd(){PLD.plan.stages.push({title:'Новый этап',tasks:[]});render(true)},
  pltpl(el){PLD.plan.stages=clone(PLTPLS[el.dataset.t].stages);render(true)},
- pltask(el){PLD.plan.stages[+el.dataset.s].tasks.push({text:'',status:'todo',who:'team',due:''});render(true)},
+ pltask(el){PLD.plan.stages[+el.dataset.s].tasks.push({id:uid(),text:'',status:'todo',who:'team',due:'',at:Date.now()});render(true)},
  plst(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';render(true)},
  plwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';render(true)},
  pldel(el){PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);render(true)},
@@ -1440,14 +1476,14 @@ root.addEventListener('click',e=>{
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
-root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
+root.addEventListener('dragstart',e=>{if(location.hash.startsWith('#/as/'))return;const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.tc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'));document.querySelectorAll('.dropline').forEach(x=>x.remove())});
 function dropIdx(list,y){const cards=[...list.querySelectorAll('.tc:not(.drag)')];for(const c of cards){const r=c.getBoundingClientRect();if(y<r.top+r.height/2)return {el:c,idx:+c.dataset.t}}return {el:null,idx:null}}
 root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();const d=dropIdx(tl,e.clientY);document.querySelectorAll('.dropline').forEach(x=>x.remove());const ln=document.createElement('div');ln.className='dropline';const box=tl.querySelector('.tcards');if(d.el)d.el.before(ln);else box.appendChild(ln);return}
 const col=e.target.closest&&e.target.closest('.kcol');if(col){e.preventDefault();document.querySelectorAll('.kcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
-root.addEventListener('drop',async e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();document.querySelectorAll('.dropline').forEach(x=>x.remove());const dd=(e.dataTransfer.getData('text/plain')||'').split(':').map(Number),S=PLD.plan.stages,s1=dd[0],t1=dd[1],s2=+tl.dataset.si;const task=S[s1]&&S[s1].tasks[t1];if(!task)return;let idx=dropIdx(tl,e.clientY).idx;S[s1].tasks.splice(t1,1);S[s2].tasks=S[s2].tasks||[];if(idx==null)idx=S[s2].tasks.length;else if(s1===s2&&t1<idx)idx--;S[s2].tasks.splice(idx,0,task);await planQuick();return}
-const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await planQuick()}else render(true)});
-root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.plsave&&window.PLD){await planQuick();return}if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
+root.addEventListener('drop',async e=>{if(location.hash.startsWith('#/as/'))return;const tl=ME.role==='admin'&&e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();document.querySelectorAll('.dropline').forEach(x=>x.remove());const dd=(e.dataTransfer.getData('text/plain')||'').split(':').map(Number),S=PLD.plan.stages,s1=dd[0],t1=dd[1],s2=+tl.dataset.si;const task=S[s1]&&S[s1].tasks[t1];if(!task)return;let idx=dropIdx(tl,e.clientY).idx;S[s1].tasks.splice(t1,1);S[s2].tasks=S[s2].tasks||[];if(idx==null)idx=S[s2].tasks.length;else if(s1===s2&&t1<idx)idx--;S[s2].tasks.splice(idx,0,task);await planQuick();return}
+const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await tkCommit(+d[0],+d[1])}else render(true)});
+root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.plsave&&window.PLD){await planQuick();return}if(t.id==='pf-a'||t.id==='pf-b'){window.PBF=Object.assign({st:'all',who:'all',mode:'range'},window.PBF,t.id==='pf-a'?{from:t.value}:{to:t.value});render(true);return}if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.PLE){window.PLE=null;render(true)}if(e.target&&e.target.id==='pq-t'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();const b=document.querySelector('[data-a=pqok]');if(b)A.pqok(b)}});
 let sv={};
 root.addEventListener('input',e=>{const t=e.target;
