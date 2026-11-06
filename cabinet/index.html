@@ -338,6 +338,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .lk2 .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(155,111,232,.16);border:1px solid rgba(196,164,255,.3);color:var(--vb);margin-bottom:14px}
 .lk2 .ic svg{width:18px;height:18px}.lk2 b{display:block;font-size:16px;font-weight:500}.lk2 small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
 .lk2:hover{border-color:rgba(196,164,255,.4)}
+.mg2{display:grid;grid-template-columns:repeat(2,auto);gap:14px 34px}.ms2 b{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1}.ms2 span{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -476,13 +477,13 @@ const wlabel=w=>w.n===0?'Подготовка':w.n>6?'Сопровождение
 let hash='#/';
 function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
-    return [['#/','Обзор','chart'],['#/learn','Обучение','book'],['#/queue','Проверка','inbox',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
+    return [['#/','Обзор','chart'],['#/learn','Обучение','book',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/approve','Согласование','tasks',pc],['#/requests','Запросы','inbox',pr],['#/reports','Отчёты','chart']]}
   const c=totals(ST.p);
   return [['#/','Обзор','home'],['#/tasks','Задания','tasks',c.revision],['#/lib','Материалы','book'],['#/me','Профиль','user']];
 }
-function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
+function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
@@ -671,34 +672,40 @@ function stat(u){
   return {u,P,M,c,N,late,ls,idle,risk,reasons:[late?'просрочено недель: '+late:'',idle>=4&&started?(idle>=99?'ни разу не заходил(а)':'нет активности '+idle+' дн.'):'',c.revision>=3?'много возвратов: '+c.revision:''].filter(Boolean)};
 }
 function actStrip(days){const s=new Set(days),t=dnum(today());let h='';for(let i=13;i>=0;i--)h+=`<i class="${s.has(ymdOf(t-i))?'on':''}" title="${ymdOf(t-i)}"></i>`;return `<span class="act">${h}</span>`}
-function adOverview(){
-  const S=students().map(stat),N=TK.length,rv=(AD.progress||[]).filter(p=>p.status==='review').sort((a,b)=>new Date(a.submitted_at)-new Date(b.submitted_at)),q=rv.length;
+function learnData(){
+  const S=students().map(stat),N=TK.length,rv=(AD.progress||[]).filter(p=>p.status==='review').sort((a,b)=>new Date(a.submitted_at)-new Date(b.submitted_at));
   const avg=S.length?S.reduce((a,x)=>a+x.c.done/N,0)/S.length:0,risk=S.filter(x=>x.risk);
-  const cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(clientStat);
   const days=[];for(let i=6;i>=0;i--){const d=ymdOf(dnum(today())-i);days.push([d,(AD.progress||[]).filter(p=>p.submitted_at&&ymd(new Date(p.submitted_at))===d).length])}
-  const tot=days.reduce((a,x)=>a+x[1],0),mx=Math.max(1,...days.map(x=>x[1]));
+  return {S,N,rv,q:rv.length,avg,risk,days,tot:days.reduce((a,x)=>a+x[1],0)};
+}
+function adOverview(){
+  const L=learnData(),cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(clientStat);
+  const np=Math.max(1,PL.length),ms=(n,l)=>`<div class="ms2"><b>${n}</b><span>${l}</span></div>`;
+  return `${hd2('Привет, <b>Виктория</b>',fdate(today()),[])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
+  <div class="g12">
+   <div class="t2 c7"><h3>Обучение</h3>
+    <div style="display:flex;align-items:center;gap:22px;margin-top:16px;flex-wrap:wrap">${rg2(Math.round(L.avg*100),96,11)}<div class="mg2">${ms(np,plur(np,'программа','программы','программ'))}${ms(L.S.length,'участников')}${ms(L.q,'ждут проверки')}${ms(L.tot,'сдач за неделю')}</div></div>
+    ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}
+    <a class="it2" href="#/learn" style="margin-top:16px"><div class="tp">${ico('book')}</div><div class="x"><p>Открыть обучение</p><small>участники, проверка, программа, воронка</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px"')}</a></div>
+   <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
+   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
+  </div>`;
+}
+function adLearn(){
+  const L=learnData(),{S,rv,q,avg,risk,days,tot}=L;
   const uname=slot=>((AD.users||[]).find(u=>u.slot===slot)||{}).name||'';
-  const np=Math.max(1,PL.length);
-  return `${hd2('Привет, <b>Виктория</b>',fdate(today()),[[ico('users'),S.length,'участников'],[ico('tasks'),q,'на проверке'],[ico('brief'),cl.length,plur(cl.length,'клиент','клиента','клиентов')]])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
+  const mx=Math.max(1,...days.map(x=>x[1]));
+  const prs=PL.length?PL:[{id:CURP,title:PT}];
+  const lt=(h,ic,t,d)=>`<a class="t2 lk2 c3" href="${h}"><div class="ic">${ico(ic)}</div><b>${t}</b><small>${d}</small></a>`;
+  return `${hd2('Обучение','Программа «'+esc(PT||'')+'»',[])}
+  ${prs.length>1?`<div class="pg2" style="margin-top:14px">${prs.map(p=>`<button class="pgc ${p.id===CURP?'on':''}" data-a="pickprog" data-id="${esc(p.id)}"><b>${esc(p.title||p.id)}</b><small>${p.id===CURP?'выбрана':'открыть'}</small></button>`).join('')}</div>`:''}
   <div class="g12">
    <div class="t2 dk2 c5"><h3>Ждут проверки <span class="big2" style="font-size:30px">${q}</span></h3>
     <div class="ck2">${rv.slice(0,3).map(p=>`<a class="rw2" href="#/queue"><div class="b">${ico('doc')}</div><div class="x"><p>${esc(firstName(uname(p.slot)))}: ${esc(((TM[p.task_id]||{}).text)||p.task_id)}</p><small>ждёт ${agoTxt(p.submitted_at)}</small></div><div class="o2"></div></a>`).join('')||'<p class="mu2" style="padding:12px 0">Очередь пуста.</p>'}</div>
     ${q?`<div style="margin-top:12px"><a class="bt2" href="#/queue">Открыть очередь ${SV.arrow}</a></div>`:''}</div>
    <div class="t2 c4"><h3>Сдачи за 7 дней</h3><div class="big2" style="margin-top:12px">${tot}</div><div class="mu2" style="margin-top:4px">${plur(tot,'работа','работы','работ')} за неделю</div>
     <div class="bars2">${days.map((d,k)=>`<div><i class="${k===6?'f':''}" style="height:${Math.max(4,d[1]/mx*70)}px"></i>${['вс','пн','вт','ср','чт','пт','сб'][new Date(dnum(d[0])*864e5).getUTCDay()]}</div>`).join('')}</div></div>
-   <div class="t2 c3"><h3>Обучение <a class="go" href="#/learn">${SV.arrow}</a></h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'средний прогресс участников'}</div></div>
-   <div class="t2 c7"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
-   <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
-  </div>`;
-}
-function adLearn(){
-  const S=students().map(stat),N=TK.length,q=(AD.progress||[]).filter(p=>p.status==='review').length;
-  const avg=S.length?S.reduce((a,x)=>a+x.c.done/N,0)/S.length:0;
-  const prs=PL.length?PL:[{id:CURP,title:PT}];
-  const lt=(h,ic,t,d)=>`<a class="t2 lk2 c3" href="${h}"><div class="ic">${ico(ic)}</div><b>${t}</b><small>${d}</small></a>`;
-  return `${hd2('Обучение','Программы, участники, задания и материалы',[[ico('users'),S.length,'участников в выбранной'],[ico('tasks'),q,'на проверке']])}
-  <div class="g12">
-   <div class="t2 c12"><h3>Программы</h3><div class="pg2">${prs.map(p=>`<button class="pgc ${p.id===CURP?'on':''}" data-a="pickprog" data-id="${esc(p.id)}"><b>${esc(p.title||p.id)}</b><small>${p.id===CURP?S.length+' участников · '+Math.round(avg*100)+'% средний прогресс':'открыть'}</small></button>`).join('')}</div></div>
+   <div class="t2 c3"><h3>Прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'средний по участникам'}</div></div>
    ${lt('#/people','users','Участники','коды, траектории, добавить')}${lt('#/prog','book','Программа','недели, задания, материалы')}${lt('#/funnel','chart','Воронка заданий','где застревают')}${lt('#/nudge','inbox','Кого поддержать','тексты для напоминаний')}
    <div class="t2 c12"><h3>Участники <a class="go" href="#/people">${SV.arrow}</a></h3>
     <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
