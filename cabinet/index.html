@@ -339,6 +339,10 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .lk2 .ic svg{width:18px;height:18px}.lk2 b{display:block;font-size:16px;font-weight:500}.lk2 small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
 .lk2:hover{border-color:rgba(196,164,255,.4)}
 .mg2{display:grid;grid-template-columns:repeat(2,auto);gap:14px 34px}.ms2 b{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1}.ms2 span{font-size:12px;color:var(--muted)}
+.cc2{display:block;text-decoration:none;color:inherit}.cc2:hover{border-color:rgba(196,164,255,.4)}
+.cc2 .top{display:flex;align-items:center;gap:12px}.cc2 .x{flex:1;min-width:0}.cc2 .x b{display:block;font-size:17px;font-weight:500}.cc2 .x small{color:var(--muted);font-size:12.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.dt2 summary{cursor:pointer;font-size:17px;font-weight:500;list-style:none}.dt2 summary::-webkit-details-marker{display:none}.dt2 summary:before{content:"+ ";color:var(--vb)}.dt2[open] summary{margin-bottom:14px}.dt2[open] summary:before{content:"− "}
 </style>
 </head>
 <body>
@@ -856,23 +860,43 @@ function clientsTable(L){
   return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Клиент</th><th>Ждём клиента</th><th>Вернул на правки</th><th>Последний вход</th></tr></thead><tbody>${L.map(x=>`<tr class="lnk" data-a="go" data-h="#/c/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'')}</small></td><td>${x.pc+x.pr?`<span class="st st-review">${x.pc} контента · ${x.pr} запросов</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td>${x.ch?`<span class="st st-revision">${x.ch}</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td><small style="color:var(--muted);font-size:12.5px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td></tr>`).join('')}</tbody></table></div></div>`;
 }
 function adClients(){
-  const named=(AD.users||[]).filter(u=>u.role==='client');
-  return `<h1 class="t">Клиенты</h1><p class="sub">Отдельные кабинеты для клиентов компании: согласование контента, запросы и отчёты.</p>${invCard()}
-  <div style="margin-top:14px">${named.length?clientsTable(named.map(clientStat)):'<div class="card">Клиентов пока нет. Добавь первого ниже.</div>'}</div>
-  <h2 class="t">Добавить клиента</h2>${addForm('client')}`;
+  const L=(AD.users||[]).filter(u=>u.role==='client').map(clientStat);
+  const wait=L.reduce((a,x)=>a+x.pc+x.pr,0),chg=L.reduce((a,x)=>a+x.ch,0);
+  return `${hd2('Клиенты','Согласование, запросы и отчёты',[])}${invCard()}
+  <div class="g12">
+   <div class="t2 c4"><h3>Ждут ответа клиента</h3><div class="big2" style="margin-top:12px">${wait}</div><div class="mu2" style="margin-top:4px">материалов и запросов</div></div>
+   <div class="t2 c4"><h3>Вернули на правки</h3><div class="big2" style="margin-top:12px">${chg}</div><div class="mu2" style="margin-top:4px">${chg?'нужно доработать':'всё в порядке'}</div></div>
+   <div class="t2 c4"><h3>Клиентов</h3><div class="big2" style="margin-top:12px">${L.length}</div><div class="mu2" style="margin-top:4px">с отдельным кабинетом</div></div>
+   ${L.map(x=>`<a class="t2 cc2 c6" href="#/c/${x.u.slot}"><div class="top"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'Клиент компании')}</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px;color:var(--muted)"')}</div>
+    <div class="chips" style="margin-top:14px">${x.pc?`<span class="pl2 w">${x.pc} на согласовании</span>`:''}${x.pr?`<span class="pl2 w">${x.pr} ${plur(x.pr,'запрос','запроса','запросов')}</span>`:''}${x.ch?`<span class="pl2 w">правки: ${x.ch}</span>`:''}${x.pc+x.pr+x.ch?'':'<span class="pl2 g">всё согласовано</span>'}<span class="pl2">${x.ls?(x.idle===0?'вход сегодня':'вход '+x.idle+' дн. назад'):'ещё не заходил(а)'}</span></div></a>`).join('')}
+   <details class="t2 c12 dt2" ${L.length?'':'open'}><summary>Добавить клиента</summary>${addForm('client')}</details>
+  </div>`;
 }
+window.CTAB=window.CTAB||{};
 function adClient(slot){
   const u=(AD.users||[]).find(x=>x.slot===slot&&x.role==='client');if(!u)return '<a class="back" href="#/clients">← Клиенты</a><p class="sub">Клиент не найден.</p>';
   const items=AI.filter(i=>i.slot===slot),M=mmap(slot),st=clientStat(u),kpi=(M.kpi||[]).map(k=>[k.l,k.v,k.d||''].join(' | ')).join('\n');
-  const sec=(k,t)=>{const L=items.filter(i=>i.kind===k);return L.length?`<h2 class="t">${t} <small>${L.length}</small></h2>${L.map(i=>`<div class="rv"><h3>${esc(i.title)}</h3><div class="meta">${ibd(i,true)} · ${fdate(i.created_at)}${i.due&&i.status==='pending'?' · срок '+fdate(i.due):''}</div>${i.body?`<div class="ans">${esc(i.body)}</div>`:''}${safeUrl(i.link)?`<div style="margin-bottom:10px"><a class="lk" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}${i.reply?`<div class="fbk ${i.status==='changes'?'bad':''}" style="margin:0 0 10px"><small>Ответ клиента${i.decided_at?' · '+fdt(i.decided_at):''}</small><p>${esc(i.reply)}</p></div>`:''}<div class="row" style="margin-top:0"><button class="btn g s" data-a="cedit" data-u="${slot}" data-id="${i.id}">Изменить</button><button class="btn wr s" data-a="cdel" data-id="${i.id}">Удалить</button></div></div>`).join('')}`:''};
-  return `<a class="back" href="#/clients">← Клиенты</a>${invCard()}<h1 class="t" style="margin-top:6px">${esc(u.name)}</h1><p class="sub">${esc(u.plan||'Клиент компании')}</p>
-  <div class="tiles f4"><div class="tile vio"><b>${st.pc}</b><span>контента ждёт решения</span></div><div class="tile ${st.pr?'hot':''}"><b>${st.pr}</b><span>запросов без ответа</span></div><div class="tile ${st.ch?'hot':''}"><b>${st.ch}</b><span>вернул на правки</span></div><div class="tile"><b>${st.ls?(st.idle===0?'сегодня':st.idle+' дн.'):'нет'}</b><span>последний вход</span></div></div>
-  <h2 class="t">Новое</h2>${cform(slot)}
-  ${sec('content','На согласовании')}${sec('request','Запросы клиенту')}${sec('report','Отчёты')}
-  <div class="two"><div><h2 class="t">Цифры на главной клиента</h2><div class="card"><small class="l">По строке на показатель: название | значение | динамика (необязательно)</small><textarea id="kpiT" style="min-height:96px" placeholder="Охват | 124 000 | +18%&#10;Заявки | 37 | +6">${esc(kpi)}</textarea><div class="row"><button class="btn g s" data-a="kpisave" data-u="${slot}">Сохранить</button></div></div></div>
+  const tab=window.CTAB[slot]||'content',open=window.CF&&window.CF.slot===slot;
+  const TABS=[['content','Материалы'],['request','Запросы'],['report','Отчёты'],['set','Настройки']];
+  const cnt=k=>items.filter(i=>i.kind===k).length;
+  const ORD={pending:0,changes:1,info:2,approved:3,done:3};
+  const card=i=>`<div class="t2"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><h3 style="display:block;font-size:16px">${esc(i.title)}</h3>${ibd(i,true)}</div><div class="mu2" style="margin-top:4px">${fdate(i.created_at)}${i.due&&i.status==='pending'?' · срок '+fdate(i.due):''}</div>${i.body?`<div class="ans" style="margin-top:12px">${esc(i.body)}</div>`:''}${safeUrl(i.link)?`<div style="margin-top:10px"><a class="lk" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}${i.reply?`<div class="fbk ${i.status==='changes'?'bad':''}" style="margin:12px 0 0"><small>Ответ клиента${i.decided_at?' · '+fdt(i.decided_at):''}</small><p>${esc(i.reply)}</p></div>`:''}<div class="row"><button class="btn g s" data-a="cedit" data-u="${slot}" data-id="${i.id}">Изменить</button><button class="btn wr s" data-a="cdel" data-id="${i.id}">Удалить</button></div></div>`;
+  const NM={content:['Новый материал','Материалов пока нет. Добавь первый на согласование.'],request:['Новый запрос','Запросов пока нет.'],report:['Новый отчёт','Отчётов пока нет.']};
+  let body;
+  if(tab==='set'){
+    body=`<div class="two"><div><h2 class="t">Цифры на главной клиента</h2><div class="card"><small class="l">По строке на показатель: название | значение | динамика (необязательно)</small><textarea id="kpiT" style="min-height:96px" placeholder="Охват | 124 000 | +18%&#10;Заявки | 37 | +6">${esc(kpi)}</textarea><div class="row"><button class="btn g s" data-a="kpisave" data-u="${slot}">Сохранить</button></div></div></div>
   <div><h2 class="t">Сообщение на главную</h2><div class="card"><textarea id="newsT" style="min-height:80px" placeholder="Клиент увидит это на обзоре до нажатия «Прочитано»"></textarea><div class="row"><button class="btn s" data-a="news" data-u="${slot}">Отправить</button></div>${((M.news||[]).length)?`<div style="margin-top:12px">${M.news.map(n=>`<p class="sub" style="font-size:13px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:8px">${esc(n.text)} <span style="color:${(M.seen||{})[n.id]?'var(--ok)':'var(--muted)'}">${(M.seen||{})[n.id]?'· прочитано':'· не прочитано'}</span> <button class="lk" data-a="newsdel" data-u="${slot}" data-id="${n.id}">убрать</button></p>`).join('')}</div>`:''}</div></div></div>
   <div class="two"><div><h2 class="t">Заметка (только тебе)</h2><div class="card"><textarea id="noteT" style="min-height:80px">${esc(M.notes||'')}</textarea><div class="row"><button class="btn g s" data-a="note" data-u="${slot}">Сохранить</button></div></div></div>
   <div><h2 class="t">Профиль</h2><div class="card"><small class="l">Название</small><input type="text" id="pn" value="${esc(u.name)}"><small class="l" style="margin-top:12px">Пакет услуг</small><input type="text" id="pp" value="${esc(u.plan)}" placeholder="Например: Контент-маркетинг, ретейнер"><div class="row"><button class="btn g s" data-a="prof" data-u="${slot}">Сохранить</button></div></div></div></div>${manageBox(u)}`;
+  }else{
+    const L=items.filter(i=>i.kind===tab).sort((a,b)=>(ORD[a.status]-ORD[b.status])||(new Date(b.created_at)-new Date(a.created_at)));
+    body=`${open&&window.CF.kind===tab||open&&window.CF.id?cform(slot):`<div style="margin-bottom:14px"><button class="bt2 v" data-a="cadd" data-u="${slot}" data-k="${tab}">+ ${NM[tab][0]}</button></div>`}
+    <div style="display:flex;flex-direction:column;gap:12px">${L.length?L.map(card).join(''):`<div class="t2"><p class="mu2">${NM[tab][1]}</p></div>`}</div>`;
+  }
+  return `<a class="back" href="#/clients">← Клиенты</a>${invCard()}
+  ${hd2(esc(u.name),esc(u.plan||'Клиент компании'),[[ico('tasks'),st.pc,'ждут решения'],[ico('chat'),st.pr,plur(st.pr,'запрос','запроса','запросов')+' без ответа'],[SV.flag,st.ch,'на правках']])}
+  <div class="flt" style="margin:16px 0 14px">${TABS.map(t=>`<button data-a="ctab" data-u="${slot}" data-t="${t[0]}" class="${t[0]===tab?'on':''}">${t[1]}${t[0]!=='set'?` <em>${cnt(t[0])}</em>`:''}</button>`).join('')}</div>
+  ${body}`;
 }
 /* ================= управление: люди ================= */
 const ALPHA='23456789ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -966,13 +990,15 @@ const A={
   toast(d==='approve'?'Одобрено':d==='changes'?'Правки отправлены':d==='done'?'Ответ отправлен':'Можно изменить решение');
   location.hash=d==='reopen'?location.hash:{approve:'#/approve',changes:'#/approve',done:'#/requests'}[d];render()},
  ckind(el){readCF(el.dataset.u);window.CF=Object.assign({},window.CF||{slot:el.dataset.u,id:null,title:'',body:'',link:'',due:''},{slot:el.dataset.u,kind:el.dataset.k});render(true)},
- cedit(el){const i=AI.find(x=>x.id===+el.dataset.id);window.CF={slot:el.dataset.u,id:i.id,kind:i.kind,title:i.title,body:i.body,link:i.link,due:i.due||''};render()},
+ cedit(el){const i=AI.find(x=>x.id===+el.dataset.id);window.CTAB[el.dataset.u]=i.kind;window.CF={slot:el.dataset.u,id:i.id,kind:i.kind,title:i.title,body:i.body,link:i.link,due:i.due||''};render()},
  ccancel(el){window.CF=null;render(true)},
+ cadd(el){window.CF={slot:el.dataset.u,id:null,kind:el.dataset.k,title:'',body:'',link:'',due:''};render(true)},
+ ctab(el){window.CTAB[el.dataset.u]=el.dataset.t;window.CF=null;render(true)},
  async csave(el){const slot=el.dataset.u;readCF(slot);const f=window.CF;
   if(!f||!f.title.trim()){toast('Напиши заголовок');return}
   if(f.link&&!safeUrl(f.link)){toast('Ссылка должна начинаться с https://');return}
   const r=await call(()=>rpc('okean_admin_item_save',{p_slot:ME.slot,p_h:ME.h,p_target:slot,p_id:f.id,p_kind:f.kind,p_title:f.title.trim(),p_body:f.body.trim(),p_link:f.link.trim(),p_due:f.due||null,p_status:f.kind==='report'?'info':'pending'}));if(!r)return;
-  AI=(await rpc('okean_admin_items',{p_slot:ME.slot,p_h:ME.h}))||AI;window.CF={slot,id:null,kind:f.kind,title:'',body:'',link:'',due:''};toast('Отправлено клиенту');render(true)},
+  AI=(await rpc('okean_admin_items',{p_slot:ME.slot,p_h:ME.h}))||AI;window.CF=null;window.CTAB[slot]=f.kind;toast('Отправлено клиенту');render(true)},
  async cdel(el){if(!confirm('Удалить материал? Клиент его больше не увидит.'))return;const ok=await call(()=>rpc('okean_admin_item_del',{p_slot:ME.slot,p_h:ME.h,p_id:+el.dataset.id}));if(!ok)return;AI=AI.filter(i=>i.id!==+el.dataset.id);render(true)},
  async pnew(el){const nm=$('#nn').value.trim();if(!nm){toast('Введи имя');return}
   const tr=[...document.querySelectorAll('[data-ntr]:checked')].map(c=>c.dataset.ntr).join('+'),code=genCode(),h=await sha(code);
