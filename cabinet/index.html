@@ -653,6 +653,12 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .ixgc.f .ixgb i{border:1px dashed rgba(196,164,255,.3);background:rgba(255,255,255,.02)}
 .ixglbl{display:grid;gap:8px;margin-top:10px;text-align:center;color:var(--muted);font-size:11.5px}.ixglbl span{min-width:0;overflow:hidden;text-overflow:clip;white-space:nowrap}.ixglbl .on{color:#fff;font-weight:600}
 @media(max-width:620px){.ixgs{width:100%;flex-direction:row;min-width:0}.ixgs div{flex:1;flex-direction:column;gap:2px;padding:10px}.ixgsteps{height:130px;gap:5px}.ixglbl{gap:5px;font-size:10.5px}.ixgt{padding:18px}}
+
+.pw{cursor:pointer;text-align:left;font:inherit}.pw.sel{border-color:rgba(225,208,255,.6);background:linear-gradient(155deg,rgba(155,111,232,.2),rgba(255,255,255,.03));box-shadow:0 0 26px -10px rgba(155,111,232,.95)}.pw.lk{opacity:.7}.pw.lk.sel{opacity:1}
+.prail{margin:0 0 14px}.pgoal{color:#C9C2E6;font-size:14px;line-height:1.5;margin:4px 0 0;max-width:62ch}
+.psub{margin:16px 2px 2px;font-size:12px;color:var(--muted)}.ptk.lkd{opacity:.7}
+.pmts{display:flex;flex-direction:column;gap:6px;margin-top:16px}.pback{padding:5px 12px;border-radius:999px;border:1px solid rgba(196,164,255,.3);background:rgba(255,255,255,.05);color:#E6DEFF;font-size:12px}
+.pft .mu2{max-width:44ch}
 </style>
 </head>
 <body>
@@ -911,18 +917,29 @@ function placeNodes(list){
   document.getElementById('pnd').innerHTML=h;
 }
 function progBlock(cw,nt){
-  const V=wview(),td=today(),done=cw.tasks.filter(t=>stOf(t.id)==='done').length,T=cw.tasks.length||1,pct=Math.round(done/T*100),mt=nextMeet(),R=27,L=2*Math.PI*R;
-  const ncur=cw.n>6?'+':String(cw.n),cn=cw.n>6?'Сопровождение':wlabel(cw),dn=V.filter(w=>w.tasks.length&&wfull(w)).length;
-  const tk=cw.tasks.slice(0,5).map(t=>{const s=stOf(t.id),d=s==='done',go=nt&&nt.id===t.id;return `<a class="ptk ${go?'go':''}" href="#/task/${t.id}"><span class="pc ${d?'d':s==='review'?'r':''}">${d?SV.check:''}</span><span class="pt ${d?'dn':''}">${esc(t.text)}</span>${s==='review'?'<span class="pl2">на проверке</span>':s==='revision'?'<span class="pri high">доработка</span>':''}<i class="pa">${ico('chev')}</i></a>`}).join('');
-  const rail=V.map(w=>{const op=isOpen(w),cc=wcount(w),full=wfull(w),on=wcur(w,cw),tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n,num=w.n===0?'0':w.sup?'+':w.n,ttl=w.sup?'Сопровождение':w.title;
-    return `<a class="pw ${full?'done':''} ${on?'on':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div><div class="pn">${num}</div><div class="ptt">${esc(ttl)}</div></div><div class="pst">${full?SV.check+'принято':op?(w.tasks.length?cc.done+' из '+w.tasks.length:''):ico('lock')+fdate(w.opens)}</div></a>`}).join('');
-  return `<div class="c8" style="min-width:0"><div class="phd"><b>Программа</b><span>${cw.n>6?'сопровождение':'неделя '+Math.max(cw.n,1)+' из 6'} · принято недель: ${dn}</span></div>
-   <div class="pcur"><div class="prw"><span class="pl2 d">Сейчас</span><span class="mu2">${esc(cw.dates||'')}${cw.tasks.length&&!wfull(cw)?' · до '+fdate(cw.due):''}</span></div>
-    <h3>${esc(cw.n===0||cw.n>6?cn:cw.title)}</h3>
-    <div class="ppr"><div class="pbar"><i style="width:${pct}%"></i></div><span class="mu2">${done} из ${cw.tasks.length}</span></div>
-    ${tk||'<p class="mu2" style="margin-top:12px">Заданий на эту неделю нет.</p>'}
-    <div class="pft">${nt?`<a class="pbtn" href="#/task/${nt.id}">Продолжить задание</a>`:`<a class="pbtn" href="#/week/${cw.n}">Открыть неделю</a>`}${mt?`<span class="pmt">${ico('cal')}${esc(mt.t)}${mt.when?', '+esc(whenTxt(mt)):''}</span>`:''}</div></div>
-   <div class="prail">${rail}</div></div>`}
+  const V=wview(),mt=nextMeet();
+  const keyOf=w=>w.n,ci=Math.max(0,V.findIndex(w=>wcur(w,cw)));
+  let si=V.findIndex(w=>keyOf(w)===window.PSEL);if(si<0)si=ci;
+  const S=V[si],parts=S.sup?S.parts:[S],op=isOpen(S),full=wfull(S),isCur=si===ci;
+  const tgOf=w=>w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
+  const done=S.tasks.filter(t=>stOf(t.id)==='done').length,T=S.tasks.length||1,pct=Math.round(done/T*100);
+  const lab=!op?'Откроется '+fdate(S.opens):full?'Пройдена':isCur?'Сейчас':'Открыта';
+  const ttl=S.n===0?'Подготовка':S.sup?'Сопровождение':S.title;
+  const row=t=>{const s=stOf(t.id),d=s==='done',go=isCur&&nt&&nt.id===t.id,inner=`<span class="pc ${d?'d':s==='review'?'r':''}">${d?SV.check:''}</span><span class="pt ${d?'dn':''}">${esc(t.text)}</span>${op&&s==='review'?'<span class="pl2">на проверке</span>':op&&s==='revision'?'<span class="pri high">доработка</span>':''}${op?`<i class="pa">${ico('chev')}</i>`:''}`;
+    return op?`<a class="ptk ${go?'go':''}" href="#/task/${t.id}">${inner}</a>`:`<div class="ptk lkd">${inner}</div>`};
+  const list=parts.map(w=>`${S.sup?`<div class="psub">${esc(wt(w))}${isOpen(w)?'':' · откроется '+fdate(w.opens)}</div>`:''}${w.tasks.map(row).join('')||(S.sup?'':'<p class="mu2" style="margin-top:12px">Заданий на эту неделю нет.</p>')}`).join('');
+  const meets=[].concat(...parts.map(w=>w.meetings||[])).filter(m=>m.t);
+  const rail=V.map((w,i)=>{const o=isOpen(w),cc=wcount(w),f=wfull(w),on=i===ci,sel=i===si,num=w.n===0?'0':w.sup?'+':w.n,tt=w.sup?'Сопровождение':w.title;
+    return `<button class="pw ${f?'done':''} ${on?'on':''} ${sel?'sel':''} ${o?'':'lk'}" data-a="psel" data-n="${keyOf(w)}"><div><div class="pn">${num}</div><div class="ptt">${esc(tt)}</div></div><div class="pst">${f?SV.check+'принято':o?(w.tasks.length?cc.done+' из '+w.tasks.length:''):ico('lock')+fdate(w.opens)}</div></button>`}).join('');
+  const cta=!op?'':(isCur&&nt)?`<a class="pbtn" href="#/task/${nt.id}">Продолжить задание</a>`:`<a class="pbtn" href="#/week/${tgOf(S)}">Открыть неделю</a>`;
+  return `<div class="c8" style="min-width:0"><div class="phd"><b>Программа</b><span>нажми на неделю, чтобы посмотреть</span></div>
+   <div class="prail">${rail}</div>
+   <div class="pcur"><div class="prw"><span class="pl2 d">${lab}</span><span class="mu2">${esc(S.dates||'')}${S.tasks.length&&op&&!full?' · до '+fdate(S.due):''}</span>${isCur?'':`<button class="pback" data-a="psel" data-n="${keyOf(V[ci])}">К текущей неделе</button>`}</div>
+    <h3>${esc(ttl)}</h3>${S.goal&&!S.sup?`<p class="pgoal">${esc(S.goal)}</p>`:''}
+    ${op&&S.tasks.length?`<div class="ppr"><div class="pbar"><i style="width:${pct}%"></i></div><span class="mu2">${done} из ${S.tasks.length}</span></div>`:''}
+    ${list}
+    ${meets.length?`<div class="pmts">${meets.map(m=>`<span class="pmt">${ico('cal')}${esc(m.t)}${m.when?', '+esc(whenTxt(m)):', время пришлю в чате'}</span>`).join('')}</div>`:''}
+    <div class="pft">${cta}${!op?`<span class="mu2">Задания откроются ${fdate(S.opens)}. Пока можно посмотреть, что будет.</span>`:''}</div></div></div>`}
 function growthTile(c,m,st,N,cw){
   const V=wview(),P=ST.p,cum={};let acc=0;
   C.weeks.forEach((w,i)=>{const prev=i?C.weeks[i-1].depth:0;acc+=(w.depth-prev)*wsub(w,P)/50;cum[w.n]=acc});
@@ -947,10 +964,10 @@ function homeV(){
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   ${hd2(`Привет, <b>${esc(firstName(nm)||'друг')}</b>`,`${wlabel(cw)===cw.title?esc(cw.title):esc(wlabel(cw))+': '+esc(cw.title)}${cw.tasks.length&&!wfull(cw)?(lk<0?' · срок прошёл':' · до '+fdate(cw.due)+leftTxt(lk)):''}`,[[ico('tasks'),c.done+'<span style="display:inline;font-size:15px;color:var(--muted)"> / '+N+'</span>','задач принято'],[SV.flag,st,'дней подряд']])}
   <div class="g12">
+   ${growthTile(c,m,st,N,cw)}
    ${progBlock(cw,nt)}
    <div class="c4" style="min-width:0;display:flex;flex-direction:column;gap:14px">
     <div class="t2"><h3>Встречи</h3>${cal2()}</div></div>
-   ${growthTile(c,m,st,N,cw)}
    <div class="t2 c6"><h3>На проверке</h3><div class="big2" style="margin-top:12px">${c.review}</div><div class="mu2" style="margin-top:6px">${c.review?'ответ обычно за сутки':'пока ничего не отправлено'}</div></div>
    <div class="t2 c6"><h3>Доработка</h3>${rev.length?`<div style="margin-top:12px"><span class="pl2 w">${rev.length} ${plur(rev.length,'работа','работы','работ')}</span></div>${rev.slice(0,2).map(r=>`<a href="#/task/${r.id}" class="mu2" style="display:block;margin-top:8px;text-decoration:none">«${esc((ST.p[r.id].feedback||r.text).slice(0,70))}»</a>`).join('')}`:`<div class="mu2" style="margin-top:14px">Возвратов нет.</div>`}</div>
   </div>`;
@@ -1656,6 +1673,7 @@ const A={
  pbfr(el){window.PBF=Object.assign({v:'status'},PBD,window.PBF);const k=el.dataset.k;window.PBF[k]=PBD[k];if(k==='mode'){PBF.from='';PBF.to=''}render(true)},
  pbfreset(){const v=(window.PBF&&PBF.v)||'status';window.PBF=Object.assign({v},PBD);render(true)},
  stopen(el){location.hash=(window.ASPFX||'#/')+'task/'+el.dataset.sid},
+ psel(el){window.PSEL=+el.dataset.n;render(true)},
  pbc(el){window.PBC=el.dataset.c;render(true)},
  pbopen(el){const k=el.dataset.s+':'+el.dataset.t,t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];window.PLE=k;window.PEF={key:k,status:t.status,pri:t.pri||'',who:t.who,stage:+el.dataset.s,x:t.text,d:t.due||''};window.DDO=null;render(true)},
  ddt(el){window.DDO=window.DDO===el.dataset.id?null:el.dataset.id;const x=$('#pe-x');if(x&&window.PEF){PEF.x=x.value;PEF.d=($('#pe-d')||{}).value||''}render(true)},
@@ -1750,7 +1768,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','stopen','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','stopen','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
