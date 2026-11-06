@@ -306,6 +306,38 @@ small.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 .logo2 small{display:block;font-weight:400;font-size:11px;color:var(--muted);letter-spacing:0}
 @media(max-width:1100px){.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c8{grid-column:span 12}}
 @media(max-width:640px){.c3,.c4{grid-column:span 12}.wg2{grid-template-columns:1fr}.st2 strong{font-size:26px}.sts2{gap:14px}.big2{font-size:40px}}
+
+/* ===== стекло ===== */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(520px 380px at 12% 8%,rgba(155,111,232,.13),transparent 70%),radial-gradient(620px 460px at 92% 38%,rgba(91,47,190,.16),transparent 70%),radial-gradient(480px 360px at 40% 96%,rgba(155,111,232,.09),transparent 70%)}
+.t2,.wk2,.side,.it2,.kp2 div,.evn2{backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2)}
+.t2{background:linear-gradient(155deg,rgba(255,255,255,.065),rgba(255,255,255,.02) 55%,rgba(155,111,232,.05));border:1px solid rgba(196,164,255,.15);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 18px 40px -28px rgba(155,111,232,.45)}
+.dk2{background:linear-gradient(155deg,rgba(155,111,232,.16),rgba(255,255,255,.025) 60%);border-color:rgba(196,164,255,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 44px -18px rgba(155,111,232,.55)}
+.dk2 .mu2,.dk2 .rw2 .x small,.dk2 .it2 .x small{color:var(--muted)}
+.rw2 .b,.it2 .tp,.t2 h3 .go{background:rgba(255,255,255,.06);border:1px solid rgba(196,164,255,.18)}
+.it2,.dk2 .it2,.evn2,.kp2 div{background:rgba(255,255,255,.04);border:1px solid rgba(196,164,255,.1)}
+.wk2{background:linear-gradient(155deg,rgba(255,255,255,.055),rgba(255,255,255,.015));border:1px solid rgba(196,164,255,.14)}
+.wk2.cur{background:linear-gradient(155deg,rgba(155,111,232,.18),rgba(255,255,255,.03));border-color:rgba(196,164,255,.5);box-shadow:0 0 34px -14px rgba(155,111,232,.7);color:var(--text)}
+.wk2.cur .tp,.wk2.cur .pr{color:var(--muted)}
+.wk2.lock{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);color:#5E5977}
+.lv2{background:linear-gradient(180deg,rgba(155,111,232,.2),rgba(255,255,255,.02) 70%);border-color:rgba(196,164,255,.3);box-shadow:0 0 44px -18px rgba(155,111,232,.6)}
+.lv2:before{background:radial-gradient(circle at 75% 0,rgba(196,164,255,.22),transparent 55%)}
+.bt2,.bt2.v{background:rgba(155,111,232,.2);border:1px solid rgba(196,164,255,.5);color:#fff;box-shadow:0 0 26px -10px rgba(155,111,232,.8),inset 0 1px 0 rgba(255,255,255,.18)}
+.cal2 .td{background:rgba(155,111,232,.35);border:1px solid rgba(196,164,255,.6);box-shadow:0 0 14px -4px rgba(155,111,232,.8)}
+.evn2 .pl{background:rgba(155,111,232,.3);border:1px solid rgba(196,164,255,.5)}
+.logo2 i{background:rgba(155,111,232,.22);border:1px solid rgba(196,164,255,.45)}
+.av2{background:rgba(155,111,232,.2);border:1px solid rgba(196,164,255,.4);color:var(--vb)}
+.o2.k{background:rgba(155,111,232,.4);border-color:rgba(196,164,255,.7)}
+.pl2.d{background:rgba(255,255,255,.08);border:1px solid rgba(196,164,255,.25)}
+.pmap{background:rgba(255,255,255,.02) radial-gradient(rgba(196,164,255,.14) 1.1px,transparent 1.2px) 0 0/16px 16px}
+.side{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
+.pg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.pgc{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(196,164,255,.14);text-align:left}
+.pgc b{display:block;font-size:17px;font-weight:500}.pgc small{display:block;font-size:12.5px;color:var(--muted);margin-top:4px}
+.pgc.on{border-color:rgba(196,164,255,.55);background:linear-gradient(155deg,rgba(155,111,232,.18),rgba(255,255,255,.03));box-shadow:0 0 30px -14px rgba(155,111,232,.7)}
+.lk2{display:block;text-decoration:none;color:inherit}
+.lk2 .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(155,111,232,.16);border:1px solid rgba(196,164,255,.3);color:var(--vb);margin-bottom:14px}
+.lk2 .ic svg{width:18px;height:18px}.lk2 b{display:block;font-size:16px;font-weight:500}.lk2 small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.lk2:hover{border-color:rgba(196,164,255,.4)}
 </style>
 </head>
 <body>
@@ -444,18 +476,18 @@ const wlabel=w=>w.n===0?'Подготовка':w.n>6?'Сопровождение
 let hash='#/';
 function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
-    return [['#/','Обзор','chart'],['#/queue','Проверка','inbox',q],['#/people','Участники','users'],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length],['#/prog','Программа','book']]}
+    return [['#/','Обзор','chart'],['#/learn','Обучение','book'],['#/queue','Проверка','inbox',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/approve','Согласование','tasks',pc],['#/requests','Запросы','inbox',pr],['#/reports','Отчёты','chart']]}
   const c=totals(ST.p);
   return [['#/','Обзор','home'],['#/tasks','Задания','tasks',c.revision],['#/lib','Материалы','book'],['#/me','Профиль','user']];
 }
-function isOn(h,cur){if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/(funnel|nudge|settings)/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
+function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
-  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side"><div class="logo2"><i><svg viewBox="0 0 24 24"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></i><div>WIKKI.OCEAN<small>Океан влияния</small></div></div>${progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
+  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side"><div class="logo2"><i><svg viewBox="0 0 24 24"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div>${cur==='#/'||cur===''?'':progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
   <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span></div>${inner}</div>
   <nav class="tabbar"><div>${it.map(link).join('')}</div></nav></div>`;
 }
@@ -476,6 +508,7 @@ function render(keep){
     else html=shell(clHome(),true);
   }else if(ME.role==='admin'){
     if(r===''||r===undefined)html=shell(adOverview(),true);
+    else if(r==='learn')html=shell(adLearn(),true);
     else if(r==='queue')html=shell(adQueue(),true);
     else if(r==='people')html=shell(adPeople(),true);
     else if(r==='clients')html=shell(adClients(),true);
@@ -645,20 +678,32 @@ function adOverview(){
   const days=[];for(let i=6;i>=0;i--){const d=ymdOf(dnum(today())-i);days.push([d,(AD.progress||[]).filter(p=>p.submitted_at&&ymd(new Date(p.submitted_at))===d).length])}
   const tot=days.reduce((a,x)=>a+x[1],0),mx=Math.max(1,...days.map(x=>x[1]));
   const uname=slot=>((AD.users||[]).find(u=>u.slot===slot)||{}).name||'';
-  return `${hd2('Привет, <b>Виктория</b>',fdate(today())+'. Программа «'+esc(PT||'')+'»',[[ico('users'),S.length,'участников'],[ico('tasks'),q,'на проверке'],[ico('brief'),cl.length,plur(cl.length,'клиент','клиента','клиентов')]])}${subnav('#/')}
+  const np=Math.max(1,PL.length);
+  return `${hd2('Привет, <b>Виктория</b>',fdate(today()),[[ico('users'),S.length,'участников'],[ico('tasks'),q,'на проверке'],[ico('brief'),cl.length,plur(cl.length,'клиент','клиента','клиентов')]])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
   <div class="g12">
    <div class="t2 dk2 c5"><h3>Ждут проверки <span class="big2" style="font-size:30px">${q}</span></h3>
     <div class="ck2">${rv.slice(0,3).map(p=>`<a class="rw2" href="#/queue"><div class="b">${ico('doc')}</div><div class="x"><p>${esc(firstName(uname(p.slot)))}: ${esc(((TM[p.task_id]||{}).text)||p.task_id)}</p><small>ждёт ${agoTxt(p.submitted_at)}</small></div><div class="o2"></div></a>`).join('')||'<p class="mu2" style="padding:12px 0">Очередь пуста.</p>'}</div>
     ${q?`<div style="margin-top:12px"><a class="bt2" href="#/queue">Открыть очередь ${SV.arrow}</a></div>`:''}</div>
    <div class="t2 c4"><h3>Сдачи за 7 дней</h3><div class="big2" style="margin-top:12px">${tot}</div><div class="mu2" style="margin-top:4px">${plur(tot,'работа','работы','работ')} за неделю</div>
     <div class="bars2">${days.map((d,k)=>`<div><i class="${k===6?'f':''}" style="height:${Math.max(4,d[1]/mx*70)}px"></i>${['вс','пн','вт','ср','чт','пт','сб'][new Date(dnum(d[0])*864e5).getUTCDay()]}</div>`).join('')}</div></div>
-   <div class="t2 c3"><h3>Прогресс группы</h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'в среднем по '+S.length+' участникам'}</div></div>
-   <div class="t2 c7"><h3>Участники <a class="go" href="#/people">${SV.arrow}</a></h3>
-    <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
+   <div class="t2 c3"><h3>Обучение <a class="go" href="#/learn">${SV.arrow}</a></h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'средний прогресс участников'}</div></div>
+   <div class="t2 c7"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
+  </div>`;
+}
+function adLearn(){
+  const S=students().map(stat),N=TK.length,q=(AD.progress||[]).filter(p=>p.status==='review').length;
+  const avg=S.length?S.reduce((a,x)=>a+x.c.done/N,0)/S.length:0;
+  const prs=PL.length?PL:[{id:CURP,title:PT}];
+  const lt=(h,ic,t,d)=>`<a class="t2 lk2 c3" href="${h}"><div class="ic">${ico(ic)}</div><b>${t}</b><small>${d}</small></a>`;
+  return `${hd2('Обучение','Программы, участники, задания и материалы',[[ico('users'),S.length,'участников в выбранной'],[ico('tasks'),q,'на проверке']])}
+  <div class="g12">
+   <div class="t2 c12"><h3>Программы</h3><div class="pg2">${prs.map(p=>`<button class="pgc ${p.id===CURP?'on':''}" data-a="pickprog" data-id="${esc(p.id)}"><b>${esc(p.title||p.id)}</b><small>${p.id===CURP?S.length+' участников · '+Math.round(avg*100)+'% средний прогресс':'открыть'}</small></button>`).join('')}</div></div>
+   ${lt('#/people','users','Участники','коды, траектории, добавить')}${lt('#/prog','book','Программа','недели, задания, материалы')}${lt('#/funnel','chart','Воронка заданий','где застревают')}${lt('#/nudge','inbox','Кого поддержать','тексты для напоминаний')}
+   <div class="t2 c12"><h3>Участники <a class="go" href="#/people">${SV.arrow}</a></h3>
+    <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
    <div class="t2 c12"><h3>Карта потока <span class="mu2">строки: участники, столбцы: недели</span></h3><div class="tblw" style="margin-top:12px"><div class="heat" style="grid-template-columns:130px repeat(11,minmax(34px,1fr));min-width:560px"><span></span>${C.weeks.map(w=>`<span class="h">${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span>`).join('')}
    ${S.map(x=>`<a class="nm" href="#/u/${x.u.slot}" style="text-decoration:none">${esc(x.u.name)}</a>${C.weeks.map(w=>{if(!w.tasks.length)return '<span></span>';const op=isOpen(w,x.M),cc=wcount(w,x.P),v=(cc.done+cc.review*.5)/w.tasks.length;return op?`<a href="#/u/${x.u.slot}" class="cell" style="background:rgba(155,111,232,${(.1+v*.8).toFixed(2)});text-decoration:none">${Math.round(cc.done/w.tasks.length*100)}${cc.review?'<span class="dot"></span>':''}</a>`:'<span class="cell lk0">·</span>'}).join('')}`).join('')}</div></div></div>
-   ${cl.length?`<div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join('')}</div>`:''}
   </div>`;
 }
 function peopleTable(S){
@@ -881,6 +926,7 @@ const A={
   catch(e){b.disabled=false;const m=e.message;$('#err').textContent=m==='len'?'В коде должно быть 12 символов, например 01-XXXXX-XXXXX. Проверь, всё ли скопировано.':m==='data'?'Страница загрузилась не полностью. Обнови её и попробуй снова.':m==='net'?'Нет связи с сервером. Проверь интернет и попробуй ещё раз.':m==='noapi'?'Сервер ещё не настроен. Напиши в WIKKI.OCEAN.':'Код не подошёл. Проверь, нет ли опечатки, или напиши Виктории.'}},
  out(){try{localStorage.removeItem('okean:code')}catch(e){}C=ME=ST=AD=null;location.hash='';gate()},
  go(el){location.hash=el.dataset.h},
+ async pickprog(el){await loadProgram(el.dataset.id);window.OPEN=null;render()},
  flt(el){window.FLT=el.dataset.f;render(true)},
  async seen(el){const s=Object.assign({},ST.meta.seen||{});s[el.dataset.id]=true;ST.meta.seen=s;await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'seen',p_v:s}));render(true)},
  async scale(el){const s=Object.assign({},ST.meta.scale||{});s[el.dataset.w]=+el.dataset.n;ST.meta.scale=s;render(true);await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'scale',p_v:s}))},
