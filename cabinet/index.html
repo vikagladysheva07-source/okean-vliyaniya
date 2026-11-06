@@ -628,7 +628,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .sxc span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.sxct{height:30px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(196,164,255,.14);overflow:hidden}
 .sxct i{display:flex;align-items:center;height:100%;padding:0 12px;border-radius:999px;font-style:normal;font-size:12.5px;font-weight:600;color:#fff;white-space:nowrap;background:linear-gradient(90deg,#4B2AA6,#6A3FD0)}
 .sxct.a i{background:linear-gradient(90deg,#7C4FD4,#B28CFF);box-shadow:0 0 18px -6px rgba(155,111,232,.9)}.sxct.o i{background:repeating-linear-gradient(135deg,rgba(255,255,255,.09) 0 6px,rgba(255,255,255,.02) 6px 12px)}
-.sxg{display:grid;grid-template-columns:1fr 1.08fr .95fr 1fr;gap:14px;align-items:stretch}
+.sxg{display:grid;grid-template-columns:1fr 1fr .9fr 1.3fr;gap:14px;align-items:stretch}
 .sx{position:relative;overflow:hidden;min-width:0;border-radius:28px;padding:20px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.018));border:1px solid rgba(196,164,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
 .sxh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15.5px;font-weight:500;margin-bottom:6px}
 .sxar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(196,164,255,.14);color:var(--text);flex:none}.sxar svg{width:15px;height:15px}
@@ -724,6 +724,16 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .edc{display:flex;align-items:center;gap:8px;margin:6px 0 0;font-size:12.5px;color:var(--muted);cursor:pointer}.edc input{width:auto}
 
 .sxadd input{padding:10px 14px}.sxpl{flex:none;width:40px;height:40px;border-radius:50%;font-size:22px;line-height:1;color:#fff;cursor:pointer;border:1px solid rgba(225,208,255,.42);background:linear-gradient(180deg,rgba(155,111,232,.3),rgba(91,47,190,.14));box-shadow:0 0 18px -8px rgba(155,111,232,.95)}
+
+/* плашка заданий побольше + свои задачи */
+.sxt{padding:22px 20px 20px!important}
+.sxtn .sxtc b{font-size:17px}.sxtc span{font-size:12.5px}.sxtn .sxar{width:34px;height:34px}
+.sxtp{height:5px;margin:14px 0 10px}
+.sxtd{gap:14px;padding:13px 8px}.sxtt{font-size:15px;line-height:1.4}.sxck2{width:25px;height:25px}.sxck2 svg{width:13px;height:13px}
+.sxtg{font-size:11.5px;padding:3px 10px}
+.sxmy{margin-top:16px}.sxmy .sxg2{font-size:13px;color:#C9C2E6}
+.sxadd{gap:8px;margin:10px 0 8px}.sxadd input{min-height:46px;padding:12px 16px;font-size:14px;border-radius:999px}.sxadd .sxbtn{min-height:46px;padding:0 16px;font-size:13px;white-space:nowrap}
+.sxtdb{gap:14px;padding:12px 8px}.sxx{width:32px;height:32px;font-size:20px}
 </style>
 </head>
 <body>
@@ -1021,7 +1031,7 @@ function homeV(){
   /* свои дела */
   const TD=Array.isArray(ST.meta.todo)?ST.meta.todo:[],tdo=TD.filter(x=>!x.done),tdd=TD.filter(x=>x.done);
   const tdrow=x=>`<div class="sxtd td ${x.done?'dn2':''}"><button class="sxtdb" data-a="todotg" data-id="${esc(x.id)}" aria-label="Отметить"><span class="sxck2 ${x.done?'d':''}">${x.done?SV.check:''}</span><span class="sxtt ${x.done?'dn':''}">${esc(x.text)}</span></button><button class="sxx" data-a="tododel" data-id="${esc(x.id)}" aria-label="Удалить">×</button></div>`;
-  const mine=`<div class="sxmy"><div class="sxg2">Мои дела<span>${tdo.length}</span></div>${as?'':`<div class="sxadd"><input id="td-i" type="text" maxlength="140" placeholder="Новое дело" autocomplete="off"><button class="sxpl" data-a="todoadd" aria-label="Добавить дело">+</button></div>`}<div class="sxtl">${tdo.map(tdrow).join('')}${tdd.map(tdrow).join('')}</div></div>`;
+  const mine=`<div class="sxmy"><div class="sxg2">Мои задачи<span>${tdo.length}</span></div>${as?'':`<div class="sxadd"><input id="td-i" type="text" maxlength="140" placeholder="Впиши свою задачу" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`}<div class="sxtl">${tdo.map(tdrow).join('')}${tdd.map(tdrow).join('')}</div></div>`;
   const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?(tdn+' из '+tl.length+(TW.sup?'':(TW.due&&tdn<tl.length?' · до '+fdate(TW.due):''))):'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
    <div class="sxtp"><i style="width:${top&&tl.length?Math.round(tdn/tl.length*100):0}%"></i></div><div class="sxtl">${rows||'<p class="sxsub">Заданий нет.</p>'}</div>${mine}${top?'':'<div class="sxsub" style="margin-top:8px">Задания откроются '+fdate(TW.opens)+'. Пока можно посмотреть, что будет.</div>'}</div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
@@ -1732,7 +1742,7 @@ const A={
  stopen(el){location.hash=(window.ASPFX||'#/')+'task/'+el.dataset.sid},
  async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});render(true)},
  async todosave(a){ST.meta.todo=a;const ok=await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'todo',p_v:a}));if(!ok)return false;render(true);return true},
- async todoadd(){const i=$('#td-i'),v=(i&&i.value||'').trim();if(!v)return;const a=(ST.meta.todo||[]).slice();if(a.length>=60){toast('Список полон, удали выполненные дела.');return}a.unshift({id:Math.random().toString(36).slice(2,9),text:v.slice(0,140),done:false});window.AFTER=()=>{const x=$('#td-i');if(x)x.focus()};await A.todosave(a)},
+ async todoadd(){const i=$('#td-i'),v=(i&&i.value||'').trim();if(!v)return;const a=(ST.meta.todo||[]).slice();if(a.length>=60){toast('Список полон, удали выполненные задачи.');return}a.unshift({id:Math.random().toString(36).slice(2,9),text:v.slice(0,140),done:false});window.AFTER=()=>{const x=$('#td-i');if(x)x.focus()};await A.todosave(a)},
  async todotg(el){const a=(ST.meta.todo||[]).map(x=>x.id===el.dataset.id?Object.assign({},x,{done:!x.done}):x);await A.todosave(a)},
  async tododel(el){await A.todosave((ST.meta.todo||[]).filter(x=>x.id!==el.dataset.id))},
  tkw(el){const V0=wview().filter(w=>w.tasks.length),cur=V0.findIndex(w=>w.n===window.TKW),c0=cur<0?V0.findIndex(w=>wcur(w,curWeek(ST.p))):cur,n=Math.min(V0.length-1,Math.max(0,c0+(+el.dataset.d)));window.TKW=V0[n].n;render(true)},
