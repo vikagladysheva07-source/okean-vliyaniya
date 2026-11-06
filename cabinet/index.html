@@ -419,6 +419,9 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .risk{color:var(--vb)}
 .cell .dot{background:#E4D6FF}
 .tkv .who2.client,.kc .who2.client{color:#E4D6FF}
+.fbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.fbar .flt{overflow:visible;padding:0}
+.kc{position:relative}.kf .ked{width:28px;height:28px;font-size:13px;margin-left:auto}.kf .tkst{margin-left:0}
 </style>
 </head>
 <body>
@@ -945,8 +948,9 @@ function clHome(){
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
 function planBoardRO(pl){
+  const P=pl;
   const COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]};
-  (pl.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>cards[t.status||'todo'].push({st,t})));
+  (pl.stages||[]).forEach((st,si)=>(st.tasks||[]).forEach(t=>{if(pbPass(P,si,t))cards[t.status||'todo'].push({st,t})}));
   return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div>${cards[k].map(c=>`<div class="kc" style="cursor:default"><span class="pl2 kst">${esc(c.st.title.slice(0,34))}</span><p>${esc(c.t.text)}</p><div class="kf"><span class="who2 ${c.t.who}">${c.t.who==='client'?'Вы':'Виктория'}</span>${c.t.due&&k!=='done'?`<small>до ${fdate(c.t.due)}</small>`:''}</div></div>`).join('')||'<div class="kempty">Пусто</div>'}</div>`).join('')}</div>`;
 }
 function roadmap(stg,curI,short){
@@ -964,11 +968,9 @@ function clPlan(){
    </details></div>`).join('')}</div>`;
 }
 function clTasks(){
-  const pl=ST.meta.plan||{stages:[]},f=window.CTF||'all',T=cltasks();
-  const flt=f==='me'?{stages:pl.stages.map(st=>({title:st.title,tasks:(st.tasks||[]).filter(t=>t.who==='client')}))}:f==='v'?{stages:pl.stages.map(st=>({title:st.title,tasks:(st.tasks||[]).filter(t=>t.who!=='client')}))}:pl;
+  const pl=ST.meta.plan||{stages:[]};
   return `${hd2('Задачи','Все задачи проекта на доске',[])}
-  <div class="flt" style="margin:14px 0"><button data-a="ctf" data-v="all" class="${f==='all'?'on':''}">Все</button><button data-a="ctf" data-v="me" class="${f==='me'?'on':''}">Мои <em>${T.all.filter(x=>x.t.who==='client').length}</em></button><button data-a="ctf" data-v="v" class="${f==='v'?'on':''}">У Виктории <em>${T.all.filter(x=>x.t.who!=='client').length}</em></button></div>
-  ${(pl.stages||[]).length?planBoardRO(flt):'<div class="t2"><p class="mu2">Задач пока нет.</p></div>'}`;
+  ${(pl.stages||[]).length?`<div style="margin:14px 0">${boardBar(pl,false)}</div>${planBoardRO(pl)}`:'<div class="t2"><p class="mu2">Задач пока нет.</p></div>'}`;
 }
 function clKey(){
   const key=(ST.meta.key||[]).slice().reverse();
@@ -1058,12 +1060,28 @@ function planEd(slot,M){
   <p class="mu2" style="margin-top:8px">Кружок слева: нажми, чтобы сменить статус (к выполнению, в работе, готово). Пока не нажмёшь «Сохранить», клиент изменений не видит.</p>`;
 }
 
+
+function pbCur(pl){return (pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done'))}
+function pbPass(pl,si,t){const f=window.PBF||{st:'all',who:'all'};
+  if(f.st==='cur'&&si!==pbCur(pl))return false;
+  if(f.st!=='all'&&f.st!=='cur'&&si!==+f.st)return false;
+  if(f.who==='client'&&t.who!=='client')return false;
+  if(f.who==='team'&&t.who==='client')return false;
+  return true}
+function boardBar(pl,adm){
+  const f=window.PBF||{st:'all',who:'all'};
+  const ch=(k,v,t)=>`<button data-a="pbf" data-k="${k}" data-v="${v}" class="${String(f[k])===String(v)?'on':''}">${t}</button>`;
+  return `<div class="fbar"><div class="flt" style="margin:0">${ch('st','all','Все задачи')}${ch('st','cur','Эта неделя')}</div>
+  <select class="sel" id="pf-s" style="width:auto;margin:0">${['<option value="all"'+(f.st==='all'||f.st==='cur'?' selected':'')+'>Любой этап</option>'].concat((pl.stages||[]).map((st,i)=>`<option value="${i}" ${String(f.st)===String(i)?'selected':''}>${esc(st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</option>`)).join('')}</select>
+  <div class="flt" style="margin:0">${ch('who','all','Все')}${ch('who','client',adm?'Клиент':'Мои')}${ch('who','team',adm?'Я':'У Виктории')}</div></div>`;
+}
 function planBoard(slot){
   const P=PLD.plan,COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']];
   const cards={todo:[],doing:[],done:[]};
-  P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>cards[t.status||'todo'].push({st,si,t,ti})));
-  const card=c=>`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Я'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="tkst ${c.t.status}" style="margin-left:auto" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
-  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span><button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button></div>
+  P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>{if(pbPass(P,si,t))cards[t.status||'todo'].push({st,si,t,ti})}));
+  const edit=c=>`<div class="kc kadd"><textarea id="pe-x" style="min-height:70px;margin-bottom:8px">${esc(c.t.text)}</textarea><small class="l">Этап</small><select id="pe-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,i)=>`<option value="${i}" ${i===c.si?'selected':''}>${esc(st.title)}</option>`).join('')}</select><div class="idx"><div><small class="l">Кто делает</small><select id="pe-w" class="sel" style="margin:0"><option value="team" ${c.t.who!=='client'?'selected':''}>Я</option><option value="client" ${c.t.who==='client'?'selected':''}>Клиент</option></select></div><div><small class="l">Статус</small><select id="pe-st" class="sel" style="margin:0">${COLS.map(([k,n])=>`<option value="${k}" ${c.t.status===k?'selected':''}>${n}</option>`).join('')}</select></div></div><small class="l" style="margin-top:8px">Срок</small><input type="date" id="pe-d" value="${esc(c.t.due||'')}"><div class="row"><button class="bt2 sm2 v" data-a="pbsave" data-s="${c.si}" data-t="${c.ti}">Сохранить</button><button class="bt2 sm2" data-a="pbeditx">Отмена</button><button class="btn wr s" data-a="pbdel" data-s="${c.si}" data-t="${c.ti}">Удалить</button></div></div>`;
+  const card=c=>window.PLE===c.si+':'+c.ti?edit(c):`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Я'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="rbt ked" data-a="pbedit" data-s="${c.si}" data-t="${c.ti}" title="Редактировать">✎</button><button class="tkst ${c.t.status}" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
+  return `${boardBar(P,true)}<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span><button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button></div>
    ${window.PLADD===k?`<div class="kc kadd"><select id="pa-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,si)=>`<option value="${si}">${esc(st.title)}</option>`).join('')}</select><input type="text" id="pa-t" placeholder="Что нужно сделать" autofocus><div class="row" style="margin-top:8px"><button class="bt2 sm2 v" data-a="pbaddok" data-c="${k}">Добавить</button><button class="bt2 sm2" data-a="pbaddx">Отмена</button></div></div>`:''}
    ${cards[k].map(card).join('')||(window.PLADD===k?'':'<div class="kempty">Перетащи сюда</div>')}</div>`).join('')}</div><p class="mu2" style="margin-top:10px">Перетаскивай карточки между колонками или нажимай кружок справа внизу. Изменения сохраняются сразу и видны клиенту.</p>`;
 }
@@ -1226,6 +1244,11 @@ const A={
  cpv(el){window.CPV=el.dataset.v;render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
  pbadd(el){window.PLADD=el.dataset.c;render(true)},
+ pbedit(el){window.PLE=el.dataset.s+':'+el.dataset.t;render(true)},
+ pbeditx(){window.PLE=null;render(true)},
+ async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti];t.text=tx;t.who=$('#pe-w').value;t.status=$('#pe-st').value;t.due=$('#pe-d').value||'';const ns=+$('#pe-s').value;if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено')},
+ async pbdel(el){if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
+ pbf(el){window.PBF=Object.assign({st:'all',who:'all'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
  async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({text:tx,status:el.dataset.c,who:'team',due:''});window.PLADD=null;await planQuick();toast('Задача добавлена')},
  async pbmove(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';await planQuick()},
@@ -1313,7 +1336,7 @@ root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'))});
 root.addEventListener('dragover',e=>{const col=e.target.closest&&e.target.closest('.kcol');if(col){e.preventDefault();document.querySelectorAll('.kcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
 root.addEventListener('drop',async e=>{const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await planQuick()}else render(true)});
-root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
+root.addEventListener('change',async e=>{const t=e.target;if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 let sv={};
 root.addEventListener('input',e=>{const t=e.target;
   if(location.hash.startsWith('#/as/'))return;
