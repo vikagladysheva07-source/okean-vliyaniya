@@ -407,6 +407,18 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .rep2{display:block;text-decoration:none;color:inherit}.rep2 .rw{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .rep2 b{display:block;font-size:20px;font-weight:500;letter-spacing:-.02em}.rep2 small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}.rep2 p{margin-top:12px;font-size:14px;line-height:1.4}
 .rep2.ok{border-color:rgba(196,164,255,.4);box-shadow:0 0 34px -16px rgba(155,111,232,.7)}
+
+/* без красного: акценты в фиолетовой гамме, красный только для удаления */
+.pl2.w{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(196,164,255,.45)}
+.who2.client{color:#E4D6FF;border-color:rgba(196,164,255,.55);background:rgba(155,111,232,.16)}
+.chip.warn{background:rgba(155,111,232,.14);border-color:rgba(196,164,255,.4);color:#E4D6FF}
+.st-revision{color:#fff;border-color:rgba(196,164,255,.6);background:rgba(155,111,232,.22)}
+.tile.hot{border-color:rgba(225,208,255,.42);background:linear-gradient(160deg,rgba(169,131,242,.18),rgba(91,47,190,.06)),var(--s1)}
+.att{background:rgba(155,111,232,.08);border-color:rgba(196,164,255,.35)}
+.fbk.bad{background:rgba(155,111,232,.1);border-color:rgba(196,164,255,.45)}.fbk.bad small{color:var(--vb)}
+.risk{color:var(--vb)}
+.cell .dot{background:#E4D6FF}
+.tkv .who2.client,.kc .who2.client{color:#E4D6FF}
 </style>
 </head>
 <body>
@@ -916,7 +928,7 @@ function clHome(){
   const charts=ps.n?`<div class="t2 c8"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${roadmap(stg,curI,short)}</div>
    <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
    <div class="t2 c6"><h3>Прогресс по этапам</h3><div style="margin-top:10px">${stg.map(x=>`<div class="sbr"><span>${esc(x.st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</span><div class="tr2"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div><em>${x.d}/${x.n}</em></div>`).join('')}</div></div>
-   <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#FFB3B3"></i><i style="flex:${ct||0.001};background:#9B6FE8"></i></div>
+   <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#E4D6FF"></i><i style="flex:${ct||0.001};background:#7C4FD4"></i></div>
     ${upc.length?`<div class="mu2" style="margin:16px 0 4px">Ближайшие сроки</div>${upc.map(x=>`<div class="tkv"><i class="tkst ${x.t.status}"></i><span>${esc(x.t.text.slice(0,60))}</span><small>${fdate(x.t.due)}</small></div>`).join('')}`:''}</div>`:'';
   const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
