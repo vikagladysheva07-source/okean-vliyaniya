@@ -377,6 +377,31 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .sbr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;font-size:13.5px}.sbr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sbr em{font-style:normal;color:var(--muted);font-size:12px}
 .sbr .tr2{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden}.sbr .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
 .ball{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.ball b{display:block;font-size:42px;font-weight:500;letter-spacing:-.04em;line-height:1}.ball span{font-size:12.5px;color:var(--muted)}
+.rmw{overflow-x:auto;margin:18px -6px 0;padding:0 6px 6px}
+.rm{display:flex;min-width:760px}
+.rn{flex:1;min-width:84px;text-align:center;position:relative;padding:0 4px}
+.rn::before{content:"";position:absolute;top:17px;left:-50%;right:50%;height:3px;background:rgba(255,255,255,.1)}
+.rn:first-child::before{display:none}
+.rn.d::before,.rn.c::before{background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
+.rn .dot{width:36px;height:36px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font-size:13px;font-weight:700;background:#14111F;border:1.5px solid rgba(196,164,255,.25);color:var(--muted);position:relative;z-index:1}
+.rn.d .dot{background:#8B5CE8;border-color:#C4A4FF;color:#fff}.rn .dot svg{width:16px;height:16px;stroke:#fff;stroke-width:3}
+.rn.c .dot{background:#fff;border-color:#9B6FE8;color:#5B2FBE;box-shadow:0 0 0 6px rgba(155,111,232,.25),0 0 24px rgba(155,111,232,.6)}
+.rn b{display:block;font-size:12.5px;font-weight:500;line-height:1.25}.rn small{display:block;font-size:11px;color:var(--muted);margin-top:2px}.rn.c b{color:#fff}
+.rmc{margin-top:16px;padding:14px 16px;border-radius:16px;background:rgba(155,111,232,.1);border:1px solid rgba(196,164,255,.28)}.rmc p{margin-top:6px;font-size:14px;color:rgba(242,237,226,.8);line-height:1.5}
+.tl{position:relative;margin-top:18px;display:flex;flex-direction:column;gap:14px;padding-left:56px}
+.tl::before{content:"";position:absolute;left:19px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,#9B6FE8,rgba(155,111,232,.12))}
+.ts{position:relative}
+.tdot{position:absolute;left:-56px;top:16px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:#14111F;border:1.5px solid rgba(196,164,255,.3);color:var(--muted)}
+.tdot svg{width:18px;height:18px;stroke:#fff;stroke-width:3}
+.ts.d .tdot{background:#8B5CE8;border-color:#C4A4FF;color:#fff}
+.ts.c .tdot{background:#fff;color:#5B2FBE;border-color:#9B6FE8;box-shadow:0 0 0 7px rgba(155,111,232,.25),0 0 26px rgba(155,111,232,.6)}
+.ts.c>.t2{border-color:rgba(196,164,255,.45);box-shadow:0 0 40px -16px rgba(155,111,232,.7)}
+.ts summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none}.ts summary::-webkit-details-marker{display:none}
+.ts summary b{display:block;font-size:18px;font-weight:500;letter-spacing:-.01em;margin-top:2px}
+.sdesc{margin:12px 0 0;font-size:14.5px;line-height:1.55;color:rgba(242,237,226,.8)}
+.tr2.big{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden;margin:14px 0 8px}.tr2.big i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
+.ts .tkv{padding:8px 0;border-top:1px solid rgba(196,164,255,.08)}
+@media(max-width:700px){.tl{padding-left:46px}.tdot{left:-46px;width:34px;height:34px}.tl::before{left:16px}}
 </style>
 </head>
 <body>
@@ -879,14 +904,14 @@ function clHome(){
   const stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}});
   const curI=stg.findIndex(x=>!x.done);
   const short=t=>{const m=t.match(/^Неделя (\d+)/);return m?'Нед. '+m[1]:t.replace(/:.*$/,'').split(' ').slice(0,2).join(' ').slice(0,14)};
-  if(stg.length>1)window.AFTER=()=>placeNodes(stg.map((x,i)=>({w:i,n:i+1,l:short(x.st.title),done:x.done,cur:i===curI,open:false})));
   const dn=T.done.length,dg=T.all.filter(x=>x.t.status==='doing').length,td=T.all.filter(x=>x.t.status==='todo').length,tot=T.all.length||1;
   const upc=T.all.filter(x=>x.t.due&&x.t.status!=='done').sort((a,b)=>a.t.due<b.t.due?-1:1).slice(0,3);
   const cw=T.wait.length,ct=T.all.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length;
-  const charts=ps.n?`<div class="t2 pmap c8"><div class="tt"><h3>Путь проекта</h3></div><div class="sc">${pathSvg()}</div></div>
+  const cs=curI>=0?stg[curI]:null;
+  const charts=ps.n?`<div class="t2 c8"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${roadmap(stg,curI,short)}${cs?`<div class="rmc"><div><span class="pl2">Сейчас</span> <b>${esc(cs.st.title.replace(/^Неделя (\d+)\.\s*/,'Неделя $1: '))}</b>${cs.st.period?` <span class="mu2">${esc(cs.st.period)}</span>`:''}</div>${cs.st.desc?`<p>${esc(cs.st.desc)}</p>`:''}</div>`:''}</div>
    <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
    <div class="t2 c6"><h3>Прогресс по этапам</h3><div style="margin-top:10px">${stg.map(x=>`<div class="sbr"><span>${esc(x.st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</span><div class="tr2"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div><em>${x.d}/${x.n}</em></div>`).join('')}</div></div>
-   <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у команды</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#FFB3B3"></i><i style="flex:${ct||0.001};background:#9B6FE8"></i></div>
+   <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#FFB3B3"></i><i style="flex:${ct||0.001};background:#9B6FE8"></i></div>
     ${upc.length?`<div class="mu2" style="margin:16px 0 4px">Ближайшие сроки</div>${upc.map(x=>`<div class="tkv"><i class="tkst ${x.t.status}"></i><span>${esc(x.t.text.slice(0,60))}</span><small>${fdate(x.t.due)}</small></div>`).join('')}`:''}</div>`:'';
   const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
@@ -894,7 +919,7 @@ function clHome(){
   <div class="g12">
    ${charts}
    ${cell('#/plan','Траектория',ps.n?`<div style="display:flex;align-items:center;gap:14px;margin-top:14px">${rg2(pc,78,9)}<div><div class="mu2">${ps.d} из ${ps.n} задач</div><div style="font-size:14px;margin-top:4px">${cur?esc(cur.title):'Все этапы завершены'}</div></div></div>`:'<p class="mu2" style="margin-top:12px">Траектория скоро появится.</p>')}
-   ${cell('#/tasks','Задачи',`<div class="big2" style="margin-top:12px">${T.wait.length}</div><div class="mu2" style="margin-top:6px">${T.wait.length?'ждут вас'+(T.wait[0].t.due?', ближайший срок '+fdate(T.wait[0].t.due):''):'от вас сейчас ничего не нужно'}</div><div class="mu2" style="margin-top:2px">у команды в работе: ${T.work.length}</div>`)}
+   ${cell('#/tasks','Задачи',`<div class="big2" style="margin-top:12px">${T.wait.length}</div><div class="mu2" style="margin-top:6px">${T.wait.length?'ждут вас'+(T.wait[0].t.due?', ближайший срок '+fdate(T.wait[0].t.due):''):'от вас сейчас ничего не нужно'}</div><div class="mu2" style="margin-top:2px">у Виктории в работе: ${T.work.length}</div>`)}
    ${cell('#/approve','Согласования и запросы',`<div class="big2" style="margin-top:12px">${pend.length}</div><div class="mu2" style="margin-top:6px">${pend.length?'ждут вашего решения':'всё согласовано'}</div>`)}
    ${cell('#/reports','Отчёты',rep?`<div style="margin-top:14px;font-size:15px">${esc(rep.title)}</div><div class="mu2" style="margin-top:4px">${fdate(rep.created_at)} · всего ${reps.length}</div>`:'<p class="mu2" style="margin-top:12px">Первый отчёт будет после старта.</p>')}
    <a class="t2 lk2 c8 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.length?key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join(''):'<p class="mu2" style="margin-top:12px">Здесь будут решения, договорённости и риски по проекту.</p>'}</a>
@@ -905,20 +930,28 @@ function clHome(){
 function planBoardRO(pl){
   const COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]};
   (pl.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>cards[t.status||'todo'].push({st,t})));
-  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div>${cards[k].map(c=>`<div class="kc" style="cursor:default"><span class="pl2 kst">${esc(c.st.title.slice(0,34))}</span><p>${esc(c.t.text)}</p><div class="kf"><span class="who2 ${c.t.who}">${c.t.who==='client'?'Вы':'Команда'}</span>${c.t.due&&k!=='done'?`<small>до ${fdate(c.t.due)}</small>`:''}</div></div>`).join('')||'<div class="kempty">Пусто</div>'}</div>`).join('')}</div>`;
+  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div>${cards[k].map(c=>`<div class="kc" style="cursor:default"><span class="pl2 kst">${esc(c.st.title.slice(0,34))}</span><p>${esc(c.t.text)}</p><div class="kf"><span class="who2 ${c.t.who}">${c.t.who==='client'?'Вы':'Виктория'}</span>${c.t.due&&k!=='done'?`<small>до ${fdate(c.t.due)}</small>`:''}</div></div>`).join('')||'<div class="kempty">Пусто</div>'}</div>`).join('')}</div>`;
+}
+function roadmap(stg,curI,short){
+  return `<div class="rmw"><div class="rm">${stg.map((x,i)=>`<div class="rn ${x.done?'d':i===curI?'c':''}"><div class="dot">${x.done?SV.check:i+1}</div><b>${esc(short(x.st.title))}</b><small>${esc((x.st.period||'').replace(' ноября','.11').replace(' декабря','.12'))}</small></div>`).join('')}</div></div>`;
 }
 function clPlan(){
-  const pl=ST.meta.plan||{stages:[]},ps=planStat(pl),v=window.CPV||'board';
-  if(!(pl.stages||[]).length)return `${hd2('Траектория','Этапы проекта и задачи',[])}<div class="g12"><div class="t2 c12"><p class="mu2">Траектория скоро появится.</p></div></div>`;
-  return `${hd2('Траектория',`${ps.d} из ${ps.n} задач выполнено`,[])}
-  <div class="flt" style="margin:14px 0"><button data-a="cpv" data-v="board" class="${v==='board'?'on':''}">Доска</button><button data-a="cpv" data-v="stages" class="${v==='stages'?'on':''}">По этапам</button></div>
-  ${v==='board'?planBoardRO(pl):`<div class="g12" style="margin-top:0">${planView(pl)}</div>`}`;
+  const pl=ST.meta.plan||{stages:[]},ps=planStat(pl),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
+  if(!stg.length)return `${hd2('Траектория','План работы по проекту',[])}<div class="g12"><div class="t2 c12"><p class="mu2">План работы скоро появится.</p></div></div>`;
+  return `${hd2('Траектория','План работы: этапы, сроки и что происходит на каждом',[])}
+  <div class="tl">${stg.map((x,i)=>`<div class="ts ${x.done?'d':i===curI?'c':''}"><div class="tdot">${x.done?SV.check:i+1}</div>
+   <details class="t2" ${i===curI?'open':''}><summary><div><span class="mu2">${esc(x.st.period||'')}</span><b>${esc(x.st.title)}</b></div><span class="pl2 ${x.done?'g':''}">${x.done?'готово':x.d+' из '+x.n}</span></summary>
+    ${x.st.desc?`<p class="sdesc">${esc(x.st.desc)}</p>`:''}
+    <div class="tr2 big"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div>
+    ${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}
+   </details></div>`).join('')}</div>`;
 }
 function clTasks(){
-  const T=cltasks();
-  const row=x=>`<div class="it2"><i class="tkst ${x.t.status}"></i><div class="x"><p>${esc(x.t.text)}</p><small>${esc(x.st.title)}${x.t.due&&x.t.status!=='done'?' · до '+fdate(x.t.due):''}</small></div></div>`;
-  const sec=(t,L,hot)=>L.length?`<div class="t2 c12"><h3>${t} <span class="pl2 ${hot?'w':''}">${L.length}</span></h3>${L.map(row).join('')}</div>`:'';
-  return `${hd2('Задачи','Что нужно от вас и что делает команда',[])}<div class="g12">${sec('Ждут вас',T.wait,true)||'<div class="t2 c12"><h3>От вас сейчас ничего не нужно</h3></div>'}${sec('В работе у команды',T.work)}${sec('Дальше',T.next)}${sec('Готово',T.done)}</div>`;
+  const pl=ST.meta.plan||{stages:[]},f=window.CTF||'all',T=cltasks();
+  const flt=f==='me'?{stages:pl.stages.map(st=>({title:st.title,tasks:(st.tasks||[]).filter(t=>t.who==='client')}))}:f==='v'?{stages:pl.stages.map(st=>({title:st.title,tasks:(st.tasks||[]).filter(t=>t.who!=='client')}))}:pl;
+  return `${hd2('Задачи','Все задачи проекта на доске',[])}
+  <div class="flt" style="margin:14px 0"><button data-a="ctf" data-v="all" class="${f==='all'?'on':''}">Все</button><button data-a="ctf" data-v="me" class="${f==='me'?'on':''}">Мои <em>${T.all.filter(x=>x.t.who==='client').length}</em></button><button data-a="ctf" data-v="v" class="${f==='v'?'on':''}">У Виктории <em>${T.all.filter(x=>x.t.who!=='client').length}</em></button></div>
+  ${(pl.stages||[]).length?planBoardRO(flt):'<div class="t2"><p class="mu2">Задач пока нет.</p></div>'}`;
 }
 function clKey(){
   const key=(ST.meta.key||[]).slice().reverse();
@@ -969,17 +1002,17 @@ function planStat(pl){let n=0,d=0;((pl&&pl.stages)||[]).forEach(st=>(st.tasks||[
 const PLST={todo:'К выполнению',doing:'В работе',done:'Готово'};
 const T=(text,who,due)=>({text,status:'todo',who:who||'team',due:due||''});
 const PLTPLS={
- content:{name:'Контент-маркетинг',stages:['Диагностика и стратегия','Упаковка и рубрики','Производство контента','Дистрибуция и аналитика','Масштабирование'].map(t=>({title:t,tasks:[]}))},
+ content:{name:'Контент-маркетинг',stages:['Диагностика и стратегия','Упаковка и рубрики','Производство контента','Дистрибуция и аналитика','Масштабирование'].map(t=>({title:t,period:'',desc:'',tasks:[]}))},
  sewing:{name:'Швейная платформа: 6 недель + 4 сопровождение',stages:[
-  {title:'До старта: нужно от вас',tasks:[T('Прислать Excel: модели, операции, расценки, текущий расчёт зарплаты','client','2026-11-09'),T('Прислать фото 3–4 бумажных листов выработки','client','2026-11-09'),T('Выделить время технолога в первые две недели','client','2026-11-09'),T('Ответить: есть ли МойСклад; чьё сырьё в заказах клиентов; два кабинета Wildberries это два юрлица или одно; сколько швей и их телефоны','client','2026-11-09')]},
-  {title:'Неделя 1. Диагностика и прототип',tasks:[T('Разобрать листы, Excel и расценки вместе с технологом'),T('Показать прототип: панель руководителя, приложение швеи, движение партии'),T('Одобрить прототип (разработка начинается после одобрения)','client','2026-11-15')]},
-  {title:'Неделя 2. Справочники',tasks:[T('Модели, операции, расценки'),T('Импорт Excel'),T('Роли и журнал действий')]},
-  {title:'Неделя 3. Приложение швеи и зарплата',tasks:[T('3–4 швеи вводят данные в приложении параллельно с бумагой','client'),T('Ведомость по периодам 10–25 и 25–10')]},
-  {title:'Неделя 4. Партии',tasks:[T('Карточка партии от раскроя до упаковки'),T('Передачи, брак, допраскрой'),T('Панель руководителя')]},
-  {title:'Неделя 5. Склад',tasks:[T('Остатки, адреса ячеек, сканер'),T('Сверить ведомость из системы с расчётом технолога','client'),T('Подключить агентов «Руководитель» и «Контролёр»')]},
-  {title:'Неделя 6. Запуск',tasks:[T('Обучить всех швей'),T('Запуск на весь цех'),T('Принять этап','client','2026-12-20')]},
-  {title:'Сопровождение: 4 недели',tasks:[T('Работать на реальных данных, править то, что всплывёт'),T('Ведомость за первый полный период совпадает с вашим расчётом','client'),T('Остатки по 10 моделям совпадают с физическим пересчётом','client'),T('Замерить время приёма партии, расчёта зарплаты и число ошибок до и после')]},
-  {title:'После запуска: следующие блоки',tasks:[T('Материалы и закупка, подключение Wildberries и Ozon'),T('Планирование мощности и поставки'),T('Реклама, карточки, маркировка, финансы')]}]}
+  {title:'До старта: нужно от вас',period:'до 9 ноября',desc:'Материалы и ответы, без которых нельзя начать: Excel, фото листов выработки, время технолога.',tasks:[T('Прислать Excel: модели, операции, расценки, текущий расчёт зарплаты','client','2026-11-09'),T('Прислать фото 3–4 бумажных листов выработки','client','2026-11-09'),T('Выделить время технолога в первые две недели','client','2026-11-09'),T('Ответить: есть ли МойСклад; чьё сырьё в заказах клиентов; два кабинета Wildberries это два юрлица или одно; сколько швей и их телефоны','client','2026-11-09')]},
+  {title:'Неделя 1. Диагностика и прототип',period:'9–15 ноября',desc:'Разбираю листы, Excel и расценки вместе с технологом. Показываю прототип экранов: панель руководителя, приложение швеи, движение партии. Разработка начинается после вашего одобрения.',tasks:[T('Разобрать листы, Excel и расценки вместе с технологом'),T('Показать прототип: панель руководителя, приложение швеи, движение партии'),T('Одобрить прототип (разработка начинается после одобрения)','client','2026-11-15')]},
+  {title:'Неделя 2. Справочники',period:'16–22 ноября',desc:'Модели, операции, расценки, импорт Excel, роли и журнал действий.',tasks:[T('Модели, операции, расценки'),T('Импорт Excel'),T('Роли и журнал действий')]},
+  {title:'Неделя 3. Приложение швеи и зарплата',period:'23–29 ноября',desc:'3–4 швеи начинают вводить данные в приложении параллельно с бумагой. Собирается ведомость по периодам.',tasks:[T('3–4 швеи вводят данные в приложении параллельно с бумагой','client'),T('Ведомость по периодам 10–25 и 25–10')]},
+  {title:'Неделя 4. Партии',period:'30 ноября – 6 декабря',desc:'Карточка партии от раскроя до упаковки, передачи, брак, допраскрой, панель руководителя.',tasks:[T('Карточка партии от раскроя до упаковки'),T('Передачи, брак, допраскрой'),T('Панель руководителя')]},
+  {title:'Неделя 5. Склад',period:'7–13 декабря',desc:'Остатки, адреса, сканер. Сверяем ведомость из системы с расчётом технолога. Подключаем агентов «Руководитель» и «Контролёр».',tasks:[T('Остатки, адреса ячеек, сканер'),T('Сверить ведомость из системы с расчётом технолога','client'),T('Подключить агентов «Руководитель» и «Контролёр»')]},
+  {title:'Неделя 6. Запуск',period:'14–20 декабря',desc:'Обучение всех швей, запуск на весь цех, приёмка этапа.',tasks:[T('Обучить всех швей'),T('Запуск на весь цех'),T('Принять этап','client','2026-12-20')]},
+  {title:'Сопровождение: 4 недели',period:'после запуска',desc:'Работаем вместе на реальных данных, правим то, что всплывёт, помогаю команде. Считаем рабочие недели, праздничные дни не в счёт.',tasks:[T('Работать на реальных данных, править то, что всплывёт'),T('Ведомость за первый полный период совпадает с вашим расчётом','client'),T('Остатки по 10 моделям совпадают с физическим пересчётом','client'),T('Замерить время приёма партии, расчёта зарплаты и число ошибок до и после')]},
+  {title:'После запуска: следующие блоки',period:'дальше',desc:'Остальные блоки подключаем по порядку пользы: сначала материалы и Wildberries и Ozon, затем планирование и поставки, затем реклама, карточки, маркировка и финансы.',tasks:[T('Материалы и закупка, подключение Wildberries и Ozon'),T('Планирование мощности и поставки'),T('Реклама, карточки, маркировка, финансы')]}]}
 };
 function planEd(slot,M){
   if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:clone(M.plan||{stages:[]})};
@@ -990,7 +1023,8 @@ function planEd(slot,M){
   if(v==='board')return bar+planBoard(slot);
   return bar+`<div style="display:flex;flex-direction:column;gap:14px">${P.stages.map((st,si)=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
    return `<div class="t2"><div class="plh"><input type="text" data-pl="stages.${si}.title" value="${esc(st.title)}" placeholder="Название этапа"><span class="pl2">${d}/${n}</span><button class="rbt" data-a="pldelst" data-s="${si}" title="Удалить этап">✕</button></div>
-   <div class="tkl">${(st.tasks||[]).map((t,ti)=>`<div class="tk2"><button class="tkst ${t.status}" data-a="plst" data-s="${si}" data-t="${ti}" title="${PLST[t.status]}: нажми, чтобы сменить"></button><input type="text" data-pl="stages.${si}.tasks.${ti}.text" value="${esc(t.text)}" placeholder="Задача"><button class="who2 ${t.who}" data-a="plwho" data-s="${si}" data-t="${ti}">${t.who==='client'?'Клиент':'Команда'}</button><input type="date" data-pl="stages.${si}.tasks.${ti}.due" value="${esc(t.due||'')}"><button class="rbt" data-a="pldel" data-s="${si}" data-t="${ti}" title="Удалить">✕</button></div>`).join('')}</div>
+   <div class="idx" style="margin-top:8px"><input type="text" data-pl="stages.${si}.period" value="${esc(st.period||'')}" placeholder="Период, например 9–15 ноября"><input type="text" data-pl="stages.${si}.desc" value="${esc(st.desc||'')}" placeholder="Коротко: что происходит на этапе"></div>
+   <div class="tkl">${(st.tasks||[]).map((t,ti)=>`<div class="tk2"><button class="tkst ${t.status}" data-a="plst" data-s="${si}" data-t="${ti}" title="${PLST[t.status]}: нажми, чтобы сменить"></button><input type="text" data-pl="stages.${si}.tasks.${ti}.text" value="${esc(t.text)}" placeholder="Задача"><button class="who2 ${t.who}" data-a="plwho" data-s="${si}" data-t="${ti}">${t.who==='client'?'Клиент':'Я'}</button><input type="date" data-pl="stages.${si}.tasks.${ti}.due" value="${esc(t.due||'')}"><button class="rbt" data-a="pldel" data-s="${si}" data-t="${ti}" title="Удалить">✕</button></div>`).join('')}</div>
    <div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pltask" data-s="${si}">+ Задача</button></div></div>`}).join('')}</div>
   <div class="row" style="margin-top:14px"><button class="bt2" data-a="pladd">+ Этап</button><button class="bt2 v" data-a="plsave" data-u="${slot}">Сохранить траекторию</button></div>
   <p class="mu2" style="margin-top:8px">Кружок слева: нажми, чтобы сменить статус (к выполнению, в работе, готово). Пока не нажмёшь «Сохранить», клиент изменений не видит.</p>`;
@@ -1000,7 +1034,7 @@ function planBoard(slot){
   const P=PLD.plan,COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']];
   const cards={todo:[],doing:[],done:[]};
   P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>cards[t.status||'todo'].push({st,si,t,ti})));
-  const card=c=>`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Команда'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="tkst ${c.t.status}" style="margin-left:auto" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
+  const card=c=>`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Я'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="tkst ${c.t.status}" style="margin-left:auto" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
   return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span><button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button></div>
    ${window.PLADD===k?`<div class="kc kadd"><select id="pa-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,si)=>`<option value="${si}">${esc(st.title)}</option>`).join('')}</select><input type="text" id="pa-t" placeholder="Что нужно сделать" autofocus><div class="row" style="margin-top:8px"><button class="bt2 sm2 v" data-a="pbaddok" data-c="${k}">Добавить</button><button class="bt2 sm2" data-a="pbaddx">Отмена</button></div></div>`:''}
    ${cards[k].map(card).join('')||(window.PLADD===k?'':'<div class="kempty">Перетащи сюда</div>')}</div>`).join('')}</div><p class="mu2" style="margin-top:10px">Перетаскивай карточки между колонками или нажимай кружок справа внизу. Изменения сохраняются сразу и видны клиенту.</p>`;
@@ -1010,7 +1044,7 @@ function planView(pl){
   const st=(pl&&pl.stages)||[];if(!st.length)return '';
   const tot=planStat(pl),pc=tot.n?Math.round(tot.d/tot.n*100):0;
   return `<div class="t2 c12"><h3>Траектория работы <span class="pl2">${tot.d} из ${tot.n} задач</span></h3>
-   <div class="stg">${st.map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(t=>t.status==='done').length;return `<div class="stc"><div class="top2"><b>${esc(s.title)}</b><span>${d}/${n}</span></div><div class="tr2"><i style="width:${n?d/n*100:0}%"></i></div>${(s.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'команда'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>`}).join('')}</div></div>`;
+   <div class="stg">${st.map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(t=>t.status==='done').length;return `<div class="stc"><div class="top2"><b>${esc(s.title)}</b><span>${d}/${n}</span></div><div class="tr2"><i style="width:${n?d/n*100:0}%"></i></div>${(s.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>`}).join('')}</div></div>`;
 }
 
 function keyEd(slot,M){
@@ -1157,6 +1191,7 @@ const A={
  ktype(el){window.KTY=el.dataset.k;const x=$('#k-x');window.KTX=x?x.value:'';render(true);if($('#k-x'))$('#k-x').value=window.KTX},
  async keyadd(el){const tx=$('#k-x').value.trim();if(!tx){toast('Напиши текст');return}const M=mmap(el.dataset.u),arr=(M.key||[]).concat([{id:Date.now(),type:window.KTY||'info',text:tx,date:$('#k-d').value||''}]);await setM(el.dataset.u,'key',arr);toast('Показано клиенту');render(true)},
  async keydel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'key',(M.key||[]).filter(k=>String(k.id)!==el.dataset.id));render(true)},
+ ctf(el){window.CTF=el.dataset.v;render(true)},
  cpv(el){window.CPV=el.dataset.v;render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
  pbadd(el){window.PLADD=el.dataset.c;render(true)},
