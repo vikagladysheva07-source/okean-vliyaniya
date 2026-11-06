@@ -1147,7 +1147,7 @@ function stat(u){
   const P=pmap(u.slot),M=mmap(u.slot),c=totals(P),N=TK.length;
   const exp=C.weeks.filter(w=>isOpen(w,M)&&w.tasks.length&&dnum(w.due)<=dnum(today()));
   const late=exp.filter(w=>!wsubm(w,P)).length,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99;
-  const started=dnum(today())>=dnum((C.weeks[1]||C.weeks[0]).opens);
+  const started=dnum(today())>=dnum((C.weeks.find(w=>w.n===1)||C.weeks[0]).opens);
   const risk=started&&(late>0||idle>=4)||(c.revision>=3);
   return {u,P,M,c,N,late,ls,idle,risk,reasons:[late?'просрочено недель: '+late:'',idle>=4&&started?(idle>=99?'ни разу не заходил(а)':'нет активности '+idle+' дн.'):'',c.revision>=3?'много возвратов: '+c.revision:''].filter(Boolean)};
 }
