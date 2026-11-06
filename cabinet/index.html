@@ -495,6 +495,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
  .kb .kcol{display:none;max-height:none}.kb .kcol.act{display:flex}
 }
 .fbar .sh{display:none}@media(max-width:700px){.fbar .lg{display:none}.fbar .sh{display:inline}.fbar .frow{gap:6px}}
+.dd{position:relative;display:inline-block;min-width:170px}
+.ddb{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--s1);font-size:13px;font-weight:700;color:var(--text);text-align:left}
+.ddb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ddb i{flex:none;width:7px;height:7px;border-right:2px solid var(--vb);border-bottom:2px solid var(--vb);transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+.dd.open .ddb{border-color:rgba(225,208,255,.5);background:linear-gradient(180deg,rgba(169,131,242,.3),rgba(91,47,190,.22))}.dd.open .ddb i{transform:rotate(225deg) translateY(-2px)}
+.ddl{display:none;position:absolute;left:0;min-width:100%;width:max-content;max-width:min(88vw,340px);top:calc(100% + 6px);z-index:70;max-height:300px;overflow-y:auto;padding:6px;border-radius:16px;background:rgba(18,14,34,.97);border:1px solid rgba(196,164,255,.35);box-shadow:0 20px 50px -12px rgba(0,0,0,.8),0 0 40px -18px rgba(155,111,232,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.dd.open .ddl{display:block}
+.ddi{display:block;width:100%;padding:9px 12px;border-radius:10px;font-size:13.5px;color:rgba(242,237,226,.85);text-align:left;white-space:normal}.ddi:hover{background:rgba(155,111,232,.18)}.ddi.on{background:rgba(155,111,232,.28);color:#fff;font-weight:700}
+.chp{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.chp button{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--s1);font-size:12.5px;font-weight:700;color:var(--muted)}.chp button.on{color:#fff;background:linear-gradient(180deg,rgba(169,131,242,.42),rgba(91,47,190,.32));border-color:rgba(225,208,255,.5)}
+@media(max-width:700px){.fmore .dd{width:100%}.mbox .dd{width:100%}}
 </style>
 </head>
 <body>
@@ -1157,6 +1166,10 @@ function pbPass(pl,si,t){const f=Object.assign({st:'all',who:'all',mode:'all'},w
     if(!d||d<a||d>b)return false}
   return true}
 function pbSort(arr){return (window.PBF&&PBF.sort==='pri')?arr.slice().sort((x,y)=>((PRK[x.t.pri]!=null?PRK[x.t.pri]:3)-(PRK[y.t.pri]!=null?PRK[y.t.pri]:3))):arr}
+function ddHtml(id,opts,val,action,xattr){
+  const cur=(opts.find(o=>String(o[0])===String(val))||opts[0]||['',''])[1],open=window.DDO===id;
+  return `<div class="dd ${open?'open':''}"><button class="ddb" data-a="ddt" data-id="${id}"><span>${cur}</span><i></i></button><div class="ddl">${opts.map(o=>`<button class="ddi ${String(o[0])===String(val)?'on':''}" data-a="${action}" data-v="${esc(o[0])}" ${xattr||''}>${o[1]}</button>`).join('')}</div></div>`;
+}
 function boardBar(pl,adm){
   const f=Object.assign({v:'status',st:'all',who:'all',mode:'all',from:'',to:'',sort:''},window.PBF);
   const ch=(k,v,t)=>`<button data-a="pbf" data-k="${k}" data-v="${v}" class="${String(f[k])===String(v)?'on':''}">${t}</button>`;
@@ -1165,7 +1178,7 @@ function boardBar(pl,adm){
   <button class="ftg" data-a="pbfx">Фильтры${act?' · '+act:''}</button>
   ${f.mode==='range'?`<div class="fdates"><input type="date" id="pf-a" value="${esc(f.from)}"><span class="mu2">до</span><input type="date" id="pf-b" value="${esc(f.to)}"></div>`:''}
   <div class="fmore"><div class="flt" style="margin:0">${ch('v','status','Статусы')}${ch('v','stages','Этапы')}</div>
-  <select class="sel" id="pf-s" style="margin:0"><option value="all">Любой этап</option>${(pl.stages||[]).map((st,i)=>`<option value="${i}" ${String(f.st)===String(i)?'selected':''}>${esc(st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</option>`).join('')}</select>
+  ${ddHtml('pf-s',[['all','Любой этап']].concat((pl.stages||[]).map((st,i)=>[i,esc(st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))])),f.st,'pbf','data-k="st"')}
   <div class="flt" style="margin:0">${ch('who','all','Все')}${ch('who','client',adm?'Клиент':'Мои')}${ch('who','team',adm?'Я':'У Виктории')}</div>
   <div class="flt" style="margin:0"><button data-a="pbf" data-k="sort" data-v="${f.sort==='pri'?'':'pri'}" class="${f.sort==='pri'?'on':''}">По важности</button></div></div></div>`;
 }
@@ -1201,11 +1214,13 @@ function taskCard(P,si,ti,t){
 function taskModal(){
   const P=window.PLD&&PLD.plan;if(!P||!window.PLE||window.ASPFX)return '';
   const m=PLE.split(':').map(Number),mt=P.stages[m[0]]&&P.stages[m[0]].tasks[m[1]];if(!mt)return '';
-  const adm=ME.role==='admin',cms=(mt.cm||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0));
-  return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(mt.text)}</textarea>
-  ${adm?`<small class="l">Список (этап)</small><select id="pe-s" class="sel" style="margin:0 0 10px">${P.stages.map((st,i)=>`<option value="${i}" ${i===m[0]?'selected':''}>${esc(st.title)}</option>`).join('')}</select>`:''}
-  <div class="idx">${adm?`<div><small class="l">Кто делает</small><select id="pe-w" class="sel" style="margin:0"><option value="team" ${mt.who!=='client'?'selected':''}>Я</option><option value="client" ${mt.who==='client'?'selected':''}>Клиент</option></select></div>`:''}<div><small class="l">Статус</small><select id="pe-st" class="sel" style="margin:0"><option value="todo" ${mt.status==='todo'?'selected':''}>Не начато</option><option value="doing" ${mt.status==='doing'?'selected':''}>В процессе</option><option value="done" ${mt.status==='done'?'selected':''}>Выполнено</option></select></div><div><small class="l">Важность</small><select id="pe-p" class="sel" style="margin:0"><option value="">Не задана</option>${Object.keys(PRI).map(k=>`<option value="${k}" ${mt.pri===k?'selected':''}>${PRI[k]}</option>`).join('')}</select></div></div>
-  <small class="l" style="margin-top:10px">Срок</small><input type="date" id="pe-d" value="${esc(mt.due||'')}">
+  const adm=ME.role==='admin',cms=(mt.cm||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0)),E=window.PEF&&PEF.key===window.PLE?PEF:{status:mt.status,pri:mt.pri||'',who:mt.who,stage:m[0],x:mt.text,d:mt.due||''};
+  return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(E.x)}</textarea>
+  ${adm?`<small class="l">Список (этап)</small><div style="margin:0 0 12px">${ddHtml('pe-s',P.stages.map((st,i)=>[i,esc(st.title)]),E.stage,'pbm','data-k="stage"')}</div>`:''}
+  <small class="l">Статус</small><div class="chp">${[['todo','Не начато'],['doing','В процессе'],['done','Выполнено']].map(o=>`<button data-a="pbm" data-k="status" data-v="${o[0]}" class="${E.status===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
+  <small class="l">Важность</small><div class="chp">${[['','Не задана'],['high','Высокая'],['mid','Средняя'],['low','Низкая']].map(o=>`<button data-a="pbm" data-k="pri" data-v="${o[0]}" class="${(E.pri||'')===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
+  ${adm?`<small class="l">Кто делает</small><div class="chp">${[['team','Я'],['client','Клиент']].map(o=>`<button data-a="pbm" data-k="who" data-v="${o[0]}" class="${E.who===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>`:''}
+  <small class="l" style="margin-top:10px">Срок</small><input type="date" id="pe-d" value="${esc(E.d)}">
   <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbsave" data-s="${m[0]}" data-t="${m[1]}">Сохранить</button>${adm?`<button class="btn wr s" data-a="pbdel" data-s="${m[0]}" data-t="${m[1]}">Удалить</button>`:''}</div>
   <div class="cms"><b>Комментарии</b>${cms.map(c=>`<div class="cmi ${c.by}"><small>${esc(c.name||(c.by==='client'?'Клиент':'Виктория'))} · ${fdt(new Date(c.at||0).toISOString())}</small><p>${esc(c.text)}</p></div>`).join('')||'<p class="mu2">Пока нет.</p>'}<textarea id="pe-c" placeholder="Написать комментарий" style="min-height:60px;margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pbcm" data-s="${m[0]}" data-t="${m[1]}">Отправить</button></div></div></div></div>`;
 }
@@ -1379,20 +1394,22 @@ const A={
  noop(){},
  pbfx(){window.PBFO=!window.PBFO;render(true)},
  pbc(el){window.PBC=el.dataset.c;render(true)},
- pbopen(el){window.PLE=el.dataset.s+':'+el.dataset.t;render(true)},
- pbclose(){window.PLE=null;render(true)},
+ pbopen(el){const k=el.dataset.s+':'+el.dataset.t,t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];window.PLE=k;window.PEF={key:k,status:t.status,pri:t.pri||'',who:t.who,stage:+el.dataset.s,x:t.text,d:t.due||''};window.DDO=null;render(true)},
+ ddt(el){window.DDO=window.DDO===el.dataset.id?null:el.dataset.id;const x=$('#pe-x');if(x&&window.PEF){PEF.x=x.value;PEF.d=($('#pe-d')||{}).value||''}render(true)},
+ pbm(el){const x=$('#pe-x');if(x&&window.PEF){PEF.x=x.value;PEF.d=($('#pe-d')||{}).value||''}const v=el.dataset.v;PEF[el.dataset.k]=el.dataset.k==='stage'?+v:v;window.DDO=null;render(true)},
+ pbclose(){window.PLE=null;window.DDO=null;render(true)},
  async pbtoggle(el){const si=+el.dataset.s,ti=+el.dataset.t,t=PLD.plan.stages[si].tasks[ti];t.status=t.status==='done'?'todo':'done';await tkCommit(si,ti)},
  pqopen(el){window.PLQ=+el.dataset.s;window.AFTER=()=>{const x=$('#pq-t');if(x)x.focus()};render(true)},
  pqx(){window.PLQ=null;render(true)},
  async pqok(el){const x=$('#pq-t'),tx=x?x.value.trim():'';if(!tx){toast('Напиши задачу');return}const st=PLD.plan.stages[+el.dataset.s];st.tasks=st.tasks||[];st.tasks.push({id:uid(),text:tx,status:'todo',who:'team',due:'',at:Date.now()});window.AFTER=()=>{const y=$('#pq-t');if(y)y.focus()};await planQuick()},
  async stadd(){PLD.plan.stages.push({title:'Новый список',period:'',desc:'',tasks:[]});await planQuick()},
  async pstmv(el){const a=PLD.plan.stages,i=+el.dataset.s,j=i+(+el.dataset.d);if(j<0||j>=a.length)return;const t=a[i];a[i]=a[j];a[j]=t;await planQuick()},
- async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti];t.text=tx;t.status=$('#pe-st').value;t.pri=$('#pe-p').value;t.due=$('#pe-d').value||'';
-  if(ME.role==='admin'){t.who=$('#pe-w').value;const ns=+$('#pe-s').value;t.at=Date.now();if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено');return}
+ async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti],E=window.PEF||{};t.text=tx;t.status=E.status||t.status;t.pri=E.pri||'';t.due=$('#pe-d').value||'';
+  if(ME.role==='admin'){t.who=E.who||t.who;const ns=E.stage!=null?+E.stage:si;t.at=Date.now();if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено');return}
   window.PLE=null;await tkCommit(si,ti);toast('Сохранено')},
  async pbcm(el){const si=+el.dataset.s,ti=+el.dataset.t,x=$('#pe-c'),tx=x?x.value.trim():'';if(!tx){toast('Напиши комментарий');return}const t=PLD.plan.stages[si].tasks[ti];t.cm=t.cm||[];t.cm.push({id:uid(),by:ME.role==='admin'?'admin':'client',name:ME.role==='admin'?'Виктория':(ME.name||'Клиент'),text:tx,at:Date.now()});await tkCommit(si,ti)},
  async pbdel(el){if(ME.role!=='admin')return;if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
- pbf(el){window.PBF=Object.assign({st:'all',who:'all',v:'status',mode:'all'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
+ pbf(el){window.DDO=null;window.PBF=Object.assign({st:'all',who:'all',v:'status',mode:'all'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
  async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({id:uid(),text:tx,status:el.dataset.c,who:'team',due:'',at:Date.now()});window.PLADD=null;await planQuick();toast('Задача добавлена')},
  pladd(){PLD.plan.stages.push({title:'Новый этап',tasks:[]});render(true)},
@@ -1483,6 +1500,7 @@ root.addEventListener('drop',async e=>{if(location.hash.startsWith('#/as/'))retu
 const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await tkCommit(+d[0],+d[1])}else render(true)});
 root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.plsave&&window.PLD){await planQuick();return}if(t.id==='pf-a'||t.id==='pf-b'){window.PBF=Object.assign({st:'all',who:'all',mode:'range'},window.PBF,t.id==='pf-a'?{from:t.value}:{to:t.value});render(true);return}if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.PLE){window.PLE=null;render(true)}if(e.target&&e.target.id==='pq-t'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();const b=document.querySelector('[data-a=pqok]');if(b)A.pqok(b)}});
+document.addEventListener('click',e=>{if(window.DDO&&!(e.target.closest&&e.target.closest('.dd'))){window.DDO=null;render(true)}});
 let sv={};
 root.addEventListener('input',e=>{const t=e.target;
   if(location.hash.startsWith('#/as/'))return;
