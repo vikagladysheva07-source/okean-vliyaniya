@@ -712,7 +712,7 @@ function asView(slot,rest){
   html=html.replace(/(href|data-h)="#\//g,'$1="#/as/'+slot+'/').replace(/<button[^>]*data-a="out"[^>]*>[^<]*<\/button>/g,'');
   const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
   hash='#/as/'+slot+(rest||'');
-  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Менять здесь ничего нельзя.</span><a class="bt2" href="${back}">Выйти из просмотра</a></div>${html}`;
+  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Это только просмотр, править здесь нельзя.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
 }
 function render(keep){
   const y=scrollY;hash=location.hash||'#/';window.ASPFX='';
@@ -1487,7 +1487,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&el0.dataset.a!=='go'){e.preventDefault();toast('Режим просмотра: менять здесь нельзя');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&el0.dataset.a!=='go'){e.preventDefault();toast('Это просмотр кабинета глазами клиента. Менять задачи можно в карточке клиента: нажми «Назад к управлению» сверху.');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
