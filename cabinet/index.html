@@ -552,6 +552,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .mbox{background:linear-gradient(160deg,rgba(26,23,38,.97),rgba(12,10,20,.98))!important;border:1px solid rgba(196,164,255,.22)!important;box-shadow:0 30px 80px -20px rgba(0,0,0,.85),0 0 40px -24px rgba(155,111,232,.55)!important}
 .mdl{background:rgba(4,4,8,.72)!important}
 .mbox textarea,.mbox input{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important}
+.wkh{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:14px}.wkp b{display:block;font-size:30px;font-weight:500;letter-spacing:-.03em;line-height:1}.wkp b small{font-size:15px;color:var(--muted);font-weight:400}.wkp span{font-size:12px;color:var(--muted)}
+.wkl{margin-top:10px}.wkr{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.07);cursor:pointer}
+.wkr .x{flex:1;min-width:0}.wkr .x p{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.wkr .x small{color:var(--muted);font-size:11.5px}
+.wkr .tkst{flex:none;width:16px;height:16px;border-width:1.5px}.wkr .who2{flex:none;font-size:11px;padding:3px 9px}.wkd{flex:none;font-style:normal;font-size:12px;color:var(--muted);min-width:64px;text-align:right}.wkd.late{color:#fff;font-weight:600}
+@media(max-width:700px){.wkr{flex-wrap:wrap}.wkd{min-width:0;margin-left:auto}}
 </style>
 </head>
 <body>
@@ -1060,8 +1065,7 @@ function clHome(){
   const cs=curI>=0?stg[curI]:null;
   const gantt=ps.n?`<div class="t2 c12"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${ganttHtml(stg,curI,short,pc)||roadmap(stg,curI,short)}</div>`:'';
   const charts=ps.n?`   <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
-   <div class="t2 c8"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#E4D6FF"></i><i style="flex:${ct||0.001};background:#7C4FD4"></i></div>
-    ${upc.length?`<div class="mu2" style="margin:16px 0 4px">Ближайшие сроки</div>${upc.map(x=>`<div class="tkv up2"><i class="tkst ${x.t.status}"></i><span>${esc(x.t.text)}</span><small>${fdate(x.t.due)}</small></div>`).join('')}`:''}</div>`:'';
+   ${weekTile(pl)}`:'';
   const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN: этапы, задачи, отчёты и важные моменты в одном месте.',[])}
@@ -1076,6 +1080,20 @@ function clHome(){
    ${gantt}
   </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
+}
+function weekTile(pl){
+  const td=today(),end=ymdOf(dnum(td)+6),L=[];
+  (pl.stages||[]).forEach((st,si)=>(st.tasks||[]).forEach(t=>{const d=pbEff(pl,si,t);if(!d)return;const late=t.status!=='done'&&d<td,inW=d>=td&&d<=end;if(late||inW)L.push({t,d,late,st})}));
+  const total=L.length,done=L.filter(x=>x.t.status==='done').length,mine=L.filter(x=>x.t.who==='client'&&x.t.status!=='done').length,vika=L.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length,late=L.filter(x=>x.late).length;
+  const open=L.filter(x=>x.t.status!=='done').sort((a,b)=>(a.late===b.late?0:a.late?-1:1)||(PRK[a.t.pri]!=null?PRK[a.t.pri]:3)-(PRK[b.t.pri]!=null?PRK[b.t.pri]:3)||(a.d<b.d?-1:1));
+  const dl=d=>{const n=dnum(d)-dnum(td);return n<0?'просрочено':n===0?'сегодня':n===1?'завтра':fdate(d)};
+  const rg=fdate(td)+' – '+fdate(end);
+  const rows=open.slice(0,6).map(x=>`<div class="wkr" data-a="wkgo" data-h="#/tasks"><i class="tkst ${x.t.status}"></i><div class="x"><p>${esc(x.t.text)}</p><small>${esc(x.st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,36))}</small></div>${x.t.pri==='high'?'<span class="pri high">Важно</span>':''}<span class="who2 ${x.t.who}">${x.t.who==='client'?'Вы':'Виктория'}</span><em class="wkd ${x.late?'late':''}">${dl(x.d)}</em></div>`).join('');
+  return `<div class="t2 c8"><h3>Задачи на неделю <span class="mu2" style="font-weight:400">${rg}</span></h3>
+  <div class="wkh"><div class="wkp"><b>${done}<small> из ${total}</small></b><span>выполнено</span></div><div class="wkp"><b>${mine}</b><span>ваши ждут</span></div><div class="wkp"><b>${vika}</b><span>у Виктории</span></div>${late?`<div class="wkp"><b>${late}</b><span>просрочено</span></div>`:''}</div>
+  <div class="stk" style="margin-top:14px"><i style="flex:${done||0.001};background:#9B6FE8"></i><i style="flex:${(total-done)||0.001};background:rgba(255,255,255,.1)"></i></div>
+  <div class="wkl">${rows||(total?'<p class="mu2" style="padding:12px 0">Все задачи недели выполнены.</p>':'<p class="mu2" style="padding:12px 0">На этой неделе задач нет.</p>')}</div>
+  <div style="margin-top:12px"><button class="bt2 sm2" data-a="wkgo" data-h="#/tasks">Открыть доску задач</button></div></div>`;
 }
 function ganttHtml(stg,curI,short,pc){
   const D=x=>x?dnum(x):null,dated=stg.filter(x=>x.st.start&&x.st.end);
@@ -1457,6 +1475,7 @@ const A={
  plview(el){window.PLV=el.dataset.v;render(true)},
  pbadd(el){window.PLADD=el.dataset.c;render(true)},
  noop(){},
+ wkgo(el){window.PBF=Object.assign({v:'status'},PBD,window.PBF,{mode:'week'});location.hash=el.dataset.h},
  pbfx(){window.PBFO=!window.PBFO;window.DDO=null;render(true)},
  pbfr(el){window.PBF=Object.assign({v:'status'},PBD,window.PBF);const k=el.dataset.k;window.PBF[k]=PBD[k];if(k==='mode'){PBF.from='';PBF.to=''}render(true)},
  pbfreset(){const v=(window.PBF&&PBF.v)||'status';window.PBF=Object.assign({v},PBD);render(true)},
@@ -1554,7 +1573,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','pbf','pbfr','pbfreset','ddt','pbfx','pbc','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
