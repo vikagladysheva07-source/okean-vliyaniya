@@ -359,6 +359,18 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .stc .tr2{height:5px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden;margin-bottom:10px}.stc .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
 .tkv{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px}.tkv .tkst{width:16px;height:16px;border-width:1.5px}.tkv span{flex:1}.tkv .dn{color:var(--muted);text-decoration:line-through}.tkv small{color:var(--muted);font-size:11.5px}
 @media(max-width:700px){.tk2{grid-template-columns:auto 1fr auto}.tk2 input[type=date]{grid-column:2/3}}
+.kb{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+.kcol{max-height:72vh;overflow-y:auto;padding:12px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid rgba(196,164,255,.12);min-height:140px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,background .15s}
+.kcol.over{border-color:rgba(196,164,255,.6);background:rgba(155,111,232,.1)}
+.kh{display:flex;align-items:center;gap:8px;padding:2px 4px 4px}.kh b{font-size:15px;font-weight:500}.kh .rbt{margin-left:auto}
+.kc{padding:14px;border-radius:16px;background:linear-gradient(155deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid rgba(196,164,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:grab;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.kc.drag{opacity:.45;transform:rotate(1.5deg)}.kc:active{cursor:grabbing}
+.kc p{font-size:14.5px;line-height:1.35;margin:10px 0 12px}
+.kst{font-size:11.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kf{display:flex;align-items:center;gap:8px}.kf small{color:var(--muted);font-size:12px}
+.kadd{cursor:default;border-color:rgba(196,164,255,.4)}
+.kempty{padding:22px 10px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(196,164,255,.2);border-radius:14px}
+@media(max-width:900px){.kb{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -915,13 +927,27 @@ function planEd(slot,M){
   if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:clone(M.plan||{stages:[]})};
   const P=PLD.plan;P.stages=P.stages||[];
   if(!P.stages.length)return `<div class="t2"><h3>Траектория работы с клиентом</h3><p class="mu2" style="margin-top:8px">Этапы и задачи, которые ты ведёшь вместе с клиентом. Клиент видит их на своей главной.</p><div class="row">${Object.keys(PLTPLS).map(k=>`<button class="bt2 v" data-a="pltpl" data-t="${k}">Шаблон: ${PLTPLS[k].name}</button>`).join('')}<button class="bt2" data-a="pladd">Пустая траектория</button></div></div>`;
-  return `<div style="display:flex;flex-direction:column;gap:14px">${P.stages.map((st,si)=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
+  const v=window.PLV||'board';
+  const bar=`<div class="flt" style="margin:0 0 14px"><button data-a="plview" data-v="board" class="${v==='board'?'on':''}">Доска</button><button data-a="plview" data-v="list" class="${v==='list'?'on':''}">По этапам (редактор)</button></div>`;
+  if(v==='board')return bar+planBoard(slot);
+  return bar+`<div style="display:flex;flex-direction:column;gap:14px">${P.stages.map((st,si)=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;
    return `<div class="t2"><div class="plh"><input type="text" data-pl="stages.${si}.title" value="${esc(st.title)}" placeholder="Название этапа"><span class="pl2">${d}/${n}</span><button class="rbt" data-a="pldelst" data-s="${si}" title="Удалить этап">✕</button></div>
    <div class="tkl">${(st.tasks||[]).map((t,ti)=>`<div class="tk2"><button class="tkst ${t.status}" data-a="plst" data-s="${si}" data-t="${ti}" title="${PLST[t.status]}: нажми, чтобы сменить"></button><input type="text" data-pl="stages.${si}.tasks.${ti}.text" value="${esc(t.text)}" placeholder="Задача"><button class="who2 ${t.who}" data-a="plwho" data-s="${si}" data-t="${ti}">${t.who==='client'?'Клиент':'Команда'}</button><input type="date" data-pl="stages.${si}.tasks.${ti}.due" value="${esc(t.due||'')}"><button class="rbt" data-a="pldel" data-s="${si}" data-t="${ti}" title="Удалить">✕</button></div>`).join('')}</div>
    <div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pltask" data-s="${si}">+ Задача</button></div></div>`}).join('')}</div>
   <div class="row" style="margin-top:14px"><button class="bt2" data-a="pladd">+ Этап</button><button class="bt2 v" data-a="plsave" data-u="${slot}">Сохранить траекторию</button></div>
   <p class="mu2" style="margin-top:8px">Кружок слева: нажми, чтобы сменить статус (к выполнению, в работе, готово). Пока не нажмёшь «Сохранить», клиент изменений не видит.</p>`;
 }
+
+function planBoard(slot){
+  const P=PLD.plan,COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']];
+  const cards={todo:[],doing:[],done:[]};
+  P.stages.forEach((st,si)=>(st.tasks||[]).forEach((t,ti)=>cards[t.status||'todo'].push({st,si,t,ti})));
+  const card=c=>`<div class="kc" draggable="true" data-s="${c.si}" data-t="${c.ti}"><span class="pl2 kst">${esc(c.st.title.replace(/^Неделя (\d)\.\s*/,'Нед. $1: ').slice(0,34))}</span><p>${esc(c.t.text||'Без названия')}</p><div class="kf"><button class="who2 ${c.t.who}" data-a="pbwho" data-s="${c.si}" data-t="${c.ti}">${c.t.who==='client'?'Клиент':'Команда'}</button>${c.t.due?`<small>${c.t.status==='done'?'':'до '}${fdate(c.t.due)}</small>`:''}<button class="tkst ${c.t.status}" style="margin-left:auto" data-a="pbmove" data-s="${c.si}" data-t="${c.ti}" title="Сменить статус"></button></div></div>`;
+  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span><button class="rbt" data-a="pbadd" data-c="${k}" title="Добавить задачу">+</button></div>
+   ${window.PLADD===k?`<div class="kc kadd"><select id="pa-s" class="sel" style="margin:0 0 8px">${P.stages.map((st,si)=>`<option value="${si}">${esc(st.title)}</option>`).join('')}</select><input type="text" id="pa-t" placeholder="Что нужно сделать" autofocus><div class="row" style="margin-top:8px"><button class="bt2 sm2 v" data-a="pbaddok" data-c="${k}">Добавить</button><button class="bt2 sm2" data-a="pbaddx">Отмена</button></div></div>`:''}
+   ${cards[k].map(card).join('')||(window.PLADD===k?'':'<div class="kempty">Перетащи сюда</div>')}</div>`).join('')}</div><p class="mu2" style="margin-top:10px">Перетаскивай карточки между колонками или нажимай кружок справа внизу. Изменения сохраняются сразу и видны клиенту.</p>`;
+}
+async function planQuick(){const ok=await setM(PLD.slot,'plan',PLD.plan);render(true)}
 function planView(pl){
   const st=(pl&&pl.stages)||[];if(!st.length)return '';
   const tot=planStat(pl),pc=tot.n?Math.round(tot.d/tot.n*100):0;
@@ -1063,6 +1089,12 @@ const A={
  ckind(el){readCF(el.dataset.u);window.CF=Object.assign({},window.CF||{slot:el.dataset.u,id:null,title:'',body:'',link:'',due:''},{slot:el.dataset.u,kind:el.dataset.k});render(true)},
  cedit(el){const i=AI.find(x=>x.id===+el.dataset.id);window.CTAB[el.dataset.u]=i.kind;window.CF={slot:el.dataset.u,id:i.id,kind:i.kind,title:i.title,body:i.body,link:i.link,due:i.due||''};render()},
  ccancel(el){window.CF=null;render(true)},
+ plview(el){window.PLV=el.dataset.v;render(true)},
+ pbadd(el){window.PLADD=el.dataset.c;render(true)},
+ pbaddx(){window.PLADD=null;render(true)},
+ async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({text:tx,status:el.dataset.c,who:'team',due:''});window.PLADD=null;await planQuick();toast('Задача добавлена')},
+ async pbmove(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';await planQuick()},
+ async pbwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';await planQuick()},
  pladd(){PLD.plan.stages.push({title:'Новый этап',tasks:[]});render(true)},
  pltpl(el){PLD.plan.stages=clone(PLTPLS[el.dataset.t].stages);render(true)},
  pltask(el){PLD.plan.stages[+el.dataset.s].tasks.push({text:'',status:'todo',who:'team',due:''});render(true)},
@@ -1142,6 +1174,10 @@ root.addEventListener('click',e=>{
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
+root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
+root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'))});
+root.addEventListener('dragover',e=>{const col=e.target.closest&&e.target.closest('.kcol');if(col){e.preventDefault();document.querySelectorAll('.kcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
+root.addEventListener('drop',async e=>{const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await planQuick()}else render(true)});
 root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 let sv={};
 root.addEventListener('input',e=>{const t=e.target;
