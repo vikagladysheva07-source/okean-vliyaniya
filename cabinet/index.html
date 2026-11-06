@@ -336,7 +336,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .pgc.on{border-color:rgba(196,164,255,.55);background:linear-gradient(155deg,rgba(155,111,232,.18),rgba(255,255,255,.03));box-shadow:0 0 30px -14px rgba(155,111,232,.7)}
 .lk2{display:block;text-decoration:none;color:inherit}
 .lk2 .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(155,111,232,.16);border:1px solid rgba(196,164,255,.3);color:var(--vb);margin-bottom:14px}
-.lk2 .ic svg{width:18px;height:18px}.lk2 b{display:block;font-size:16px;font-weight:500}.lk2 small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.lk2 .ic svg{width:18px;height:18px}.lk2>b{display:block;font-size:16px;font-weight:500}.lk2 small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
 .lk2:hover{border-color:rgba(196,164,255,.4)}
 .mg2{display:grid;grid-template-columns:repeat(2,auto);gap:14px 34px}.ms2 b{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1}.ms2 span{font-size:12px;color:var(--muted)}
 .cc2{display:block;text-decoration:none;color:inherit}.cc2:hover{border-color:rgba(196,164,255,.4)}
@@ -371,6 +371,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .kadd{cursor:default;border-color:rgba(196,164,255,.4)}
 .kempty{padding:22px 10px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(196,164,255,.2);border-radius:14px}
 @media(max-width:900px){.kb{grid-template-columns:1fr}}
+.cl2{transition:border-color .15s}.cl2:hover{border-color:rgba(196,164,255,.45);box-shadow:0 0 30px -14px rgba(155,111,232,.7)}
 </style>
 </head>
 <body>
@@ -403,6 +404,7 @@ const IC={
  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/>',
  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.2-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.7c1.9.6 3.1 2.4 3.5 5.3"/>',
  inbox:'<path d="M4 13 6.5 5h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>',
+ flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
  chart:'<path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
  video:'<path d="M5 4h14v16H5z"/><path d="m10 9 5 3-5 3z"/>',file:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>',doc:'<path d="M6 4h12v16H6z"/><path d="M9 9h6M9 13h6"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/>'};
 const ico=(k,c)=>`<svg class="i ${c||''}" viewBox="0 0 24 24">${IC[k]||IC.link}</svg>`;
@@ -511,11 +513,11 @@ function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
     return [['#/','Обзор','chart'],['#/learn','Обучение','book',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
-    return [['#/','Обзор','home'],['#/approve','Согласование','tasks',pc],['#/requests','Запросы','inbox',pr],['#/reports','Отчёты','chart']]}
+    return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Согласования','inbox',pc+pr],['#/reports','Отчёты','doc'],['#/key','Важное','flag']]}
   const c=totals(ST.p);
   return [['#/','Обзор','home'],['#/tasks','Задания','tasks',c.revision],['#/lib','Материалы','book'],['#/me','Профиль','user']];
 }
-function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
+function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
@@ -533,8 +535,10 @@ function route(h){
   hash=h;const [_,r,a,b]=hash.split('/');
   let html;
   if(ME.role==='client'){
-    if(r==='approve')html=shell(clList('content'));
-    else if(r==='requests')html=shell(clList('request'));
+    if(r==='approve'||r==='requests')html=shell(clDecide());
+    else if(r==='plan')html=shell(clPlan(),true);
+    else if(r==='tasks')html=shell(clTasks(),true);
+    else if(r==='key')html=shell(clKey(),true);
     else if(r==='reports')html=shell(clList('report'));
     else if(r==='item')html=shell(clItem(a));
     else html=shell(clHome(),true);
@@ -737,7 +741,7 @@ function adOverview(){
     ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}
     <a class="it2" href="#/learn" style="margin-top:16px"><div class="tp">${ico('book')}</div><div class="x"><p>Открыть обучение</p><small>участники, проверка, программа, воронка</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px"')}</a></div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
-   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}<button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button></div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
+   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' на согласовании · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}<button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button></div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
   </div>`;
 }
 function adLearn(){
@@ -851,40 +855,76 @@ function adSettings(){
   <div class="card" style="margin-top:12px"><small class="l">Токен бота</small><input type="text" id="tgtok" autocomplete="off" placeholder="${SETT.token?'Токен сохранён. Вставь новый, чтобы заменить':'123456789:AA...'}"><div class="row"><button class="btn s" data-a="tgtok">Сохранить токен</button><button class="btn g s" data-a="tgchat">Найти мой чат</button><button class="btn g s" data-a="tgtest" ${ok?'':'disabled'}>Отправить тест</button></div><p class="sub" style="font-size:12.5px;margin-top:10px">Токен хранится на сервере и не показывается снова. Если он утёк, отзови его у BotFather командой /revoke.</p></div>`;
 }
 /* ================= клиенты компании ================= */
-const IK={content:'Согласование',request:'Запросы',report:'Отчёты'};
+const IK={content:'Согласования',request:'Запросы',report:'Отчёты'};
 const IMAP={content:{pending:['review','Ждёт вашего решения','Ждёт клиента'],approved:['done','Одобрено','Одобрено'],changes:['revision','Нужны правки','Клиент просит правки']},request:{pending:['review','Нужно от вас','Ждём ответ'],done:['done','Получено','Получено']},report:{info:['todo','Отчёт','Отчёт']}};
 const ibd=(it,adm)=>{const x=(IMAP[it.kind]||{})[it.status]||['todo',it.status,it.status];return `<span class="st st-${x[0]}">${x[adm?2:1]}</span>`};
 const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
 const itemRow=(it,href,adm)=>`<a class="tr ${it.status}" href="${href}"><div><b>${esc(it.title)}</b><small>${esc(IK[it.kind])}${it.due&&it.status==='pending'?' · до '+fdate(it.due):''} · ${fdate(it.created_at)}</small></div>${ibd(it,adm)}</a>`;
+const KT={decision:'Решение',agree:'Договорённость',risk:'Риск',info:'Важно'};
+function cltasks(){
+  const pl=(ST&&ST.meta&&ST.meta.plan)||{stages:[]},all=[];
+  (pl.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>all.push({st,t})));
+  const by=(a,b)=>(a.t.due||'9')<(b.t.due||'9')?-1:1;
+  return {all,wait:all.filter(x=>x.t.who==='client'&&x.t.status!=='done').sort(by),work:all.filter(x=>x.t.who!=='client'&&x.t.status==='doing'),next:all.filter(x=>x.t.who!=='client'&&x.t.status==='todo'),done:all.filter(x=>x.t.status==='done')};
+}
 function clHome(){
-  const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
-  const pc=pend.filter(i=>i.kind==='content').length,pr=pend.length-pc,kpi=ST.meta.kpi||[];
-  const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),rep=CI.filter(i=>i.kind==='report')[0];
-  const row=i=>`<a class="it2" href="#/item/${i.id}"><div class="tp">${ico(i.kind==='request'?'chat':'doc')}</div><div class="x"><p>${esc(i.title)}</p><small>${esc(IK[i.kind])}${i.due?' · до '+fdate(i.due):''}</small></div><span class="bt2" style="padding:9px 16px">Открыть</span></a>`;
+  const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=ST.meta.plan||{stages:[]},ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
+  const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),reps=CI.filter(i=>i.kind==='report'),rep=reps[0],key=(ST.meta.key||[]).slice().reverse();
+  const T=cltasks(),cur=(pl.stages||[]).find(st=>(st.tasks||[]).some(t=>t.status!=='done'));
+  const cell=(h,t,body)=>`<a class="t2 lk2 c4 cl2" href="${h}"><h3>${t}<span class="go">${SV.arrow}</span></h3>${body}</a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Здесь вы согласуете контент, смотрите отчёты и отвечаете на запросы команды.',[[ico('tasks'),pc,'на согласовании'],[ico('chat'),pr,plur(pr,'запрос','запроса','запросов')+' к вам']])}
+  ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN: этапы, задачи, отчёты и важные моменты в одном месте.',[])}
   <div class="g12">
-   <div class="t2 dk2 c7"><h3>Ждёт вашего решения <span class="big2" style="font-size:30px">${pend.length}</span></h3>${pend.length?pend.map(row).join(''):'<p class="mu2" style="padding:14px 0">Всё согласовано. Новые материалы появятся здесь.</p>'}</div>
-   <div class="t2 c5"><h3>Показатели</h3>${kpi.length?`<div class="kp2">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div>`:'<p class="mu2" style="margin-top:12px">Цифры появятся после первого отчёта.</p>'}</div>
-   ${planView(ST.meta.plan)}
-   <div class="t2 c6"><h3>Запросы команды</h3><p class="mu2" style="margin-top:8px">${pr?pr+' '+plur(pr,'запрос ждёт','запроса ждут','запросов ждут')+' вашего ответа.':'Новых запросов нет.'}</p><div style="margin-top:14px"><a class="bt2 v" href="#/requests">Открыть запросы</a></div></div>
-   <div class="t2 c6"><h3>Последний отчёт</h3>${rep?`<a class="it2" href="#/item/${rep.id}"><div class="tp">${ico('doc')}</div><div class="x"><p>${esc(rep.title)}</p><small>${fdate(rep.created_at)}</small></div></a>`:'<p class="mu2" style="margin-top:8px">Отчётов пока нет.</p>'}</div>
+   ${cell('#/plan','Траектория',ps.n?`<div style="display:flex;align-items:center;gap:14px;margin-top:14px">${rg2(pc,78,9)}<div><div class="mu2">${ps.d} из ${ps.n} задач</div><div style="font-size:14px;margin-top:4px">${cur?esc(cur.title):'Все этапы завершены'}</div></div></div>`:'<p class="mu2" style="margin-top:12px">Траектория скоро появится.</p>')}
+   ${cell('#/tasks','Задачи',`<div class="big2" style="margin-top:12px">${T.wait.length}</div><div class="mu2" style="margin-top:6px">${T.wait.length?'ждут вас'+(T.wait[0].t.due?', ближайший срок '+fdate(T.wait[0].t.due):''):'от вас сейчас ничего не нужно'}</div><div class="mu2" style="margin-top:2px">у команды в работе: ${T.work.length}</div>`)}
+   ${cell('#/approve','Согласования и запросы',`<div class="big2" style="margin-top:12px">${pend.length}</div><div class="mu2" style="margin-top:6px">${pend.length?'ждут вашего решения':'всё согласовано'}</div>`)}
+   ${cell('#/reports','Отчёты',rep?`<div style="margin-top:14px;font-size:15px">${esc(rep.title)}</div><div class="mu2" style="margin-top:4px">${fdate(rep.created_at)} · всего ${reps.length}</div>`:'<p class="mu2" style="margin-top:12px">Первый отчёт будет после старта.</p>')}
+   <a class="t2 lk2 c8 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.length?key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join(''):'<p class="mu2" style="margin-top:12px">Здесь будут решения, договорённости и риски по проекту.</p>'}</a>
+   ${kpi.length?`<div class="t2 c12"><h3>Показатели</h3><div class="kp2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div></div>`:''}
   </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
+function planBoardRO(pl){
+  const COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]};
+  (pl.stages||[]).forEach(st=>(st.tasks||[]).forEach(t=>cards[t.status||'todo'].push({st,t})));
+  return `<div class="kb">${COLS.map(([k,n])=>`<div class="kcol"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div>${cards[k].map(c=>`<div class="kc" style="cursor:default"><span class="pl2 kst">${esc(c.st.title.slice(0,34))}</span><p>${esc(c.t.text)}</p><div class="kf"><span class="who2 ${c.t.who}">${c.t.who==='client'?'Вы':'Команда'}</span>${c.t.due&&k!=='done'?`<small>до ${fdate(c.t.due)}</small>`:''}</div></div>`).join('')||'<div class="kempty">Пусто</div>'}</div>`).join('')}</div>`;
+}
+function clPlan(){
+  const pl=ST.meta.plan||{stages:[]},ps=planStat(pl),v=window.CPV||'board';
+  if(!(pl.stages||[]).length)return `${hd2('Траектория','Этапы проекта и задачи',[])}<div class="g12"><div class="t2 c12"><p class="mu2">Траектория скоро появится.</p></div></div>`;
+  return `${hd2('Траектория',`${ps.d} из ${ps.n} задач выполнено`,[])}
+  <div class="flt" style="margin:14px 0"><button data-a="cpv" data-v="board" class="${v==='board'?'on':''}">Доска</button><button data-a="cpv" data-v="stages" class="${v==='stages'?'on':''}">По этапам</button></div>
+  ${v==='board'?planBoardRO(pl):`<div class="g12" style="margin-top:0">${planView(pl)}</div>`}`;
+}
+function clTasks(){
+  const T=cltasks();
+  const row=x=>`<div class="it2"><i class="tkst ${x.t.status}"></i><div class="x"><p>${esc(x.t.text)}</p><small>${esc(x.st.title)}${x.t.due&&x.t.status!=='done'?' · до '+fdate(x.t.due):''}</small></div></div>`;
+  const sec=(t,L,hot)=>L.length?`<div class="t2 c12"><h3>${t} <span class="pl2 ${hot?'w':''}">${L.length}</span></h3>${L.map(row).join('')}</div>`:'';
+  return `${hd2('Задачи','Что нужно от вас и что делает команда',[])}<div class="g12">${sec('Ждут вас',T.wait,true)||'<div class="t2 c12"><h3>От вас сейчас ничего не нужно</h3></div>'}${sec('В работе у команды',T.work)}${sec('Дальше',T.next)}${sec('Готово',T.done)}</div>`;
+}
+function clKey(){
+  const key=(ST.meta.key||[]).slice().reverse();
+  return `${hd2('Важные моменты','Решения, договорённости и риски по проекту',[])}<div class="g12">${key.length?key.map(k=>`<div class="t2 c12"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}</div><p style="margin-top:10px;font-size:16px;line-height:1.45">${esc(k.text)}</p></div>`).join(''):'<div class="t2 c12"><p class="mu2">Пока записей нет.</p></div>'}</div>`;
+}
+function clDecide(){
+  const L=CI.filter(i=>i.kind!=='report'),P=L.filter(i=>i.status==='pending').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1),D=L.filter(i=>i.status!=='pending').sort((a,b)=>a.created_at<b.created_at?1:-1);
+  return `${hd2('Согласования и запросы','Что нужно решить и что нам нужно от вас',[])}<div class="g12">
+   <div class="t2 c12"><h3>Ждут вашего решения <span class="pl2 ${P.length?'w':''}">${P.length}</span></h3>${P.length?`<div class="card p0" style="margin-top:10px">${P.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<p class="mu2" style="margin-top:10px">Всё согласовано.</p>'}</div>
+   ${D.length?`<div class="t2 c12"><h3>История</h3><div class="card p0" style="margin-top:10px">${D.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
+}
 function clList(kind){
   const L=CI.filter(i=>i.kind===kind).sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(a.created_at<b.created_at?1:-1));
-  const sub={content:'Посты, сценарии и макеты на ваше решение. Откройте материал, одобрите или попросите правки.',request:'Что нам нужно от вас, чтобы двигаться дальше: доступы, материалы, ответы.',report:'Итоги периодов и что сделано.'}[kind];
+  const sub={content:'Прототипы, решения и результаты этапов на ваше согласование.',request:'Что нам нужно от вас, чтобы двигаться дальше: доступы, данные, ответы.',report:'Итоги этапов и что сделано.'}[kind];
   return `<h1 class="t">${IK[kind]}</h1><p class="sub">${sub}</p><div style="margin-top:14px">${L.length?`<div class="card p0">${L.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<div class="card">Пока ничего нет.</div>'}</div>`;
 }
 function clItem(id){
   const it=CI.find(i=>String(i.id)===String(id));if(!it)return '<a class="back" href="#/">← Обзор</a><p class="sub">Материал не найден.</p>';
-  const back={content:'#/approve',request:'#/requests',report:'#/reports'}[it.kind],pend=it.status==='pending',lk=safeUrl(it.link);
+  const back={content:'#/approve',request:'#/approve',report:'#/reports'}[it.kind],pend=it.status==='pending',lk=safeUrl(it.link);
   const decided=!pend&&it.kind!=='report';
   return `<a class="back" href="${back}">← ${IK[it.kind]}</a><div class="row" style="margin-top:6px">${ibd(it)}${it.due&&pend?`<span class="chip">до ${fdate(it.due)}</span>`:''}</div>
   <h1 class="t" style="text-transform:none;font-size:clamp(22px,4.6vw,28px);line-height:1.2">${esc(it.title)}</h1>
   ${it.body?`<div class="card" style="margin-top:14px"><div class="ans">${esc(it.body)}</div></div>`:''}
-  ${lk?`<div class="row"><a class="btn g s" href="${esc(lk)}" target="_blank" rel="noopener">Открыть материал</a></div>`:''}
+  ${lk?`<div class="row"><a class="btn g s" href="${esc(lk)}" target="_blank" rel="noopener">Открыть</a></div>`:''}
   ${it.kind==='content'&&pend?`<h2 class="t">Ваше решение</h2><textarea id="cmt" style="min-height:90px" placeholder="Что поправить? Обязательно, если нужны правки."></textarea><div class="row"><button class="btn ok" data-a="cdec" data-id="${it.id}" data-d="approve">Одобрить</button><button class="btn wr" data-a="cdec" data-id="${it.id}" data-d="changes">Нужны правки</button></div>`:''}
   ${it.kind==='request'&&pend?`<h2 class="t">Ваш ответ</h2><textarea id="cmt" style="min-height:90px" placeholder="Напишите ответ или вставьте ссылку на файл."></textarea><div class="row"><button class="btn" data-a="cdec" data-id="${it.id}" data-d="done">Отправить ответ</button></div>`:''}
   ${decided?`${it.reply?`<div class="fbk ${it.status==='changes'?'bad':''}"><small>${it.kind==='request'?'Ваш ответ':'Ваш комментарий'}${it.decided_at?' · '+fdt(it.decided_at):''}</small><p>${esc(it.reply)}</p></div>`:''}<div class="row"><button class="btn g s" data-a="cdec" data-id="${it.id}" data-d="reopen">Изменить решение</button></div>`:''}`;
@@ -892,9 +932,9 @@ function clItem(id){
 let CF=null;
 function cform(slot){
   const f=window.CF&&window.CF.slot===slot?window.CF:{slot,id:null,kind:'content',title:'',body:'',link:'',due:''};
-  return `<div class="card"><small class="l">${f.id?'Редактирование':'Новый материал для клиента'}</small><div class="seg" style="margin-bottom:12px">${['content','request','report'].map(k=>`<button data-a="ckind" data-u="${slot}" data-k="${k}" class="${f.kind===k?'on':''}">${k==='content'?'На согласование':k==='request'?'Запрос клиенту':'Отчёт'}</button>`).join('')}</div>
-  <small class="l">Заголовок</small><input type="text" id="cf-title" value="${esc(f.title)}" placeholder="${f.kind==='content'?'Например: Reels №12, сценарий':f.kind==='request'?'Например: Доступ к рекламному кабинету':'Например: Итоги октября'}">
-  <small class="l" style="margin-top:12px">Текст</small><textarea id="cf-body" style="min-height:120px" placeholder="${f.kind==='content'?'Текст поста или сценария на согласование':f.kind==='request'?'Что именно нужно и зачем':'Что сделано, цифры, выводы'}">${esc(f.body)}</textarea>
+  return `<div class="card"><small class="l">${f.id?'Редактирование':'Новое для клиента'}</small><div class="seg" style="margin-bottom:12px">${['content','request','report'].map(k=>`<button data-a="ckind" data-u="${slot}" data-k="${k}" class="${f.kind===k?'on':''}">${k==='content'?'На согласование':k==='request'?'Запрос клиенту':'Отчёт'}</button>`).join('')}</div>
+  <small class="l">Заголовок</small><input type="text" id="cf-title" value="${esc(f.title)}" placeholder="${f.kind==='content'?'Например: Прототип панели руководителя':f.kind==='request'?'Например: Файл с расценками':'Например: Итоги недели 2'}">
+  <small class="l" style="margin-top:12px">Текст</small><textarea id="cf-body" style="min-height:120px" placeholder="${f.kind==='content'?'Что показываем и что нужно решить':f.kind==='request'?'Что именно нужно и зачем':'Что сделано, цифры, выводы'}">${esc(f.body)}</textarea>
   <div class="idx" style="margin-top:12px"><div><small class="l">Ссылка (макет, файл, видео)</small><input type="text" id="cf-link" value="${esc(f.link)}" placeholder="https://"></div>${f.kind==='report'?'<div></div>':`<div><small class="l">Срок ответа</small><input type="date" id="cf-due" value="${esc(f.due)}"></div>`}</div>
   <div class="row"><button class="btn s" data-a="csave" data-u="${slot}">${f.id?'Сохранить и отправить заново':'Отправить клиенту'}</button>${f.id?`<button class="btn g s" data-a="ccancel" data-u="${slot}">Отмена</button>`:''}</div></div>`;
 }
@@ -954,6 +994,12 @@ function planView(pl){
   return `<div class="t2 c12"><h3>Траектория работы <span class="pl2">${tot.d} из ${tot.n} задач</span></h3>
    <div class="stg">${st.map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(t=>t.status==='done').length;return `<div class="stc"><div class="top2"><b>${esc(s.title)}</b><span>${d}/${n}</span></div><div class="tr2"><i style="width:${n?d/n*100:0}%"></i></div>${(s.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'команда'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>`}).join('')}</div></div>`;
 }
+
+function keyEd(slot,M){
+  const L=(M.key||[]).slice().reverse();
+  return `<div class="t2" style="margin-bottom:14px"><h3>Важный момент для клиента</h3><div class="seg" style="margin:12px 0">${Object.keys(KT).map((k,i)=>`<button data-a="ktype" data-k="${k}" class="${(window.KTY||'info')===k?'on':''}">${KT[k]}</button>`).join('')}</div><textarea id="k-x" style="min-height:80px" placeholder="Например: Согласовали, что склад подключаем после запуска зарплаты"></textarea><div class="row"><input type="date" id="k-d" style="max-width:200px"><button class="bt2 v" data-a="keyadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px">${L.map(k=>`<div class="t2"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}<button class="rbt" style="margin-left:auto" data-a="keydel" data-u="${slot}" data-id="${k.id}" title="Удалить">✕</button></div><p style="margin-top:8px">${esc(k.text)}</p></div>`).join('')||'<div class="t2"><p class="mu2">Записей пока нет.</p></div>'}</div>`;
+}
 function adClients(){
   const L=(AD.users||[]).filter(u=>u.role==='client').map(clientStat);
   const wait=L.reduce((a,x)=>a+x.pc+x.pr,0),chg=L.reduce((a,x)=>a+x.ch,0);
@@ -972,13 +1018,14 @@ function adClient(slot){
   const u=(AD.users||[]).find(x=>x.slot===slot&&x.role==='client');if(!u)return '<a class="back" href="#/clients">← Клиенты</a><p class="sub">Клиент не найден.</p>';
   const items=AI.filter(i=>i.slot===slot),M=mmap(slot),st=clientStat(u),kpi=(M.kpi||[]).map(k=>[k.l,k.v,k.d||''].join(' | ')).join('\n');
   const tab=window.CTAB[slot]||'plan',open=window.CF&&window.CF.slot===slot;
-  const TABS=[['plan','Траектория'],['content','Материалы'],['request','Запросы'],['report','Отчёты'],['set','Настройки']];
-  const cnt=k=>items.filter(i=>i.kind===k).length;
+  const TABS=[['plan','Траектория'],['content','Согласования'],['request','Запросы'],['report','Отчёты'],['key','Важное'],['set','Настройки']];
+  const cnt=k=>k==='key'?((M.key||[]).length):items.filter(i=>i.kind===k).length;
   const ORD={pending:0,changes:1,info:2,approved:3,done:3};
   const card=i=>`<div class="t2"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><h3 style="display:block;font-size:16px">${esc(i.title)}</h3>${ibd(i,true)}</div><div class="mu2" style="margin-top:4px">${fdate(i.created_at)}${i.due&&i.status==='pending'?' · срок '+fdate(i.due):''}</div>${i.body?`<div class="ans" style="margin-top:12px">${esc(i.body)}</div>`:''}${safeUrl(i.link)?`<div style="margin-top:10px"><a class="lk" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}${i.reply?`<div class="fbk ${i.status==='changes'?'bad':''}" style="margin:12px 0 0"><small>Ответ клиента${i.decided_at?' · '+fdt(i.decided_at):''}</small><p>${esc(i.reply)}</p></div>`:''}<div class="row"><button class="btn g s" data-a="cedit" data-u="${slot}" data-id="${i.id}">Изменить</button><button class="btn wr s" data-a="cdel" data-id="${i.id}">Удалить</button></div></div>`;
-  const NM={content:['Новый материал','Материалов пока нет. Добавь первый на согласование.'],request:['Новый запрос','Запросов пока нет.'],report:['Новый отчёт','Отчётов пока нет.']};
+  const NM={content:['Новое согласование','Согласований пока нет.'],request:['Новый запрос','Запросов пока нет.'],report:['Новый отчёт','Отчётов пока нет.']};
   let body;
   if(tab==='plan'){body=planEd(slot,M)}
+  else if(tab==='key'){body=keyEd(slot,M)}
   else if(tab==='set'){
     body=`<div class="two"><div><h2 class="t">Цифры на главной клиента</h2><div class="card"><small class="l">По строке на показатель: название | значение | динамика (необязательно)</small><textarea id="kpiT" style="min-height:96px" placeholder="Охват | 124 000 | +18%&#10;Заявки | 37 | +6">${esc(kpi)}</textarea><div class="row"><button class="btn g s" data-a="kpisave" data-u="${slot}">Сохранить</button></div></div></div>
   <div><h2 class="t">Сообщение на главную</h2><div class="card"><textarea id="newsT" style="min-height:80px" placeholder="Клиент увидит это на обзоре до нажатия «Прочитано»"></textarea><div class="row"><button class="btn s" data-a="news" data-u="${slot}">Отправить</button></div>${((M.news||[]).length)?`<div style="margin-top:12px">${M.news.map(n=>`<p class="sub" style="font-size:13px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:8px">${esc(n.text)} <span style="color:${(M.seen||{})[n.id]?'var(--ok)':'var(--muted)'}">${(M.seen||{})[n.id]?'· прочитано':'· не прочитано'}</span> <button class="lk" data-a="newsdel" data-u="${slot}" data-id="${n.id}">убрать</button></p>`).join('')}</div>`:''}</div></div></div>
@@ -1089,6 +1136,10 @@ const A={
  ckind(el){readCF(el.dataset.u);window.CF=Object.assign({},window.CF||{slot:el.dataset.u,id:null,title:'',body:'',link:'',due:''},{slot:el.dataset.u,kind:el.dataset.k});render(true)},
  cedit(el){const i=AI.find(x=>x.id===+el.dataset.id);window.CTAB[el.dataset.u]=i.kind;window.CF={slot:el.dataset.u,id:i.id,kind:i.kind,title:i.title,body:i.body,link:i.link,due:i.due||''};render()},
  ccancel(el){window.CF=null;render(true)},
+ ktype(el){window.KTY=el.dataset.k;const x=$('#k-x');window.KTX=x?x.value:'';render(true);if($('#k-x'))$('#k-x').value=window.KTX},
+ async keyadd(el){const tx=$('#k-x').value.trim();if(!tx){toast('Напиши текст');return}const M=mmap(el.dataset.u),arr=(M.key||[]).concat([{id:Date.now(),type:window.KTY||'info',text:tx,date:$('#k-d').value||''}]);await setM(el.dataset.u,'key',arr);toast('Показано клиенту');render(true)},
+ async keydel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'key',(M.key||[]).filter(k=>String(k.id)!==el.dataset.id));render(true)},
+ cpv(el){window.CPV=el.dataset.v;render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
  pbadd(el){window.PLADD=el.dataset.c;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
