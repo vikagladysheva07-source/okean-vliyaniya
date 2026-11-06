@@ -996,17 +996,17 @@ function homeV(){
   const nt=cw.tasks.find(t=>['todo','revision'].includes(stOf(t.id)));
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]);
   const nm=firstName(ME.name)||'друг',wc=wcount(cw),WT=cw.tasks.length,wp=WT?Math.round(wc.done/WT*100):0,pp=pct(c.done,N);
-  const ix=ST.meta.idx||{},i0=+ix.start||0,i1=+ix.final||0,has0=String(ix.start||'')!=='',has1=String(ix.final||'')!=='',iv=has1?i1:has0?i0:null;
+  const pn=v=>parseFloat(String(v).replace(',','.'))||0,fx=n=>String(Math.round(n*10)/10).replace('.',','),ix=ST.meta.idx||{},i0=pn(ix.start),i1=pn(ix.final),has0=String(ix.start||'')!=='',has1=String(ix.final||'')!=='',iv=has1?i1:has0?i0:null;
   const ci=Math.max(0,V.findIndex(w=>wcur(w,cw))),wnum=cw.n>6?'Сопровождение':cw.n===0?'Подготовка':'Неделя '+cw.n;
   const as=!!window.ASPFX,ph=ST.meta.photo;
   const cap=(l,v,w,cls)=>`<div class="sxc"><span>${l}</span><div class="sxct ${cls||''}"><i style="width:${Math.max(18,w)}%">${v}</i></div></div>`;
   /* фото */
   const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${as?'':`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
-   <div class="sxpc"><b>${esc(nm)}</b><div class="sxbd">${iv!=null?`<b>${iv}</b><span>индекс из 50</span>`:'<b>—</b><span>индекс</span>'}</div></div></div>`;
+   <div class="sxpc"><b>${esc(nm)}</b><div class="sxbd">${iv!=null?`<b>${fx(iv)}</b><span>индекс из 50</span>`:'<b>—</b><span>индекс</span>'}</div></div></div>`;
   /* индекс влияния (тест из 50) */
-  const bar=(v,l,k)=>`<div class="sxb ${k}"><span class="sxbv">${v===null?'':v}</span><div class="sxbt"><i style="height:${v===null?100:Math.max(6,v/50*100)}%"></i></div><span class="sxbl">${l}</span></div>`;
+  const bar=(v,l,k)=>`<div class="sxb ${k}"><span class="sxbv">${v===null?'':fx(v)}</span><div class="sxbt"><i style="height:${v===null?100:Math.max(6,v/50*100)}%"></i></div><span class="sxbl">${l}</span></div>`;
   const idxT=`<div class="sx sxi"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
-   ${iv!=null?`<div class="sxn">${iv}<small>из 50</small></div><div class="sxsub">${has0&&has1?(i1-i0>=0?'↑ +':'↓ ')+Math.abs(i1-i0)+' за программу':has0?'стартовый результат, итоговый тест в конце':''}</div>
+   ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div><div class="sxsub">${has0&&has1?(i1-i0>=0?'↑ +':'↓ ')+fx(Math.abs(i1-i0))+' за программу':has0?'стартовый результат, итоговый тест в конце':''}</div>
    <div class="sxbs">${bar(has0?i0:null,'Старт',has0?'f':'e')}${bar(has1?i1:null,'Итог',has1?'f n':'e')}</div>`
    :`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   /* кольцо недели */
@@ -1038,7 +1038,7 @@ function homeV(){
    <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('tasks')}</span><div><b>${c.done}</b><small>принято из ${N}</small></div></div><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
-  <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}${cap('Индекс',iv!=null?iv+' из 50':'тест',iv!=null?iv/50*100:100,'o')}</div>
+  <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}${cap('Индекс',iv!=null?fx(iv)+' из 50':'тест',iv!=null?iv/50*100:100,'o')}</div>
   <div class="sxg">${photo}${idxT}${ring}${works}${prog}${tasks}</div>`;
 }
 function stTasks(adm){
