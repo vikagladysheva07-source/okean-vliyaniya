@@ -734,6 +734,16 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxmy{margin-top:16px}.sxmy .sxg2{font-size:13px;color:#C9C2E6}
 .sxadd{gap:8px;margin:10px 0 8px}.sxadd input{min-height:46px;padding:12px 16px;font-size:14px;border-radius:999px}.sxadd .sxbtn{min-height:46px;padding:0 16px;font-size:13px;white-space:nowrap}
 .sxtdb{gap:14px;padding:12px 8px}.sxx{width:32px;height:32px;font-size:20px}
+
+/* индекс: лепестки */
+.sxi.sxi2{grid-column:2/4;grid-row:1}
+.sxix{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:10px;align-items:center}
+.sxi2 .sxn{font-size:56px}.sxi2 .sxsub{line-height:1.5}
+.sxpr{margin-top:12px}.sxpr div{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(196,164,255,.09);font-size:13.5px}.sxpr div:last-child{border:0}.sxpr span{color:#C9C2E6;min-width:0}.sxpr b{font-weight:500;white-space:nowrap}.sxpr i{font-style:normal;color:var(--muted);margin-left:6px;font-weight:400}
+.sxrd svg{display:block;width:100%;height:auto;max-height:300px;overflow:visible}.sxlg{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4px;color:var(--muted);font-size:12px}.sxlg span{display:inline-flex;align-items:center;gap:6px}.sxlg i{display:inline-block;width:14px;height:8px;border-radius:3px}.sxlg i.a{background:#C4A4FF}.sxlg i.b{height:0;border-top:2px dashed rgba(196,164,255,.7)}
+.sxr{grid-column:4;grid-row:1}
+@media(max-width:1180px){.sxi.sxi2{grid-column:span 2}.sxr{grid-column:auto;grid-row:auto}}
+@media(max-width:700px){.sxi.sxi2{grid-column:auto}.sxix{grid-template-columns:1fr}.sxi2 .sxn{font-size:48px}}
 </style>
 </head>
 <body>
@@ -1010,20 +1020,29 @@ function homeV(){
   /* фото */
   const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${as?'':`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
    <div class="sxpc"><b>${esc(nm)}</b></div></div>`;
-  /* индекс влияния (тест из 50) */
-  const bar=(v,l,k)=>`<div class="sxb ${k}"><span class="sxbv">${v===null?'':fx(v)}</span><div class="sxbt"><i style="height:${v===null?100:Math.max(6,v/50*100)}%"></i></div><span class="sxbl">${l}</span></div>`;
-  const idxT=`<div class="sx sxi"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
-   ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div><div class="sxsub">${has0&&has1?(i1-i0>=0?'↑ +':'↓ ')+fx(Math.abs(i1-i0))+' за программу':has0?'стартовый результат, итоговый тест в конце':''}</div>
-   <div class="sxbs">${bar(has0?i0:null,'Старт',has0?'f':'e')}${bar(has1?i1:null,'Итог',has1?'f n':'e')}</div>`
-   :`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
+  /* индекс влияния: тест из 50 + параметры из анкеты */
+  const IP=ST.meta.idxp,PN=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const radar=(p,t)=>{const cx=160,cy=140,R=92,pt=(k,v,r)=>{const an=(-90+k*72)*Math.PI/180,rr=(r||R)*v/10;return [cx+rr*Math.cos(an),cy+rr*Math.sin(an)]},poly=(a)=>a.map((v,k)=>pt(k,v).map(n=>n.toFixed(1)).join(',')).join(' ');
+    const grid=[2.5,5,7.5,10].map(g=>`<polygon points="${[0,1,2,3,4].map(k=>pt(k,g).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="rgba(196,164,255,.14)"/>`).join('');
+    const axes=[0,1,2,3,4].map(k=>{const q=pt(k,10);return `<line x1="${cx}" y1="${cy}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="rgba(196,164,255,.12)"/>`}).join('');
+    const lb=['Ценность','Позиц.','Оффер','Привлеч.','Продажи'].map((n,k)=>{const q=pt(k,10,R+16),an=(-90+k*72),anc=Math.abs(Math.cos(an*Math.PI/180))<.2?'middle':Math.cos(an*Math.PI/180)>0?'start':'end';return `<text x="${q[0].toFixed(1)}" y="${(q[1]+4).toFixed(1)}" text-anchor="${anc}" fill="#C9C2E6" font-size="12.5">${n}</text>`}).join('');
+    const dots=p.map((v,k)=>{const q=pt(k,v);return `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="4.5" fill="#fff" stroke="#9B6FE8" stroke-width="2.5"/>`}).join('');
+    return `<svg viewBox="0 0 320 280" role="img" aria-label="Параметры индекса влияния"><defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9B6FE8" stop-opacity=".55"/><stop offset="1" stop-color="#9B6FE8" stop-opacity=".16"/></radialGradient></defs>${grid}${axes}${t?`<polygon points="${poly(t)}" fill="none" stroke="rgba(196,164,255,.6)" stroke-width="2" stroke-dasharray="5 5"/>`:''}<polygon points="${poly(p)}" fill="url(#rdg)" stroke="#C4A4FF" stroke-width="2.5" stroke-linejoin="round"/>${dots}${lb}</svg>`};
+  let idxT;
+  if(IP&&Array.isArray(IP.p)&&IP.p.length===5){
+    const P0=IP.p.map(Number),T0=Array.isArray(IP.t)&&IP.t.length===5?IP.t.map(Number):null,ai=+IP.ai||1,aiT=+IP.at||ai,v0=avg(P0)*ai,vT=T0?avg(T0)*aiT:null;
+    idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния</div><div class="sxix"><div><div class="sxn">${fx(v0)}<small>из 50</small></div><div class="sxsub">Глубина ${fx(avg(P0))} × уровень AI ${ai}${vT!=null?`<br>Цель на 18 декабря: ${fx(vT)}`:''}</div>
+     <div class="sxpr">${PN.map((n,k)=>`<div><span>${n}</span><b>${P0[k]}${T0?`<i>→ ${T0[k]}</i>`:''}</b></div>`).join('')}</div></div>
+     <div class="sxrd">${radar(P0,T0)}<div class="sxlg"><span><i class="a"></i>сейчас</span>${T0?'<span><i class="b"></i>цель на 18 декабря</span>':''}</div></div></div></div>`;
+  }else{
+    idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
+     ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
+  }
   /* кольцо недели */
   const R=50,L=2*Math.PI*R;
   const ring=`<div class="sx sxr"><div class="sxh">${esc(wnum)}<a class="sxar" href="#/week/${cw.n}">${ico('chev')}</a></div>
    <div class="sxrg"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="8" stroke-dasharray="2 5"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-wp/100)).toFixed(1)}" transform="rotate(-90 60 60)"/><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C4A4FF"/><stop offset="1" stop-color="#7C4FD4"/></linearGradient></defs></svg><div class="sxrc"><b>${wp}%</b><span>${WT&&!wfull(cw)?'до '+fdate(cw.due):wfull(cw)?'неделя принята':''}</span></div></div>
    <div class="sxrb">${nt?`<a class="sxbtn" href="#/task/${nt.id}">${ico('chev')}Продолжить</a>`:`<a class="sxbtn g" href="#/week/${cw.n}">Открыть неделю</a>`}</div></div>`;
-  /* мои работы */
-  const tot=c.done+c.review+c.revision,T2=Math.max(1,tot),sg=(n,l,k)=>`<div class="sxsg ${k}"><b>${n}</b><span>${l}</span></div>`;
-  const works=`<div class="sx sxw"><div class="sxh">Мои работы<span class="sxbig">${tot}</span></div><div class="sxst">${tot?`<i class="a" style="flex:${c.done/T2}"></i><i class="b" style="flex:${c.review/T2}"></i><i class="c" style="flex:${c.revision/T2}"></i>`:'<i style="flex:1"></i>'}</div><div class="sxsgs">${sg(c.done,'принято','a')}${sg(c.review,'на проверке','b')}${sg(c.revision,'доработка','c')}</div></div>`;
   /* программа: блок на каждую неделю */
   const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.length,pc=T?Math.round(cc.done/T*100):0,num=w.n===0?'Старт':w.sup?'Дальше':'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
     return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><span>${esc(num)}</span><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2b"><div class="sxw2p"><i style="width:${op?pc:0}%"></i></div>${op&&T?`<span>${pc}%</span>`:''}</div><i class="sxw2a">${ico('chev')}</i></a>`}).join('');
@@ -1046,7 +1065,7 @@ function homeV(){
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('tasks')}</span><div><b>${c.done}</b><small>принято из ${N}</small></div></div><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
   <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}</div>
-  <div class="sxg">${photo}${idxT}${ring}${works}${prog}${tasks}</div>`;
+  <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>`;
 }
 function stTasks(adm){
   const COLS=[['todo','Не выполнено'],['review','В работе'],['done','Готово']],cards={todo:[],review:[],done:[]},locked=[];
