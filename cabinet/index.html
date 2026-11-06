@@ -408,6 +408,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .wkst input:nth-of-type(6):checked ~ .wdr .wd:nth-child(6){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(6):checked ~ .wpl .wpn:nth-child(6){display:flex}
 .wkst input:nth-of-type(7):checked ~ .wdr .wd:nth-child(7){background:rgba(155,111,232,.22);border-color:rgba(196,164,255,.6)}.wkst input:nth-of-type(7):checked ~ .wpl .wpn:nth-child(7){display:flex}
 @media(max-width:640px){.wdr{gap:4px}.wd{min-height:84px;padding:10px 2px 8px}.wd b{font-size:18px}.lgd{font-size:11px}}
+.acl{cursor:pointer;display:flex;flex-direction:column;gap:14px}.acl .top{display:flex;align-items:center;gap:16px}.acl .x{min-width:0;flex:1}.acl .x b{font-size:17px;display:block}.acl .x small{display:block;color:var(--muted);margin-top:2px;font-size:13px}
+.mdt{display:flex;gap:5px;margin-top:10px}.mdt i{flex:1;height:6px;border-radius:4px;background:rgba(255,255,255,.1)}.mdt i.ok{background:#9B6FE8}.mdt i.cur{background:#C9A8FF;box-shadow:0 0 10px rgba(201,168,255,.7)}
+.bdgs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.bdg{display:flex;flex-direction:column;gap:2px;padding:10px;border-radius:14px;background:rgba(255,255,255,.04);font-size:11px;color:var(--muted)}.bdg b{font-size:20px;color:var(--text);font-weight:600}.bdg.on b{color:#C9A8FF}.bdg.w{background:rgba(255,180,90,.1)}.bdg.w b{color:#FFC98A}
+.acts{display:flex;justify-content:flex-end}
+@media(max-width:640px){.bdgs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
 .sgl{display:flex;flex-direction:column;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,164,255,.14)}
 .sgr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:12.5px;color:var(--muted)}.sgr em{font-style:normal;font-variant-numeric:tabular-nums}
@@ -956,15 +961,29 @@ function learnData(){
 }
 function adOverview(){
   const L=learnData(),cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(clientStat);
-  const np=Math.max(1,PL.length),ms=(n,l)=>`<div class="ms2"><b>${n}</b><span>${l}</span></div>`;
-  return `${hd2('Привет, <b>Виктория</b>',fdate(today()),[])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
+  const np=Math.max(1,PL.length),ms=(n,l)=>`<div class="ms2"><b>${n}</b><span>${l}</span></div>`,td0=today(),all=[];
+  const cards=cl.map(x=>{const pl=planOf(mmap(x.u.slot)),sg=(pl.stages||[]).map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(k=>k.status==='done').length;return {s,n,d,done:n>0&&d===n}}),ci=sg.findIndex(q=>!q.done),pc=x.tp?Math.round(x.td/x.tp*100):0;
+    (pl.stages||[]).forEach(s=>(s.tasks||[]).forEach(k=>all.push({t:k,st:s,cn:x.u.name,h:'#/c/'+x.u.slot})));
+    const mine=(pl.stages||[]).reduce((a,s)=>a+(s.tasks||[]).filter(k=>k.who!=='client'&&k.status!=='done'&&k.due&&k.due<=ymdOf(dnum(td0)+7)).length,0);
+    const dts=sg.map((q,i)=>`<i class="${q.done?'ok':i===ci?'cur':''}"></i>`).join('');
+    const bd=(n,l,w)=>`<span class="bdg ${n?(w?'w':'on'):''}"><b>${n}</b>${l}</span>`;
+    return {x,mine,html:`<div class="t2 c6 acl" data-a="go" data-h="#/c/${x.u.slot}"><div class="top">${rg2(pc,84,10)}<div class="x"><b>${esc(x.u.name)}</b><small>${ci>=0?esc(sg[ci].s.title.replace(/^Неделя (\d+)\.\s*/,'Неделя $1 · ').replace(/:.*$/,'')):'Все этапы завершены'}</small><div class="mdt">${dts}</div></div></div>
+     <div class="bdgs">${bd(x.pc+x.pr,'ждут клиента',1)}${bd(x.ch,'на правках',1)}${bd(mine,'на мне за неделю')}<span class="bdg"><b>${x.ls?(x.idle===0?'сегодня':x.idle+' дн.'):'—'}</b>вход</span></div>
+     <div class="acts"><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет клиента</button></div></div>`}});
+  const mineAll=cards.reduce((a,c)=>a+c.mine,0),waitAll=cl.reduce((a,x)=>a+x.pc+x.pr,0),chgAll=cl.reduce((a,x)=>a+x.ch,0);
+  const tile=(h,ic,n,cap)=>`<a class="t2 bgt c3" href="${h}"><div class="ib">${ic}</div><b>${n}</b><span>${cap}</span></a>`;
+  return `${hd2('Привет, <b>Виктория</b>',fdate(td0),[])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
   <div class="g12">
-   <div class="t2 c7"><h3>Обучение</h3>
+   ${tile('#/clients',ico('tasks'),mineAll,'на мне на неделю')}
+   ${tile('#/clients',ico('users'),waitAll,'ждут клиентов')}
+   ${tile('#/clients',SV.check,chgAll,'на правках')}
+   ${tile('#/learn',ico('book'),L.q,'ждут проверки')}
+   ${cards.map(c=>c.html).join('')||'<div class="t2 c12"><p class="mu2">Клиентов пока нет.</p></div>'}
+   ${all.length?wkStrip(all,x=>x.t.who!=='client','на мне','клиент','awk'):''}
+   <div class="t2 c7"><h3>Обучение <a class="go" href="#/learn">${SV.arrow}</a></h3>
     <div style="display:flex;align-items:center;gap:22px;margin-top:16px;flex-wrap:wrap">${rg2(Math.round(L.avg*100),96,11)}<div class="mg2">${ms(np,plur(np,'программа','программы','программ'))}${ms(L.S.length,'участников')}${ms(L.q,'ждут проверки')}${ms(L.tot,'сдач за неделю')}</div></div>
-    ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}
-    <a class="it2" href="#/learn" style="margin-top:16px"><div class="tp">${ico('book')}</div><div class="x"><p>Открыть обучение</p><small>участники, проверка, программа, воронка</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px"')}</a></div>
+    ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}</div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
-   <div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.length?cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' на согласовании · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}<button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет</button></div>`).join(''):'<p class="mu2" style="margin-top:12px">Клиентов пока нет.</p>'}</div>
   </div>`;
 }
 function adLearn(){
@@ -1090,6 +1109,14 @@ function cltasks(){
   const by=(a,b)=>(a.t.due||'9')<(b.t.due||'9')?-1:1;
   return {all,wait:all.filter(x=>x.t.who==='client'&&x.t.status!=='done').sort(by),work:all.filter(x=>x.t.who!=='client'&&x.t.status==='doing'),next:all.filter(x=>x.t.who!=='client'&&x.t.status==='todo'),done:all.filter(x=>x.t.status==='done')};
 }
+function wkStrip(all,isMine,lm,lo,pre){
+  const td0=today(),wdn=['ВС','ПН','ВТ','СР','ЧТ','ПТ','СБ'],days=[0,1,2,3,4,5,6].map(i=>ymdOf(dnum(td0)+i)),byD=d=>all.filter(x=>x.t.due===d&&x.t.status!=='done'),lateN=all.filter(x=>x.t.due&&x.t.due<td0&&x.t.status!=='done').length;
+  const selD=Math.max(0,days.findIndex(d=>byD(d).length)),cls=x=>isMine(x)?'me':'we';
+  const dots=l=>l.length>3?`<i class="${l.some(isMine)?'me':'we'}"></i><em>${l.length}</em>`:l.map(x=>`<i class="${cls(x)}"></i>`).join('');
+  return `<div class="t2 c12 wkst"><h3>Ближайшие сроки <span class="lgd"><i class="me"></i>${lm}<i class="we"></i>${lo}${lateN?`<b class="lt">просрочено ${lateN}</b>`:''}</span></h3>${days.map((d,i)=>`<input type="radio" name="${pre}" id="${pre}${i}" ${i===selD?'checked':''}>`).join('')}
+   <div class="wdr">${days.map((d,i)=>{const l=byD(d),dd=new Date(d+'T12:00:00');return `<label for="${pre}${i}" class="wd ${i===0?'td':''}"><small>${wdn[dd.getDay()]}</small><b>${dd.getDate()}</b><div class="wdd">${dots(l)}</div></label>`}).join('')}</div>
+   <div class="wpl">${days.map(d=>{const l=byD(d);return `<div class="wpn">${l.length?l.slice(0,5).map(x=>`<a href="${x.h||'#/tasks'}"><i class="${cls(x)}"></i><span>${x.cn?`<b>${esc(x.cn)}</b> · `:''}${esc(x.t.text)}</span></a>`).join('')+(l.length>5?`<a href="#/tasks" class="mr">Ещё ${l.length-5}</a>`:''):'<p>В этот день сроков нет</p>'}</div>`}).join('')}</div></div>`;
+}
 function clHome(){
   const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=planOf(ST.meta),ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),reps=CI.filter(i=>i.kind==='report'),rep=reps[0],key=(ST.meta.key||[]).slice().reverse();
@@ -1108,12 +1135,7 @@ function clHome(){
   const heroPath=ps.n?`<div class="t2 c7 pth"><h3>Путь проекта <a class="go" href="#/plan">${SV.arrow}</a></h3><div class="stps">${steps}</div>${cs?`<div class="cnow"><div><small>Сейчас</small><p>${esc(cs.st.title.replace(/^Неделя (\d+)\.\s*/,'Неделя $1 · '))}</p></div><em>${cs.d}/${cs.n}</em><div class="sgb"><i style="width:${cs.n?Math.round(cs.d/cs.n*100):0}%"></i></div></div>`:''}</div>`:'';
   const hero=ps.n?`<div class="t2 c5 hr"><h3>Общий прогресс</h3><div class="hrg">${rg2(pc,150,16)}</div><div class="trio"><div><b style="color:#B58CFF">${dn}</b><span>готово</span></div><div><b style="color:#D9C5FF">${dg}</b><span>в работе</span></div><div><b style="color:#8F8AA8">${td}</b><span>впереди</span></div></div></div>`:'';
   const tile=(h,ic,n,cap,tone)=>`<a class="t2 bgt c3 ${tone||''}" href="${h}"><div class="ib">${ic}</div><b>${n}</b><span>${cap}</span></a>`;
-  const td0=today(),wdn=['ВС','ПН','ВТ','СР','ЧТ','ПТ','СБ'],days=[0,1,2,3,4,5,6].map(i=>ymdOf(dnum(td0)+i)),byD=d=>T.all.filter(x=>x.t.due===d&&x.t.status!=='done'),lateN=T.all.filter(x=>x.t.due&&x.t.due<td0&&x.t.status!=='done').length;
-  const selD=Math.max(0,days.findIndex(d=>byD(d).length));
-  const dots=l=>l.length>3?`<i class="${l.some(x=>x.t.who==='client')?'me':'we'}"></i><em>${l.length}</em>`:l.map(x=>`<i class="${x.t.who==='client'?'me':'we'}"></i>`).join('');
-  const nxtB=`<div class="t2 c12 wkst"><h3>Ближайшие сроки <span class="lgd"><i class="me"></i>вы<i class="we"></i>Виктория${lateN?`<b class="lt">просрочено ${lateN}</b>`:''}</span></h3>${days.map((d,i)=>`<input type="radio" name="wkd" id="wkd${i}" ${i===selD?'checked':''}>`).join('')}
-   <div class="wdr">${days.map((d,i)=>{const l=byD(d),dd=new Date(d+'T12:00:00');return `<label for="wkd${i}" class="wd ${i===0?'td':''}"><small>${wdn[dd.getDay()]}</small><b>${dd.getDate()}</b><div class="wdd">${dots(l)}</div></label>`}).join('')}</div>
-   <div class="wpl">${days.map(d=>{const l=byD(d);return `<div class="wpn">${l.length?l.slice(0,5).map(x=>`<a href="#/tasks"><i class="${x.t.who==='client'?'me':'we'}"></i><span>${esc(x.t.text)}</span></a>`).join('')+(l.length>5?`<a href="#/tasks" class="mr">Ещё ${l.length-5}: открыть все задачи</a>`:''):'<p>В этот день сроков нет</p>'}</div>`}).join('')}</div></div>`;
+  const nxtB=wkStrip(T.all,x=>x.t.who==='client','вы','Виктория','wkd');
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Ваш проект с WIKKI.OCEAN',[])}
   <div class="g12">
