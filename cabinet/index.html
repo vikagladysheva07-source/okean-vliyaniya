@@ -1081,11 +1081,6 @@ function clReports(){
   const other=R.filter(i=>!used.has(i.id));
   return `${hd2('Отчёты','Отчёт по проделанной работе за каждую неделю',[])}<div class="g12"><div class="rg c12">${cards||'<div class="t2"><p class="mu2">Отчёты появятся после старта.</p></div>'}</div>${other.length?`<div class="t2 c12"><h3>Другие отчёты</h3><div class="card p0" style="margin-top:10px">${other.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
 }
-function clList(kind){
-  const L=CI.filter(i=>i.kind===kind).sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(a.created_at<b.created_at?1:-1));
-  const sub={content:'Прототипы, решения и результаты этапов на ваше согласование.',request:'Что нам нужно от вас, чтобы двигаться дальше: доступы, данные, ответы.',report:'Итоги этапов и что сделано.'}[kind];
-  return `<h1 class="t">${IK[kind]}</h1><p class="sub">${sub}</p><div style="margin-top:14px">${L.length?`<div class="card p0">${L.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<div class="card">Пока ничего нет.</div>'}</div>`;
-}
 function clItem(id){
   const it=CI.find(i=>String(i.id)===String(id));if(!it)return '<a class="back" href="#/">← Обзор</a><p class="sub">Материал не найден.</p>';
   const back={content:'#/approve',request:'#/approve',report:'#/reports'}[it.kind],pend=it.status==='pending',lk=safeUrl(it.link);
@@ -1111,10 +1106,6 @@ function clientStat(u){
   const it=AI.filter(i=>i.slot===u.slot),ls=lastSeen(u.slot);
   const pl=planStat(planOf(mmap(u.slot)));return {u,tp:pl.n,td:pl.d,pc:it.filter(i=>i.kind==='content'&&i.status==='pending').length,ch:it.filter(i=>i.status==='changes').length,pr:it.filter(i=>i.kind==='request'&&i.status==='pending').length,ls,idle:ls?Math.floor((Date.now()-ls)/864e5):99};
 }
-function clientsTable(L){
-  return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Клиент</th><th>Ждём клиента</th><th>Вернул на правки</th><th>Последний вход</th></tr></thead><tbody>${L.map(x=>`<tr class="lnk" data-a="go" data-h="#/c/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'')}</small></td><td>${x.pc+x.pr?`<span class="st st-review">${x.pc} контента · ${x.pr} запросов</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td>${x.ch?`<span class="st st-revision">${x.ch}</span>`:'<span style="color:var(--muted)">нет</span>'}</td><td><small style="color:var(--muted);font-size:12.5px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td></tr>`).join('')}</tbody></table></div></div>`;
-}
-
 /* ===== траектория работы с клиентом ===== */
 function planStat(pl){let n=0,d=0;((pl&&pl.stages)||[]).forEach(st=>(st.tasks||[]).forEach(t=>{n++;if(t.status==='done')d++}));return {n,d}}
 const PLST={todo:'К выполнению',doing:'В работе',done:'Готово'};
@@ -1236,13 +1227,6 @@ async function tkCommit(si,ti){
   }else{t.at=Date.now();await planQuick()}
 }
 async function planQuick(){const ok=await setM(PLD.slot,'plan',PLD.plan);render(true)}
-function planView(pl){
-  const st=(pl&&pl.stages)||[];if(!st.length)return '';
-  const tot=planStat(pl),pc=tot.n?Math.round(tot.d/tot.n*100):0;
-  return `<div class="t2 c12"><h3>Траектория работы <span class="pl2">${tot.d} из ${tot.n} задач</span></h3>
-   <div class="stg">${st.map(s=>{const n=(s.tasks||[]).length,d=(s.tasks||[]).filter(t=>t.status==='done').length;return `<div class="stc"><div class="top2"><b>${esc(s.title)}</b><span>${d}/${n}</span></div><div class="tr2"><i style="width:${n?d/n*100:0}%"></i></div>${(s.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>`}).join('')}</div></div>`;
-}
-
 function keyEd(slot,M){
   const L=(M.key||[]).slice().reverse();
   return `<div class="t2" style="margin-bottom:14px"><h3>Важный момент для клиента</h3><div class="seg" style="margin:12px 0">${Object.keys(KT).map((k,i)=>`<button data-a="ktype" data-k="${k}" class="${(window.KTY||'info')===k?'on':''}">${KT[k]}</button>`).join('')}</div><textarea id="k-x" style="min-height:80px" placeholder="Например: Согласовали, что склад подключаем после запуска зарплаты"></textarea><div class="row"><input type="date" id="k-d" style="max-width:200px"><button class="bt2 v" data-a="keyadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
@@ -1390,8 +1374,6 @@ const A={
  async keyadd(el){const tx=$('#k-x').value.trim();if(!tx){toast('Напиши текст');return}const M=mmap(el.dataset.u),arr=(M.key||[]).concat([{id:Date.now(),type:window.KTY||'info',text:tx,date:$('#k-d').value||''}]);await setM(el.dataset.u,'key',arr);toast('Показано клиенту');render(true)},
  async keydel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'key',(M.key||[]).filter(k=>String(k.id)!==el.dataset.id));render(true)},
  crep(el){window.CF={slot:el.dataset.u,id:null,kind:'report',title:'Неделя '+el.dataset.n+': итоги работы',body:'',link:'',due:''};render(true)},
- ctf(el){window.CTF=el.dataset.v;render(true)},
- cpv(el){window.CPV=el.dataset.v;render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
  pbadd(el){window.PLADD=el.dataset.c;render(true)},
  noop(){},
@@ -1405,8 +1387,6 @@ const A={
  async pqok(el){const x=$('#pq-t'),tx=x?x.value.trim():'';if(!tx){toast('Напиши задачу');return}const st=PLD.plan.stages[+el.dataset.s];st.tasks=st.tasks||[];st.tasks.push({id:uid(),text:tx,status:'todo',who:'team',due:'',at:Date.now()});window.AFTER=()=>{const y=$('#pq-t');if(y)y.focus()};await planQuick()},
  async stadd(){PLD.plan.stages.push({title:'Новый список',period:'',desc:'',tasks:[]});await planQuick()},
  async pstmv(el){const a=PLD.plan.stages,i=+el.dataset.s,j=i+(+el.dataset.d);if(j<0||j>=a.length)return;const t=a[i];a[i]=a[j];a[j]=t;await planQuick()},
- pbedit(el){window.PLE=el.dataset.s+':'+el.dataset.t;render(true)},
- pbeditx(){window.PLE=null;render(true)},
  async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti];t.text=tx;t.status=$('#pe-st').value;t.pri=$('#pe-p').value;t.due=$('#pe-d').value||'';
   if(ME.role==='admin'){t.who=$('#pe-w').value;const ns=+$('#pe-s').value;t.at=Date.now();if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено');return}
   window.PLE=null;await tkCommit(si,ti);toast('Сохранено')},
@@ -1415,8 +1395,6 @@ const A={
  pbf(el){window.PBF=Object.assign({st:'all',who:'all',v:'status',mode:'all'},window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
  async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({id:uid(),text:tx,status:el.dataset.c,who:'team',due:'',at:Date.now()});window.PLADD=null;await planQuick();toast('Задача добавлена')},
- async pbmove(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.status={todo:'doing',doing:'done',done:'todo'}[t.status]||'todo';await planQuick()},
- async pbwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';await planQuick()},
  pladd(){PLD.plan.stages.push({title:'Новый этап',tasks:[]});render(true)},
  pltpl(el){PLD.plan.stages=clone(PLTPLS[el.dataset.t].stages);render(true)},
  pltask(el){PLD.plan.stages[+el.dataset.s].tasks.push({id:uid(),text:'',status:'todo',who:'team',due:'',at:Date.now()});render(true)},
