@@ -616,7 +616,7 @@ function adSettings(){
   const ok=SETT.token&&SETT.chat;
   return `<h1 class="t">Уведомления</h1><p class="sub">Telegram-бот пришлёт тебе сообщение, когда участник сдаёт работу или клиент отвечает на согласование. Каждое утро в 9:00 по Москве приходит сводка, если есть что проверить.</p>${subnav('#/settings')}
   <div class="tiles" style="margin-top:14px"><div class="tile ${ok?'good':'hot'}"><b style="font-size:22px">${ok?'Подключено':'Не подключено'}</b><span>токен бота: ${SETT.token?'есть':'нет'} · твой чат: ${SETT.chat?'найден':'не найден'}</span></div></div>
-  <h2 class="t">Как подключить</h2><div class="card lib"><ul><li><b>1.</b> В Telegram открой <a class="lk" href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, отправь /newbot, придумай имя и ник бота. BotFather пришлёт токен.</li><li><b>2.</b> Вставь токен ниже и нажми «Сохранить токен».</li><li><b>3.</b> Открой своего бота и нажми Start или напиши ему любое слово.</li><li><b>4.</b> Нажми «Найти мой чат», потом «Отправить тест».</li></ul></div>
+  <h2 class="t">Как подключить</h2><div class="card lib"><ul><li><b>1.</b> В Telegram открой <a class="lk" href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, отправь /newbot, придумай имя и ник бота. BotFather пришлёт токен.</li><li><b>2.</b> Открой своего бота и нажми Start.</li><li><b>3.</b> Вставь токен ниже и нажми «Сохранить токен». Чат найдётся сам и придёт тестовое сообщение.</li></ul></div>
   <div class="card" style="margin-top:12px"><small class="l">Токен бота</small><input type="text" id="tgtok" autocomplete="off" placeholder="${SETT.token?'Токен сохранён. Вставь новый, чтобы заменить':'123456789:AA...'}"><div class="row"><button class="btn s" data-a="tgtok">Сохранить токен</button><button class="btn g s" data-a="tgchat">Найти мой чат</button><button class="btn g s" data-a="tgtest" ${ok?'':'disabled'}>Отправить тест</button></div><p class="sub" style="font-size:12.5px;margin-top:10px">Токен хранится на сервере и не показывается снова. Если он утёк, отзови его у BotFather командой /revoke.</p></div>`;
 }
 /* ================= клиенты компании ================= */
@@ -764,12 +764,12 @@ const A={
 
  async ncopy(el){const r=nudgeList()[+el.dataset.i];try{await navigator.clipboard.writeText(r.text);toast('Сообщение скопировано')}catch(e){prompt('Скопируй сообщение:',r.text)}},
  async tgtok(){const v=($('#tgtok').value||'').trim();if(!/^\d{6,12}:[\w-]{30,}$/.test(v)){toast('Токен выглядит иначе. Скопируй его целиком из BotFather');return}
-  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_token',p_v:v})))return;window.TGT=v;SETT.token=true;toast('Токен сохранён');render(true)},
+  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_token',p_v:v})))return;window.TGT=v;SETT.token=true;toast('Токен сохранён, ищу твой чат');await A.tgchat(true)},
  async tgchat(){const v=window.TGT||($('#tgtok')&&$('#tgtok').value.trim());if(!v){toast('Вставь токен и нажми «Сохранить токен»');return}
   let j;try{j=await (await fetch('https://api.telegram.org/bot'+v+'/getUpdates')).json()}catch(e){toast('Не удалось связаться с Telegram. Попробуй ещё раз');return}
   const m=(j.result||[]).map(u=>(u.message||u.my_chat_member||{}).chat).filter(Boolean).pop();
-  if(!m){toast('Сообщений боту пока нет. Открой бота, нажми Start и повтори');return}
-  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_chat',p_v:String(m.id)})))return;SETT.chat=true;toast('Чат найден: '+(m.first_name||m.title||m.id));render(true)},
+  if(!m){render(true);toast('Токен сохранён. Теперь открой бота, нажми Start и жми «Найти мой чат»');return}
+  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_chat',p_v:String(m.id)})))return;SETT.chat=true;render(true);if(await call(()=>rpc('okean_admin_tg_test',{p_slot:ME.slot,p_h:ME.h})))toast('Готово. Тест отправлен, проверь Telegram')},
  async tgtest(){if(await call(()=>rpc('okean_admin_tg_test',{p_slot:ME.slot,p_h:ME.h})))toast('Тест отправлен. Проверь Telegram')},
  /* клиенты */
  async cdec(el){const id=+el.dataset.id,d=el.dataset.d,t=($('#cmt')||{}).value||'';
