@@ -224,6 +224,7 @@ small.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 @media(max-width:520px){.hero{grid-template-columns:88px 1fr}.ring{width:88px;height:88px}}
 /* ===== обзор v2 ===== */
 .main.wide{max-width:1180px}
+.main{width:100%}
 .hd2{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 2px 4px}
 .hd2 h1{font-size:clamp(26px,4vw,36px);line-height:1.1;font-weight:500;letter-spacing:-.03em}
 .hd2 h1 b{color:var(--vb);font-weight:700}
@@ -402,6 +403,10 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .tr2.big{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden;margin:14px 0 8px}.tr2.big i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
 .ts .tkv{padding:8px 0;border-top:1px solid rgba(196,164,255,.08)}
 @media(max-width:700px){.tl{padding-left:46px}.tdot{left:-46px;width:34px;height:34px}.tl::before{left:16px}}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.rep2{display:block;text-decoration:none;color:inherit}.rep2 .rw{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.rep2 b{display:block;font-size:20px;font-weight:500;letter-spacing:-.02em}.rep2 small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}.rep2 p{margin-top:12px;font-size:14px;line-height:1.4}
+.rep2.ok{border-color:rgba(196,164,255,.4);box-shadow:0 0 34px -16px rgba(155,111,232,.7)}
 </style>
 </head>
 <body>
@@ -569,7 +574,7 @@ function route(h){
     else if(r==='plan')html=shell(clPlan(),true);
     else if(r==='tasks')html=shell(clTasks(),true);
     else if(r==='key')html=shell(clKey(),true);
-    else if(r==='reports')html=shell(clList('report'));
+    else if(r==='reports')html=shell(clReports(),true);
     else if(r==='item')html=shell(clItem(a));
     else html=shell(clHome(),true);
   }else if(ME.role==='admin'){
@@ -963,6 +968,17 @@ function clDecide(){
    <div class="t2 c12"><h3>Ждут вашего решения <span class="pl2 ${P.length?'w':''}">${P.length}</span></h3>${P.length?`<div class="card p0" style="margin-top:10px">${P.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<p class="mu2" style="margin-top:10px">Всё согласовано.</p>'}</div>
    ${D.length?`<div class="t2 c12"><h3>История</h3><div class="card p0" style="margin-top:10px">${D.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
 }
+const weekNo=t=>{const m=String(t||'').match(/^Неделя\s+(\d+)/);return m?+m[1]:0};
+function clReports(){
+  const pl=ST.meta.plan||{stages:[]},R=CI.filter(i=>i.kind==='report'),used=new Set();
+  const weeks=(pl.stages||[]).map(st=>({st,n:weekNo(st.title)})).filter(x=>x.n);
+  const curI=(pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done')),curN=curI>=0?weekNo(pl.stages[curI].title):99;
+  const cards=weeks.map(w=>{const r=R.find(i=>weekNo(i.title)===w.n);if(r)used.add(r.id);
+    return r?`<a class="t2 rep2 ok" href="#/item/${r.id}"><div class="rw"><span class="pl2 g">отчёт готов</span><span class="mu2">${fdate(r.created_at)}</span></div><b>Неделя ${w.n}</b><small>${esc(w.st.period||'')}</small><p>${esc(r.title.replace(/^Неделя\s+\d+[:.\s-]*/,'')||'Итоги недели')}</p></a>`
+    :`<div class="t2 rep2"><div class="rw"><span class="pl2">${w.n===curN?'идёт неделя':w.n<curN?'отчёт скоро':'впереди'}</span></div><b>Неделя ${w.n}</b><small>${esc(w.st.period||'')}</small><p class="mu2">${w.n<=curN?'Отчёт появится здесь в конце недели.':'Отчёт появится после недели.'}</p></div>`}).join('');
+  const other=R.filter(i=>!used.has(i.id));
+  return `${hd2('Отчёты','Отчёт по проделанной работе за каждую неделю',[])}<div class="g12"><div class="rg c12">${cards||'<div class="t2"><p class="mu2">Отчёты появятся после старта.</p></div>'}</div>${other.length?`<div class="t2 c12"><h3>Другие отчёты</h3><div class="card p0" style="margin-top:10px">${other.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
+}
 function clList(kind){
   const L=CI.filter(i=>i.kind===kind).sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||(a.created_at<b.created_at?1:-1));
   const sub={content:'Прототипы, решения и результаты этапов на ваше согласование.',request:'Что нам нужно от вас, чтобы двигаться дальше: доступы, данные, ответы.',report:'Итоги этапов и что сделано.'}[kind];
@@ -1004,14 +1020,15 @@ const T=(text,who,due)=>({text,status:'todo',who:who||'team',due:due||''});
 const PLTPLS={
  content:{name:'Контент-маркетинг',stages:['Диагностика и стратегия','Упаковка и рубрики','Производство контента','Дистрибуция и аналитика','Масштабирование'].map(t=>({title:t,period:'',desc:'',tasks:[]}))},
  sewing:{name:'Швейная платформа: 6 недель + 4 сопровождение',stages:[
-  {title:'Неделя 1. Диагностика и прототип',period:'9–15 ноября',desc:'Разбираю листы, Excel и расценки вместе с технологом. Показываю прототип экранов: панель руководителя, приложение швеи, движение партии. Разработка начинается после вашего одобрения.',tasks:[T('Прислать Excel: модели, операции, расценки, текущий расчёт зарплаты','client','2026-11-09'),T('Прислать фото 3–4 бумажных листов выработки','client','2026-11-09'),T('Выделить время технолога в первые две недели','client','2026-11-09'),T('Ответить: есть ли МойСклад; чьё сырьё в заказах клиентов; два кабинета Wildberries это два юрлица или одно; сколько швей и их телефоны','client','2026-11-09'),T('Разобрать листы, Excel и расценки вместе с технологом'),T('Показать прототип: панель руководителя, приложение швеи, движение партии'),T('Одобрить прототип (разработка начинается после одобрения)','client','2026-11-15')]},
-  {title:'Неделя 2. Справочники',period:'16–22 ноября',desc:'Модели, операции, расценки, импорт Excel, роли и журнал действий.',tasks:[T('Модели, операции, расценки'),T('Импорт Excel'),T('Роли и журнал действий')]},
-  {title:'Неделя 3. Приложение швеи и зарплата',period:'23–29 ноября',desc:'3–4 швеи начинают вводить данные в приложении параллельно с бумагой. Собирается ведомость по периодам.',tasks:[T('3–4 швеи вводят данные в приложении параллельно с бумагой','client'),T('Ведомость по периодам 10–25 и 25–10')]},
-  {title:'Неделя 4. Партии',period:'30 ноября – 6 декабря',desc:'Карточка партии от раскроя до упаковки, передачи, брак, допраскрой, панель руководителя.',tasks:[T('Карточка партии от раскроя до упаковки'),T('Передачи, брак, допраскрой'),T('Панель руководителя')]},
-  {title:'Неделя 5. Склад',period:'7–13 декабря',desc:'Остатки, адреса, сканер. Сверяем ведомость из системы с расчётом технолога. Подключаем агентов «Руководитель» и «Контролёр».',tasks:[T('Остатки, адреса ячеек, сканер'),T('Сверить ведомость из системы с расчётом технолога','client'),T('Подключить агентов «Руководитель» и «Контролёр»')]},
-  {title:'Неделя 6. Запуск',period:'14–20 декабря',desc:'Обучение всех швей, запуск на весь цех, приёмка этапа.',tasks:[T('Обучить всех швей'),T('Запуск на весь цех'),T('Принять этап','client','2026-12-20')]},
-  {title:'Сопровождение: 4 недели',period:'после запуска',desc:'Работаем вместе на реальных данных, правим то, что всплывёт, помогаю команде. Считаем рабочие недели, праздничные дни не в счёт.',tasks:[T('Работать на реальных данных, править то, что всплывёт'),T('Ведомость за первый полный период совпадает с вашим расчётом','client'),T('Остатки по 10 моделям совпадают с физическим пересчётом','client'),T('Замерить время приёма партии, расчёта зарплаты и число ошибок до и после')]},
-  {title:'После запуска: следующие блоки',period:'дальше',desc:'Остальные блоки подключаем по порядку пользы: сначала материалы и Wildberries и Ozon, затем планирование и поставки, затем реклама, карточки, маркировка и финансы.',tasks:[T('Материалы и закупка, подключение Wildberries и Ozon'),T('Планирование мощности и поставки'),T('Реклама, карточки, маркировка, финансы')]}]}
+  {title:'Неделя 1. Сбор данных и диагностика',period:'6–12 ноября',desc:'Работа стартовала 6 ноября. Вы присылаете данные по чек-листу, я разбираю листы, Excel и расценки вместе с технологом и показываю прототип экранов: панель руководителя, приложение швеи, движение партии. Разработка начинается после вашего одобрения.',tasks:[T('Модели, артикулы и размеры: цвета, статус, запас на складе','client','2026-11-12'),T('Операции и расценки: справочник и цена каждой','client','2026-11-12'),T('Расчёт зарплаты за два последних периода','client','2026-11-12'),T('Выгрузка из МойСклада: номенклатура, штрихкоды, остатки и доступ на чтение','client','2026-11-12'),T('Бумажные листы выработки: 3–4 листа швей и лист партии (фото)','client','2026-11-12'),T('Пример техкарты по одной модели','client','2026-11-12'),T('Правила расценок: как меняется цена при усложнении операции','client','2026-11-12'),T('Партии и остатки на день запуска, устройство полок и ячеек','client','2026-11-12'),T('Как фиксируете брак, допраскрой и передачи между участками','client','2026-11-12'),T('Люди и роли: имя, должность, телефон, Android или iPhone, интернет в цеху','client','2026-11-12'),T('Оборудование: сканер штрихкодов и принтер этикеток','client','2026-11-12'),T('Время технолога: 3–4 часа в неделю первые две недели','client','2026-11-12'),T('Ответы на вопросы: сырьё клиентов, кабинеты WB и Ozon, кто принимает решения, кто платит за сервер и ИИ, дата старта','client','2026-11-12'),T('Разобрать листы, Excel и расценки вместе с технологом','team',''),T('Показать прототип: панель руководителя, приложение швеи, движение партии','team',''),T('Одобрить прототип (разработка начинается после одобрения)','client','2026-11-12')]},
+  {title:'Неделя 2. Справочники',period:'13–19 ноября',desc:'Модели, операции, расценки, импорт Excel, роли и журнал действий.',tasks:[T('Модели, операции, расценки','team',''),T('Импорт Excel','team',''),T('Роли и журнал действий','team','')]},
+  {title:'Неделя 3. Приложение швеи и зарплата',period:'20–26 ноября',desc:'3–4 швеи начинают вводить данные в приложении параллельно с бумагой. Собирается ведомость по периодам.',tasks:[T('3–4 швеи вводят данные в приложении параллельно с бумагой','client',''),T('Ведомость по периодам 10–25 и 25–10','team','')]},
+  {title:'Неделя 4. Партии',period:'27 ноября – 3 декабря',desc:'Карточка партии от раскроя до упаковки, передачи, брак, допраскрой, панель руководителя.',tasks:[T('Карточка партии от раскроя до упаковки','team',''),T('Передачи, брак, допраскрой','team',''),T('Панель руководителя','team','')]},
+  {title:'Данные для площадок и агентов',period:'к 3 декабря',desc:'Вторая часть чек-листа: доступы и выгрузки для подключения Wildberries, Ozon и агентов. Токены и ключи присылайте отдельным сообщением лично, не в общий чат. Доступ только на чтение.',tasks:[T('Доступ к Wildberries: токены API по каждому кабинету, только чтение','client','2026-12-03'),T('Доступ к Ozon: Client-Id и API-ключ, только чтение','client','2026-12-03'),T('Выгрузки за 6 месяцев: отчёты WB и Ozon, продажи по SKU, остатки, поставки, платное хранение','client','2026-12-03'),T('Как считаете поставки сейчас: Excel, кабинеты, сервисы','client','2026-12-03'),T('Отгрузки и возвраты: FBO и FBS, склады, кто собирает, что с возвратами','client','2026-12-03'),T('Материалы: ткани, фурнитура, упаковка, поставщики, сроки, расход','client','2026-12-03'),T('Планирование цеха: сколько шьёте в день и неделю, как решаете, что дошивать','client','2026-12-03'),T('Доходы и расходы: статьи, откуда деньги, выписка за 2–3 месяца','client','2026-12-03'),T('Системы учёта: конфигурация 1С, оператор ЭДО, бухгалтерия, налогообложение','client','2026-12-03'),T('Маркировка «Честный знак»: какие товары и кто ведёт','client','2026-12-03'),T('Лимиты для агентов: максимальный заказ в цех, снижение цены, бюджет рекламы, кто согласует поставки','client','2026-12-03'),T('Отчёты: что получать каждое утро и каждую неделю, и кому','client','2026-12-03'),T('Расходы на сервисы: МойСклад, 1С, аналитика, интеграторы','client','2026-12-03')]},
+  {title:'Неделя 5. Склад',period:'4–10 декабря',desc:'Остатки, адреса, сканер. Сверяем ведомость из системы с расчётом технолога. Подключаем агентов «Руководитель» и «Контролёр».',tasks:[T('Остатки, адреса ячеек, сканер','team',''),T('Сверить ведомость из системы с расчётом технолога','client',''),T('Подключить агентов «Руководитель» и «Контролёр»','team','')]},
+  {title:'Неделя 6. Запуск',period:'11–17 декабря',desc:'Обучение всех швей, запуск на весь цех, приёмка этапа.',tasks:[T('Обучить всех швей','team',''),T('Запуск на весь цех','team',''),T('Принять этап','client','2026-12-17')]},
+  {title:'Сопровождение: 4 недели',period:'с 18 декабря',desc:'Работаем вместе на реальных данных, правим то, что всплывёт, помогаю команде. Считаем рабочие недели, праздничные дни не в счёт.',tasks:[T('Работать на реальных данных, править то, что всплывёт','team',''),T('Ведомость за первый полный период совпадает с вашим расчётом','client',''),T('Остатки по 10 моделям совпадают с физическим пересчётом','client',''),T('Замерить время приёма партии, расчёта зарплаты и число ошибок до и после','team','')]},
+  {title:'После запуска: следующие блоки',period:'дальше',desc:'Остальные блоки подключаем по порядку пользы: сначала материалы и Wildberries и Ozon, затем планирование и поставки, затем реклама, карточки, маркировка и финансы.',tasks:[T('Материалы и закупка, подключение Wildberries и Ozon','team',''),T('Планирование мощности и поставки','team',''),T('Реклама, карточки, маркировка, финансы','team','')]}]}
 };
 function planEd(slot,M){
   if(!window.PLD||PLD.slot!==slot)window.PLD={slot,plan:clone(M.plan||{stages:[]})};
@@ -1084,7 +1101,9 @@ function adClient(slot){
   <div><h2 class="t">Профиль</h2><div class="card"><small class="l">Название</small><input type="text" id="pn" value="${esc(u.name)}"><small class="l" style="margin-top:12px">Пакет услуг</small><input type="text" id="pp" value="${esc(u.plan)}" placeholder="Например: Контент-маркетинг, ретейнер"><div class="row"><button class="btn g s" data-a="prof" data-u="${slot}">Сохранить</button></div></div></div></div>${manageBox(u)}`;
   }else{
     const L=items.filter(i=>i.kind===tab).sort((a,b)=>(ORD[a.status]-ORD[b.status])||(new Date(b.created_at)-new Date(a.created_at)));
-    body=`${open&&window.CF.kind===tab||open&&window.CF.id?cform(slot):`<div style="margin-bottom:14px"><button class="bt2 v" data-a="cadd" data-u="${slot}" data-k="${tab}">+ ${NM[tab][0]}</button></div>`}
+    const miss=tab==='report'?((M.plan&&M.plan.stages)||[]).map(st=>weekNo(st.title)).filter(n=>n&&!items.some(i=>i.kind==='report'&&weekNo(i.title)===n)):[];
+    const quick=miss.length&&!open?`<div class="mu2" style="margin:0 0 8px">Отчёт за неделю:</div><div class="chips" style="margin-bottom:14px">${miss.map(n=>`<button class="bt2 sm2" data-a="crep" data-u="${slot}" data-n="${n}">Неделя ${n}</button>`).join('')}</div>`:'';
+    body=`${quick}${open&&window.CF.kind===tab||open&&window.CF.id?cform(slot):`<div style="margin-bottom:14px"><button class="bt2 v" data-a="cadd" data-u="${slot}" data-k="${tab}">+ ${NM[tab][0]}</button></div>`}
     <div style="display:flex;flex-direction:column;gap:12px">${L.length?L.map(card).join(''):`<div class="t2"><p class="mu2">${NM[tab][1]}</p></div>`}</div>`;
   }
   return `<a class="back" href="#/clients">← Клиенты</a>${invCard()}
@@ -1190,6 +1209,7 @@ const A={
  ktype(el){window.KTY=el.dataset.k;const x=$('#k-x');window.KTX=x?x.value:'';render(true);if($('#k-x'))$('#k-x').value=window.KTX},
  async keyadd(el){const tx=$('#k-x').value.trim();if(!tx){toast('Напиши текст');return}const M=mmap(el.dataset.u),arr=(M.key||[]).concat([{id:Date.now(),type:window.KTY||'info',text:tx,date:$('#k-d').value||''}]);await setM(el.dataset.u,'key',arr);toast('Показано клиенту');render(true)},
  async keydel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'key',(M.key||[]).filter(k=>String(k.id)!==el.dataset.id));render(true)},
+ crep(el){window.CF={slot:el.dataset.u,id:null,kind:'report',title:'Неделя '+el.dataset.n+': итоги работы',body:'',link:'',due:''};render(true)},
  ctf(el){window.CTF=el.dataset.v;render(true)},
  cpv(el){window.CPV=el.dataset.v;render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
