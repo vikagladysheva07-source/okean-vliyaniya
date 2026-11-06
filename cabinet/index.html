@@ -377,9 +377,9 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .sbr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;font-size:13.5px}.sbr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sbr em{font-style:normal;color:var(--muted);font-size:12px}
 .sbr .tr2{height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden}.sbr .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
 .ball{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.ball b{display:block;font-size:42px;font-weight:500;letter-spacing:-.04em;line-height:1}.ball span{font-size:12.5px;color:var(--muted)}
-.rmw{overflow-x:auto;margin:18px -6px 0;padding:0 6px 6px}
-.rm{display:flex;min-width:760px}
-.rn{flex:1;min-width:84px;text-align:center;position:relative;padding:0 4px}
+.rmw{overflow-x:auto;margin:6px -10px 0;padding:14px 10px 10px}
+.rm{display:flex;min-width:600px}
+.rn{flex:1;min-width:60px;text-align:center;position:relative;padding:0 4px}
 .rn::before{content:"";position:absolute;top:17px;left:-50%;right:50%;height:3px;background:rgba(255,255,255,.1)}
 .rn:first-child::before{display:none}
 .rn.d::before,.rn.c::before{background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
@@ -908,7 +908,7 @@ function clHome(){
   const upc=T.all.filter(x=>x.t.due&&x.t.status!=='done').sort((a,b)=>a.t.due<b.t.due?-1:1).slice(0,3);
   const cw=T.wait.length,ct=T.all.filter(x=>x.t.who!=='client'&&x.t.status!=='done').length;
   const cs=curI>=0?stg[curI]:null;
-  const charts=ps.n?`<div class="t2 c8"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${roadmap(stg,curI,short)}${cs?`<div class="rmc"><div><span class="pl2">Сейчас</span> <b>${esc(cs.st.title.replace(/^Неделя (\d+)\.\s*/,'Неделя $1: '))}</b>${cs.st.period?` <span class="mu2">${esc(cs.st.period)}</span>`:''}</div>${cs.st.desc?`<p>${esc(cs.st.desc)}</p>`:''}</div>`:''}</div>
+  const charts=ps.n?`<div class="t2 c8"><h3>Дорожная карта <a class="go" href="#/plan">${SV.arrow}</a></h3>${roadmap(stg,curI,short)}</div>
    <div class="t2 c4"><h3>Общий прогресс</h3><div style="display:flex;justify-content:center;margin:14px 0 12px">${rg2(pc,112,13)}</div><div class="stk"><i style="flex:${dn};background:#9B6FE8"></i><i style="flex:${dg};background:rgba(196,164,255,.5)"></i><i style="flex:${td};background:rgba(255,255,255,.1)"></i></div><div class="lg2"><span><i style="background:#9B6FE8"></i>готово ${dn}</span><span><i style="background:rgba(196,164,255,.5)"></i>в работе ${dg}</span><span><i style="background:rgba(255,255,255,.18)"></i>впереди ${td}</span></div></div>
    <div class="t2 c6"><h3>Прогресс по этапам</h3><div style="margin-top:10px">${stg.map(x=>`<div class="sbr"><span>${esc(x.st.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))}</span><div class="tr2"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div><em>${x.d}/${x.n}</em></div>`).join('')}</div></div>
    <div class="t2 c6"><h3>У кого сейчас задачи</h3><div class="ball"><div><b>${cw}</b><span>у вас</span></div><div><b>${ct}</b><span>у Виктории</span></div></div><div class="stk" style="margin-top:14px"><i style="flex:${cw||0.001};background:#FFB3B3"></i><i style="flex:${ct||0.001};background:#9B6FE8"></i></div>
