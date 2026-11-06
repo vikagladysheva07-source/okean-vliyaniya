@@ -712,7 +712,7 @@ function asView(slot,rest){
   html=html.replace(/(href|data-h)="#\//g,'$1="#/as/'+slot+'/').replace(/<button[^>]*data-a="out"[^>]*>[^<]*<\/button>/g,'');
   const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
   hash='#/as/'+slot+(rest||'');
-  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Это только просмотр, править здесь нельзя.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
+  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Доска задач и фильтры здесь работают, остальное только просмотр.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
 }
 function render(keep){
   const y=scrollY;hash=location.hash||'#/';window.ASPFX='';
@@ -1207,12 +1207,12 @@ function planListsRO(pl){
 function planBoard(slot){return pbView()==='status'?taskBoard():planLists(slot)}
 function whoTxt(t){return ME.role==='client'?(t.who==='client'?'Вы':'Виктория'):(t.who==='client'?'Клиент':'Я')}
 function taskCard(P,si,ti,t){
-  const ro=!!window.ASPFX||!t.id,n=(t.cm||[]).length,d=pbEff(P,si,t),late=t.status!=='done'&&d&&d<today();
+  const ro=!t.id,n=(t.cm||[]).length,d=pbEff(P,si,t),late=t.status!=='done'&&d&&d<today();
   const sn=P.stages[si].title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ');
   return `<div class="tc ${t.status}" ${ro?'':`draggable="true" data-a="pbopen"`} data-s="${si}" data-t="${ti}"><button class="tcb ${t.status}" ${ro?'tabindex="-1" style="pointer-events:none"':`data-a="pbtoggle" data-s="${si}" data-t="${ti}" title="Отметить выполненной"`}></button><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(sn.slice(0,30))}</span>${t.pri?`<span class="pri ${t.pri}">${PRI[t.pri]}</span>`:''}</div><p>${esc(t.text||'Без названия')}</p><div class="tm"><span class="who2 ${t.who}">${whoTxt(t)}</span>${d&&t.status!=='done'?`<small class="${late?'late':''}">${late?'просрочено · ':'до '}${fdate(d)}</small>`:''}${n?`<small class="cmn">${ico('chat')} ${n}</small>`:''}</div></div></div>`;
 }
 function taskModal(){
-  const P=window.PLD&&PLD.plan;if(!P||!window.PLE||window.ASPFX)return '';
+  const P=window.PLD&&PLD.plan;if(!P||!window.PLE)return '';
   const m=PLE.split(':').map(Number),mt=P.stages[m[0]]&&P.stages[m[0]].tasks[m[1]];if(!mt)return '';
   const adm=ME.role==='admin',cms=(mt.cm||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0)),E=window.PEF&&PEF.key===window.PLE?PEF:{status:mt.status,pri:mt.pri||'',who:mt.who,stage:m[0],x:mt.text,d:mt.due||''};
   return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(E.x)}</textarea>
@@ -1487,16 +1487,16 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&el0.dataset.a!=='go'){e.preventDefault();toast('Это просмотр кабинета глазами клиента. Менять задачи можно в карточке клиента: нажми «Назад к управлению» сверху.');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','pbf','ddt','pbfx','pbc','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
-root.addEventListener('dragstart',e=>{if(location.hash.startsWith('#/as/'))return;const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
+root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.tc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'));document.querySelectorAll('.dropline').forEach(x=>x.remove())});
 function dropIdx(list,y){const cards=[...list.querySelectorAll('.tc:not(.drag)')];for(const c of cards){const r=c.getBoundingClientRect();if(y<r.top+r.height/2)return {el:c,idx:+c.dataset.t}}return {el:null,idx:null}}
 root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();const d=dropIdx(tl,e.clientY);document.querySelectorAll('.dropline').forEach(x=>x.remove());const ln=document.createElement('div');ln.className='dropline';const box=tl.querySelector('.tcards');if(d.el)d.el.before(ln);else box.appendChild(ln);return}
 const col=e.target.closest&&e.target.closest('.kcol');if(col){e.preventDefault();document.querySelectorAll('.kcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
-root.addEventListener('drop',async e=>{if(location.hash.startsWith('#/as/'))return;const tl=ME.role==='admin'&&e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();document.querySelectorAll('.dropline').forEach(x=>x.remove());const dd=(e.dataTransfer.getData('text/plain')||'').split(':').map(Number),S=PLD.plan.stages,s1=dd[0],t1=dd[1],s2=+tl.dataset.si;const task=S[s1]&&S[s1].tasks[t1];if(!task)return;let idx=dropIdx(tl,e.clientY).idx;S[s1].tasks.splice(t1,1);S[s2].tasks=S[s2].tasks||[];if(idx==null)idx=S[s2].tasks.length;else if(s1===s2&&t1<idx)idx--;S[s2].tasks.splice(idx,0,task);await planQuick();return}
+root.addEventListener('drop',async e=>{const tl=ME.role==='admin'&&e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();document.querySelectorAll('.dropline').forEach(x=>x.remove());const dd=(e.dataTransfer.getData('text/plain')||'').split(':').map(Number),S=PLD.plan.stages,s1=dd[0],t1=dd[1],s2=+tl.dataset.si;const task=S[s1]&&S[s1].tasks[t1];if(!task)return;let idx=dropIdx(tl,e.clientY).idx;S[s1].tasks.splice(t1,1);S[s2].tasks=S[s2].tasks||[];if(idx==null)idx=S[s2].tasks.length;else if(s1===s2&&t1<idx)idx--;S[s2].tasks.splice(idx,0,task);await planQuick();return}
 const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await tkCommit(+d[0],+d[1])}else render(true)});
 root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.plsave&&window.PLD){await planQuick();return}if(t.id==='pf-a'||t.id==='pf-b'){window.PBF=Object.assign({st:'all',who:'all',mode:'range'},window.PBF,t.id==='pf-a'?{from:t.value}:{to:t.value});render(true);return}if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.PLE){window.PLE=null;render(true)}if(e.target&&e.target.id==='pq-t'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();const b=document.querySelector('[data-a=pqok]');if(b)A.pqok(b)}});
