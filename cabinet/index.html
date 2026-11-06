@@ -74,6 +74,12 @@ select.sel{width:100%;margin:0 0 14px;background:#0B0A12;border:1px solid var(--
 .rb{display:flex;gap:4px;padding-top:22px}
 .rb button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--s1);color:var(--muted);text-align:center;font-size:14px}
 .rb button:hover{color:#fff;border-color:var(--v)}
+.flt a.sn{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--s1);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none}
+.flt a.sn.on{color:#fff;background:linear-gradient(180deg,rgba(169,131,242,.42),rgba(91,47,190,.32));border-color:rgba(225,208,255,.5)}
+.fun{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:7px;position:relative;overflow:hidden;max-width:260px}
+.fun i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.fun .f1{background:rgba(196,164,255,.28)}.fun .f2{background:rgba(155,111,232,.7)}.fun .f3{background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}
+.wk .nw{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--v);color:#fff;vertical-align:2px}
 input:focus,textarea:focus{border-color:var(--v)}
 textarea{min-height:110px;resize:vertical;line-height:1.5}
 small.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
@@ -325,7 +331,8 @@ async function loadProgram(id){
   if(ME.role==='admin')try{localStorage.setItem('okean:prog',CURP)}catch(e){}
 }
 async function refresh(){
-  if(ME.role==='admin'){AD=await rpc('okean_admin_all',{p_slot:ME.slot,p_h:ME.h});AI=(await rpc('okean_admin_items',{p_slot:ME.slot,p_h:ME.h}))||[]}
+  if(ME.role==='admin'){AD=await rpc('okean_admin_all',{p_slot:ME.slot,p_h:ME.h});AI=(await rpc('okean_admin_items',{p_slot:ME.slot,p_h:ME.h}))||[];
+    try{OPENS={};((await rpc('okean_admin_opens',{p_slot:ME.slot,p_h:ME.h}))||[]).forEach(o=>OPENS[o.task]=o.n);SETT=(await rpc('okean_admin_settings',{p_slot:ME.slot,p_h:ME.h}))||SETT}catch(e){}}
   if(ME.role==='client'){CI=(await rpc('okean_client_items',{p_slot:ME.slot,p_h:ME.h}))||[]}
   const s=await rpc('okean_state',{p_slot:ME.slot,p_h:ME.h});
   ST={p:{},meta:s.meta||{},days:s.events||[]};(s.progress||[]).forEach(r=>ST.p[r.task_id]=r);
@@ -360,7 +367,7 @@ function navItems(){
   const c=totals(ST.p);
   return [['#/','Обзор','home'],['#/tasks','Задания','tasks',c.revision],['#/lib','Материалы','book'],['#/me','Профиль','user']];
 }
-function isOn(h,cur){if(h==='#/')return cur==='#/'||cur===''||cur==='#';return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
+function isOn(h,cur){if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/(funnel|nudge|settings)/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&cur.startsWith('#/item/'))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
@@ -392,6 +399,9 @@ function render(keep){
     else if(r==='c')html=shell(adClient(a),true);
     else if(r==='u')html=shell(adUser(a),true);
     else if(r==='my')html=shell(stTasks(true),false);
+    else if(r==='funnel')html=shell(adFunnel(),true);
+    else if(r==='nudge')html=shell(adNudge(),true);
+    else if(r==='settings')html=shell(adSettings(),true);
     else if(r==='prog')html=shell(adProg(),false);
     else if(r==='edit')html=shell(adEdit(a),false);
     else if(r==='week')html=shell(weekV(+a),false);
@@ -426,7 +436,7 @@ function homeV(){
   <div class="tiles f4"><div class="tile good"><b>${c.done}</b><span>принято из ${N}</span></div><div class="tile vio"><b>${c.review}</b><span>на проверке у Виктории</span></div><div class="tile ${c.revision?'hot':''}"><b>${c.revision}</b><span>вернулось на доработку</span></div><div class="tile"><b>${st}</b><span>дней подряд в кабинете</span></div></div>
   ${rev.length?`<div class="att"><b style="font-size:14px">Нужна доработка</b>${rev.slice(0,4).map(r=>`<a href="#/task/${r.id}">${esc(r.text)}<small>${esc((ST.p[r.id].feedback||'').slice(0,110))}</small></a>`).join('')}</div>`:''}
   ${nt?`<a class="next" href="#/task/${nt.id}"><small>Сегодня · ${dow}, ${fdate(t)} · ${wlabel(cw)}</small><b>${esc(nt.text)}</b><div class="row"><span class="chip">${cw.dates}</span>${cw.tasks.length&&!wfull(cw)?(lk<0?`<span class="chip warn">срок прошёл ${-lk} дн. назад</span>`:`<span class="chip">до ${fdate(cw.due)}${leftTxt(lk)}</span>`):''}</div></a>`:`<div class="card" style="margin-top:16px"><b>Все открытые задания сданы. Следующая неделя откроется по расписанию.</b></div>`}
-  <h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const op=isOpen(w),cc=wcount(w),T=w.tasks.length||1,d=wfull(w);return `<a class="wk ${d?'done':''} ${w===cw&&!d?'cur':''} ${op?'':'lock'}" href="${op?'#/week/'+w.n:'#/'}" data-lock="${op?'':w.opens}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${op?w.dates:'откроется '+fdate(w.opens)}</span><span>${op&&w.tasks.length?(cc.done+' из '+w.tasks.length)+(cc.review?' · '+cc.review+' на проверке':''):''}</span></span><b>${esc(w.title)}</b><div class="bar"><i style="width:${op?cc.done/T*100:0}%"></i><i class="r" style="width:${op?cc.review/T*100:0}%"></i></div></a>`}).join('')}</div>`;
+  <h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const op=isOpen(w),cc=wcount(w),T=w.tasks.length||1,d=wfull(w);return `<a class="wk ${d?'done':''} ${w===cw&&!d?'cur':''} ${op?'':'lock'}" href="${op?'#/week/'+w.n:'#/'}" data-lock="${op?'':w.opens}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${op?w.dates:'откроется '+fdate(w.opens)}</span><span>${op&&w.tasks.length?(cc.done+' из '+w.tasks.length)+(cc.review?' · '+cc.review+' на проверке':''):''}</span></span><b>${esc(w.title)}${op&&w.opens&&dnum(today())-dnum(w.opens)<=2&&dnum(today())>=dnum(w.opens)&&w.tasks.length&&!wfull(w)?'<span class="nw">новая</span>':''}</b><div class="bar"><i style="width:${op?cc.done/T*100:0}%"></i><i class="r" style="width:${op?cc.review/T*100:0}%"></i></div></a>`}).join('')}</div>`;
 }
 function stTasks(adm){
   const f=window.FLT||'all',c=totals(ST.p);
@@ -512,7 +522,7 @@ function adOverview(){
   const avg=S.length?S.reduce((a,x)=>a+x.c.done/N,0)/S.length:0,risk=S.filter(x=>x.risk);
   const wkAvg=C.weeks.map(w=>{if(!w.tasks.length||!S.length)return 0;return S.reduce((a,x)=>a+wcount(w,x.P).done,0)/(S.length*w.tasks.length)});
   const act=S.filter(x=>x.idle<3).length;
-  return `<h1 class="t">Обзор потока</h1><p class="sub">${fdate(today())}. Участников: ${S.length}.</p>
+  return `<h1 class="t">Обзор потока</h1><p class="sub">${fdate(today())}. Участников: ${S.length}.</p>${subnav('#/')}
   <div class="tiles f4"><div class="tile vio"><b>${q}</b><span>ждут проверки</span></div><div class="tile"><b>${Math.round(avg*100)}%</b><span>среднее выполнение программы</span></div><div class="tile good"><b>${act}</b><span>заходили за последние 3 дня</span></div><div class="tile ${risk.length?'hot':''}"><b>${risk.length}</b><span>в зоне риска${risk.length?': '+risk.map(r=>esc(r.u.name.split(' ')[0])).join(', '):''}</span></div></div>
   ${q?`<a class="next" href="#/queue"><small>Очередь проверки</small><b>${q} ${plur(q,'работа ждёт','работы ждут','работ ждут')} твоего ответа</b></a>`:''}
   <h2 class="t">Прогресс по неделям <small>принято, средний по потоку</small></h2><div class="card"><div class="bars">${C.weeks.map((w,i)=>`<div><span>${Math.round(wkAvg[i]*100)}%</span><i style="height:${Math.max(3,wkAvg[i]*88)}px;${isOpen(w,{})?'':'opacity:.3'}"></i><span>${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span></div>`).join('')}</div></div>
@@ -556,6 +566,58 @@ function adUser(slot){
   <div><h2 class="t">Заметка (только тебе)</h2><div class="card"><textarea id="noteT" style="min-height:80px" placeholder="Личные заметки об участнике">${esc(M.notes||'')}</textarea><div class="row"><button class="btn g s" data-a="note" data-u="${slot}">Сохранить</button></div></div></div></div>
   ${manageBox(u)}
   <h2 class="t">Профиль</h2><div class="card"><div class="idx"><div><small class="l">Имя</small><input type="text" id="pn" value="${esc(u.name)}"></div><div><small class="l">Программа</small><input type="text" id="pp" value="${esc(u.plan)}"></div></div><small class="l" style="margin-top:12px">Траектория</small><div class="tag-in">${C.tracks.map(t=>`<label><input type="checkbox" data-tr="${t.id}" ${trIds(u.track).includes(t.id)?'checked':''}> ${esc(t.name)}</label>`).join('')}</div><div class="row"><button class="btn g s" data-a="prof" data-u="${slot}">Сохранить профиль</button></div>${M.goal?`<p class="sub" style="font-size:13.5px;margin-top:14px"><b style="color:var(--text)">Точка Б участника:</b> ${esc(M.goal)}</p>`:''}</div>`;
+}
+/* ================= аналитика, напоминания, уведомления ================= */
+let OPENS={},SETT={token:false,chat:false};
+const subnav=cur=>`<div class="flt" style="margin-top:14px">${[['#/','Поток'],['#/funnel','Воронка заданий'],['#/nudge','Кого поддержать'],['#/settings','Уведомления']].map(x=>`<a href="${x[0]}" class="sn ${x[0]===cur?'on':''}">${x[1]}</a>`).join('')}</div>`;
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+function adFunnel(){
+  const S=students();if(!S.length)return `<h1 class="t">Воронка заданий</h1>${subnav('#/funnel')}<div class="card" style="margin-top:14px">Участников пока нет.</div>`;
+  const maps=S.map(u=>({u,P:pmap(u.slot),M:mmap(u.slot)}));
+  let worst=null,hot=null;
+  const wk=C.weeks.filter(w=>w.tasks.length).map(w=>{
+    const reached=maps.filter(x=>isOpen(w,x.M)).length;
+    const rows=w.tasks.map(t=>{
+      const a=maps.filter(x=>isOpen(w,x.M)),opened=Math.min(a.length,OPENS[t.id]||0),
+        answered=a.filter(x=>{const p=x.P[t.id];return p&&(p.status!=='todo'||p.answer||p.link)}).length,
+        done=a.filter(x=>stOf(t.id,x.P)==='done').length,rev=a.filter(x=>stOf(t.id,x.P)==='revision').length,subm=a.filter(x=>['review','done','revision'].includes(stOf(t.id,x.P))).length;
+      const r={t,reached:a.length,opened,answered:subm,done,rev};
+      if(a.length>=2&&(!worst||pct(subm,a.length)<worst.p))worst={t,w,p:pct(subm,a.length)};
+      if(subm>=2&&(!hot||pct(rev,subm)>hot.p))hot={t,w,p:pct(rev,subm)};
+      return r});
+    return {w,reached,rows}});
+  const bar=(r)=>{const R=r.reached||1;return `<div class="fun"><i style="width:${pct(r.opened,R)}%" class="f1"></i><i style="width:${pct(r.answered,R)}%" class="f2"></i><i style="width:${pct(r.done,R)}%" class="f3"></i></div>`};
+  return `<h1 class="t">Воронка заданий</h1><p class="sub">Где люди застревают. Программа «${esc(PT)}», участников: ${S.length}.</p>${subnav('#/funnel')}
+  <div class="two" style="margin-top:14px">${worst?`<div class="tile hot"><b style="font-size:22px">${worst.p}%</b><span>меньше всего сдают: «${esc(worst.t.text.slice(0,70))}» (${esc(wlabel(worst.w))})</span></div>`:''}${hot&&hot.p>0?`<div class="tile hot"><b style="font-size:22px">${hot.p}%</b><span>чаще всего возвращаются на доработку: «${esc(hot.t.text.slice(0,70))}»</span></div>`:''}</div>
+  <p class="sub" style="font-size:12.5px;margin-top:14px">Полоса показывает долю от тех, кому неделя открыта: светлая часть открыли задание, средняя сдали, яркая приняты.</p>
+  ${wk.map(x=>`<h2 class="t">${esc(wt(x.w))} <small>открыта ${x.reached} из ${S.length}</small></h2><div class="card p0"><div class="tblw"><table class="tbl min"><thead><tr><th>Задание</th><th>Открыли</th><th>Сдали</th><th>Приняты</th><th>Возвраты</th></tr></thead><tbody>${x.rows.map(r=>`<tr><td class="nm" style="min-width:220px"><b style="font-size:14px;font-weight:600">${esc(r.t.text.slice(0,90))}</b>${bar(r)}</td><td>${r.opened}/${r.reached}</td><td>${r.answered}/${r.reached}</td><td>${r.done}/${r.reached}</td><td>${r.rev?`<span class="st st-revision">${r.rev}</span>`:'<span style="color:var(--muted)">0</span>'}</td></tr>`).join('')}</tbody></table></div></div>`).join('')}`;
+}
+const firstName=n=>String(n||'').split(' ')[0];
+const isPair=n=>/\sи\s/.test(n||'');
+function nudgeList(){
+  const out=[];
+  students().map(stat).forEach(x=>{
+    const n=firstName(x.u.name),pair=isPair(x.u.name),you=pair?'вы':'ты';
+    const lateW=C.weeks.filter(w=>isOpen(w,x.M)&&w.tasks.length&&dnum(w.due)<dnum(today())&&!wsubm(w,x.P));
+    if(lateW.length){const w=lateW[0];out.push({x,why:'Просрочена '+wlabel(w).toLowerCase()+' (срок был '+fdate(w.due)+')',text:`${pair?x.u.name:n}, привет! Срок по этапу «${w.title}» был ${fdate(w.due)}. Что сейчас мешает двигаться? ${pair?'Напишите':'Напиши'}, и подберём, как наверстать без стресса.`})}
+    else if(x.idle>=3&&x.idle<99&&dnum(today())>=dnum((C.weeks[1]||C.weeks[0]).opens))out.push({x,why:'Нет входов '+x.idle+' дн.',text:`${pair?x.u.name:n}, привет! Давно не видно ${pair?'вас':'тебя'} в кабинете. Всё в порядке? Если что-то застопорилось, ${pair?'напишите':'напиши'}, разберёмся вместе.`});
+    else if(x.idle>=99&&dnum(today())>=dnum((C.weeks[1]||C.weeks[0]).opens))out.push({x,why:'Ни разу не заходили в кабинет',text:`${pair?x.u.name:n}, привет! Кабинет уже открыт, программа идёт. ${pair?'Зайдите':'Зайди'} по своему коду и посмотрите первое задание. Если не получается войти, напишите мне.`});
+    const rv=TK.filter(t=>stOf(t.id,x.P)==='revision'&&x.P[t.id]&&(Date.now()-new Date(x.P[t.id].reviewed_at||x.P[t.id].updated_at))>3*864e5);
+    if(rv.length)out.push({x,why:rv.length+' работ на доработке больше 3 дней',text:`${pair?x.u.name:n}, привет! У ${pair?'вас':'тебя'} ${rv.length>1?'есть работы':'есть работа'} на доработке, комментарии в кабинете. Когда ${pair?'сможете':'сможешь'} вернуться к ${rv.length>1?'ним':'ней'}? Если неясно, что поправить, давайте коротко созвонимся.`});
+  });
+  return out;
+}
+function adNudge(){
+  const L=nudgeList();
+  return `<h1 class="t">Кого поддержать</h1><p class="sub">Участники, которым пора написать. Текст готов, скопируй и отправь в личные сообщения.</p>${subnav('#/nudge')}
+  <div style="margin-top:14px">${L.length?L.map((r,i)=>`<div class="rv"><h3>${esc(r.x.u.name)}</h3><div class="meta">${esc(r.why)}</div><div class="ans">${esc(r.text)}</div><div class="row" style="margin-top:0"><button class="btn s" data-a="ncopy" data-i="${i}">Скопировать сообщение</button><a class="btn g s" href="#/u/${r.x.u.slot}">Открыть кабинет</a></div></div>`).join(''):'<div class="card">Все в ритме, писать никому не нужно.</div>'}</div>`;
+}
+function adSettings(){
+  const ok=SETT.token&&SETT.chat;
+  return `<h1 class="t">Уведомления</h1><p class="sub">Telegram-бот пришлёт тебе сообщение, когда участник сдаёт работу или клиент отвечает на согласование. Каждое утро в 9:00 по Москве приходит сводка, если есть что проверить.</p>${subnav('#/settings')}
+  <div class="tiles" style="margin-top:14px"><div class="tile ${ok?'good':'hot'}"><b style="font-size:22px">${ok?'Подключено':'Не подключено'}</b><span>токен бота: ${SETT.token?'есть':'нет'} · твой чат: ${SETT.chat?'найден':'не найден'}</span></div></div>
+  <h2 class="t">Как подключить</h2><div class="card lib"><ul><li><b>1.</b> В Telegram открой <a class="lk" href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, отправь /newbot, придумай имя и ник бота. BotFather пришлёт токен.</li><li><b>2.</b> Вставь токен ниже и нажми «Сохранить токен».</li><li><b>3.</b> Открой своего бота и нажми Start или напиши ему любое слово.</li><li><b>4.</b> Нажми «Найти мой чат», потом «Отправить тест».</li></ul></div>
+  <div class="card" style="margin-top:12px"><small class="l">Токен бота</small><input type="text" id="tgtok" autocomplete="off" placeholder="${SETT.token?'Токен сохранён. Вставь новый, чтобы заменить':'123456789:AA...'}"><div class="row"><button class="btn s" data-a="tgtok">Сохранить токен</button><button class="btn g s" data-a="tgchat">Найти мой чат</button><button class="btn g s" data-a="tgtest" ${ok?'':'disabled'}>Отправить тест</button></div><p class="sub" style="font-size:12.5px;margin-top:10px">Токен хранится на сервере и не показывается снова. Если он утёк, отзови его у BotFather командой /revoke.</p></div>`;
 }
 /* ================= клиенты компании ================= */
 const IK={content:'Согласование',request:'Запросы',report:'Отчёты'};
@@ -700,6 +762,15 @@ const A={
   el.disabled=true;if(await persist(id,'submit')){toast('Отправлено на проверку');location.hash='#/week/'+TM[id].w.n}else el.disabled=false},
  async withdraw(el){if(await persist(el.dataset.id,'withdraw',true)){toast('Задание вернулось к тебе');render(true)}},
 
+ async ncopy(el){const r=nudgeList()[+el.dataset.i];try{await navigator.clipboard.writeText(r.text);toast('Сообщение скопировано')}catch(e){prompt('Скопируй сообщение:',r.text)}},
+ async tgtok(){const v=($('#tgtok').value||'').trim();if(!/^\d{6,12}:[\w-]{30,}$/.test(v)){toast('Токен выглядит иначе. Скопируй его целиком из BotFather');return}
+  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_token',p_v:v})))return;window.TGT=v;SETT.token=true;toast('Токен сохранён');render(true)},
+ async tgchat(){const v=window.TGT||($('#tgtok')&&$('#tgtok').value.trim());if(!v){toast('Вставь токен и нажми «Сохранить токен»');return}
+  let j;try{j=await (await fetch('https://api.telegram.org/bot'+v+'/getUpdates')).json()}catch(e){toast('Не удалось связаться с Telegram. Попробуй ещё раз');return}
+  const m=(j.result||[]).map(u=>(u.message||u.my_chat_member||{}).chat).filter(Boolean).pop();
+  if(!m){toast('Сообщений боту пока нет. Открой бота, нажми Start и повтори');return}
+  if(!await call(()=>rpc('okean_admin_secret_set',{p_slot:ME.slot,p_h:ME.h,p_k:'tg_chat',p_v:String(m.id)})))return;SETT.chat=true;toast('Чат найден: '+(m.first_name||m.title||m.id));render(true)},
+ async tgtest(){if(await call(()=>rpc('okean_admin_tg_test',{p_slot:ME.slot,p_h:ME.h})))toast('Тест отправлен. Проверь Telegram')},
  /* клиенты */
  async cdec(el){const id=+el.dataset.id,d=el.dataset.d,t=($('#cmt')||{}).value||'';
   if(d==='changes'&&!t.trim()){toast('Напишите, что нужно поправить');return}
