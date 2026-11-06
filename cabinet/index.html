@@ -33,9 +33,8 @@ a{color:inherit}
 .tabbar a .bd{position:absolute;margin:-4px 0 0 16px;min-width:16px;height:16px;border-radius:9px;background:var(--v);color:#fff;font-size:10px;display:grid;place-items:center;padding:0 4px}
 svg.i{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(min-width:900px){
- .shell{display:grid;grid-template-columns:240px 1fr}
- .side{display:flex;flex-direction:column;position:sticky;top:0;height:100svh;padding:26px 16px;border-right:1px solid var(--line);background:rgba(15,13,23,.6)}
- .side .brand{padding:0 10px 22px}
+ .shell{display:grid;grid-template-columns:256px 1fr}
+ .side{display:flex;flex-direction:column;position:sticky;top:14px;height:calc(100svh - 28px);margin:14px 0 14px 14px;padding:22px 14px;border:1px solid #1E1A33;border-radius:26px;background:#0D0B1A}
  .side a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;font-size:14.5px;font-weight:600;color:var(--muted);text-decoration:none;margin-bottom:2px}
  .side a svg{width:20px;height:20px;flex:none}
  .side a:hover{color:#fff;background:rgba(255,255,255,.04)}
@@ -223,6 +222,90 @@ small.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 .two{display:grid;gap:14px}
 @media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.hero{grid-template-columns:88px 1fr}.ring{width:88px;height:88px}}
+/* ===== обзор v2 ===== */
+.main.wide{max-width:1180px}
+.hd2{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 2px 4px}
+.hd2 h1{font-size:clamp(26px,4vw,36px);line-height:1.1;font-weight:500;letter-spacing:-.03em}
+.hd2 h1 b{color:var(--vb);font-weight:700}
+.hd2 p{color:var(--muted);margin-top:6px;font-size:15px}
+.sts2{display:flex;gap:22px;flex-wrap:wrap}
+.st2{display:flex;align-items:center;gap:10px}
+.st2 .ic{width:42px;height:42px;border-radius:14px;background:rgba(155,111,232,.18);color:var(--vb);display:grid;place-items:center}
+.st2 .ic svg{width:20px;height:20px}
+.st2 strong{display:block;font-size:30px;font-weight:500;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.st2 span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.g12{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:18px}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+.t2{background:#110F1E;border:1px solid #1E1A33;border-radius:22px;padding:20px;min-width:0}
+.t2 h3{font-size:17px;font-weight:500;display:flex;align-items:center;justify-content:space-between;gap:8px;letter-spacing:-.01em}
+.t2 h3 .go{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);display:grid;place-items:center;color:var(--text);text-decoration:none}
+.t2 h3 .go svg{width:16px;height:16px}
+.dk2{background:linear-gradient(160deg,#2A1B63,#150F33);border-color:rgba(196,164,255,.22)}
+.mu2{color:var(--muted);font-size:13px}
+.dk2 .mu2{color:#B5ADDA}
+.big2{font-size:46px;font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.pl2{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(155,111,232,.18);color:var(--vb);font-weight:600}
+.pl2.w{background:rgba(255,163,163,.14);color:#FFB3B3}.pl2.g{background:rgba(125,221,176,.14);color:var(--ok)}.pl2.d{background:rgba(255,255,255,.12);color:#fff}
+.bt2{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;background:#fff;color:#16112E;font-weight:700;font-size:14px;text-decoration:none}
+.bt2.v{background:linear-gradient(180deg,#B691F8,#8B5CE8 48%,#5B2FBE);color:#fff}
+.bt2 svg{width:15px;height:15px}
+.ck2{display:flex;flex-direction:column;margin-top:10px}
+.rw2{display:flex;align-items:center;gap:12px;padding:9px 0;text-decoration:none;color:inherit}
+.rw2 .b{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:none}
+.rw2 .b svg{width:18px;height:18px}
+.rw2 .x{flex:1;min-width:0}.rw2 .x p{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rw2 .x small{font-size:12px;color:#B5ADDA;display:block}
+.o2{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.3);flex:none;display:grid;place-items:center}
+.o2.k{background:var(--v);border-color:var(--v)}.o2 svg{width:14px;height:14px;stroke:#fff;stroke-width:3}
+.rg2{position:relative;flex:none}.rg2 b{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
+.bars2{display:flex;align-items:flex-end;gap:7px;height:112px;margin-top:14px}
+.bars2 div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%;font-size:11px;color:var(--muted)}
+.bars2 i{width:100%;max-width:16px;border-radius:9px;background:linear-gradient(180deg,#C4A4FF,#7C4FD4);display:block;min-height:4px}
+.bars2 i.f{background:rgba(155,111,232,.25)}
+.pp2{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid #1E1A33;text-decoration:none;color:inherit;cursor:pointer}
+.pp2:first-child{border-top:0}
+.av2{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#9B6FE8,#C4A4FF);display:grid;place-items:center;font-weight:700;color:#1D1545;flex:none}
+.pp2 .x{flex:1;min-width:0}.pp2 .x p{font-weight:500}.pp2 .x small{color:var(--muted);font-size:12px;display:block}
+.cm{font-size:14px;color:var(--muted);margin-top:4px}
+.cal2{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:13px;margin-top:10px}
+.cal2 span{padding:7px 0;border-radius:10px}
+.cal2 .h{color:var(--muted);font-size:11px}
+.cal2 .td{background:linear-gradient(135deg,#9B6FE8,#5B2FBE);color:#fff;font-weight:700}.cal2 .ev{background:rgba(155,111,232,.18);color:var(--vb);font-weight:700}
+.evn2{display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.045)}
+.evn2 .pl{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#9B6FE8,#5B2FBE);color:#fff;display:grid;place-items:center;flex:none}
+.evn2 .pl svg{width:14px;height:14px;fill:#fff;stroke:none}
+.evn2 p{font-weight:500;font-size:14px}.evn2 small{color:var(--muted);font-size:12px;display:block}
+.pmap{padding:0;overflow:hidden;background:#0C0A17 radial-gradient(#241F3B 1.2px,transparent 1.3px) 0 0/16px 16px;position:relative;display:flex;align-items:center}
+.pmap .tt{position:absolute;left:22px;top:18px;z-index:2}.pmap .tt h3{font-size:18px}
+.pmap .sc{width:100%;min-width:0;overflow-x:auto}.pmap svg{display:block;width:100%;min-width:600px;height:auto}
+.pmap .n{font-size:11px;fill:#8F8AA8;font-weight:500}
+.wg2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.wk2{background:#110F1E;border:1px solid #1E1A33;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:112px;text-decoration:none;color:inherit}
+.wk2 .tp{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.wk2 h4{font-size:16.5px;font-weight:500;line-height:1.25;flex:1}
+.wk2 .pr{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.wk2 .tr2{flex:1;height:6px;border-radius:9px;background:rgba(155,111,232,.18);overflow:hidden;display:flex}
+.wk2 .tr2 i{display:block;height:100%;background:linear-gradient(90deg,#7C4FD4,#C4A4FF)}.wk2 .tr2 i.r{background:rgba(196,164,255,.4)}
+.wk2.cur{background:linear-gradient(160deg,#3A2A8A,#1D1545);border-color:rgba(196,164,255,.4);color:#fff}
+.wk2.cur .tp,.wk2.cur .pr{color:#D8CCF7}
+.wk2.lock{background:#0D0B18;color:#5E5977}.wk2.lock .tr2 i{background:#3A3458}
+.lv2{background:linear-gradient(180deg,#3A2A8A 0%,#1D1545 60%,#0E0A26 100%);color:#fff;position:relative;overflow:hidden;min-height:190px;display:flex;flex-direction:column;justify-content:flex-end;border-color:rgba(196,164,255,.22)}
+.lv2:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 10%,rgba(196,164,255,.3),transparent 45%)}
+.lv2>*{position:relative}
+.lv2 h2{font-size:28px;font-weight:500;letter-spacing:-.03em;margin:6px 0 10px}
+.dots2{display:flex;gap:6px}.dots2 i{width:22px;height:6px;border-radius:9px;background:rgba(255,255,255,.2)}.dots2 i.k{background:#fff}
+.it2{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.045);margin-top:10px;text-decoration:none;color:inherit}
+.dk2 .it2{background:rgba(255,255,255,.08)}
+.it2 .tp{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);color:var(--vb);display:grid;place-items:center;flex:none}
+.it2 .tp svg{width:18px;height:18px}
+.it2 .x{flex:1;min-width:0}.it2 .x p{font-weight:500}.it2 .x small{color:var(--muted);font-size:12px;display:block}.dk2 .it2 .x small{color:#B5ADDA}
+.kp2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.kp2 div{padding:14px;border-radius:16px;background:rgba(255,255,255,.045)}.kp2 b{display:block;font-size:26px;font-weight:500;letter-spacing:-.03em}.kp2 span{font-size:12px;color:var(--muted)}
+.logo2{display:flex;align-items:center;gap:10px;padding:0 8px 20px;font-weight:700;letter-spacing:.02em}
+.logo2 i{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#9B6FE8,#5B2FBE);display:grid;place-items:center;font-style:normal;flex:none}
+.logo2 i svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round}
+.logo2 small{display:block;font-weight:400;font-size:11px;color:var(--muted);letter-spacing:0}
+@media(max-width:1100px){.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c8{grid-column:span 12}}
+@media(max-width:640px){.c3,.c4{grid-column:span 12}.wg2{grid-template-columns:1fr}.st2 strong{font-size:26px}.sts2{gap:14px}.big2{font-size:40px}}
 </style>
 </head>
 <body>
@@ -372,7 +455,7 @@ function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
-  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side"><div class="brand">WIKKI.OCEAN</div>${progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
+  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><aside class="side"><div class="logo2"><i><svg viewBox="0 0 24 24"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></i><div>WIKKI.OCEAN<small>Океан влияния</small></div></div>${progSel()}${it.map(link).join('')}<div class="me"><b>${esc(ME.name||'')}</b>${adm?'Управление':ME.role==='client'?'Клиент WIKKI.OCEAN':esc(trNames(ME.track)||ME.plan||'')}<br><button data-a="out">Выйти</button></div></aside>
   <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span></div>${inner}</div>
   <nav class="tabbar"><div>${it.map(link).join('')}</div></nav></div>`;
 }
@@ -390,7 +473,7 @@ function render(keep){
     else if(r==='requests')html=shell(clList('request'));
     else if(r==='reports')html=shell(clList('report'));
     else if(r==='item')html=shell(clItem(a));
-    else html=shell(clHome());
+    else html=shell(clHome(),true);
   }else if(ME.role==='admin'){
     if(r===''||r===undefined)html=shell(adOverview(),true);
     else if(r==='queue')html=shell(adQueue(),true);
@@ -414,7 +497,7 @@ function render(keep){
     else if(r==='task')html=shell(taskV(a),false);
     else if(r==='lib')html=shell(libV(),false);
     else if(r==='me')html=shell(meV(),false);
-    else html=shell(homeV(),false);
+    else html=shell(homeV(),true);
   }
   root.innerHTML=html;
   if(keep)scrollTo(0,y);else scrollTo(0,0);
@@ -422,21 +505,59 @@ function render(keep){
 }
 window.addEventListener('hashchange',()=>{if(ME)render()});
 /* ================= экраны участника ================= */
+/* ===== обзор v2: общие части ===== */
+const SV={arrow:'<svg class="i" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>',play:'<svg viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></svg>',check:'<svg class="i" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',flag:'<svg class="i" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>'};
+const MONN=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const rg2=(p,s,w,txt)=>{const r=(s-w)/2,L=2*Math.PI*r;return `<div class="rg2" style="width:${s}px;height:${s}px"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}"><circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#2A2445" stroke-width="${w}"/><circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="#9B6FE8" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${L*p/100} ${L}" transform="rotate(-90 ${s/2} ${s/2})"/></svg><b style="font-size:${Math.round(s/4.6)}px">${txt==null?p+'%':txt}</b></div>`};
+const hd2=(h,sub,stats)=>`<div class="hd2"><div><h1>${h}</h1><p>${sub}</p></div><div class="sts2">${stats.map(s=>`<div class="st2"><div class="ic">${s[0]}</div><div><strong>${s[1]}</strong><span>${s[2]}</span></div></div>`).join('')}</div></div>`;
+function nextMeet(){let b=null;C.weeks.forEach(w=>(w.meetings||[]).forEach(m=>{if(m.when&&new Date(m.when)>=new Date()&&(!b||new Date(m.when)<new Date(b.when)))b=m}));return b}
+function cal2(){
+  const t=today(),d0=new Date(dnum(t)*864e5),y=d0.getUTCFullYear(),mo=d0.getUTCMonth();
+  const first=Date.UTC(y,mo,1)/864e5,dim=new Date(Date.UTC(y,mo+1,0)).getUTCDate(),lead=(new Date(first*864e5).getUTCDay()+6)%7;
+  const ev=new Set();C.weeks.forEach(w=>{if(w.opens)ev.add(w.opens);(w.meetings||[]).forEach(m=>{if(m.when)ev.add(ymd(new Date(m.when)))})});
+  let h=['пн','вт','ср','чт','пт','сб','вс'].map(x=>`<span class="h">${x}</span>`).join('');
+  for(let i=0;i<lead;i++)h+='<span></span>';
+  for(let d=1;d<=dim;d++){const s=y+'-'+pad(mo+1)+'-'+pad(d);h+=`<span class="${s===t?'td':ev.has(s)?'ev':''}">${d}</span>`}
+  const m=nextMeet();
+  return `<div class="cm">${MONN[mo]} ${y}</div><div class="cal2">${h}</div><div class="evn2"><div class="pl">${SV.play}</div><div><p>${m?esc(m.t):'Живые встречи'}</p><small>${m?esc(whenTxt(m)):'Время и ссылку присылаем в чате группы'}</small></div></div>`;
+}
+const agoTxt=iso=>{if(!iso)return '';const h=Math.floor((Date.now()-new Date(iso))/36e5);return h<1?'только что':h<24?h+' ч назад':Math.floor(h/24)+' дн. назад'};
+const LEV=['Поверхность','Дрейф','Течение','Глубина','Бездна'];
+function pathSvg(){
+  const D='M28 170 C110 40 190 220 270 130 S410 30 470 130 S600 205 696 70';
+  return `<svg viewBox="0 0 720 230" id="pmap"><path id="prd" d="${D}" fill="none" stroke="#241C52" stroke-width="30" stroke-linecap="round"/><path d="${D}" fill="none" stroke="#9B6FE8" stroke-width="2" stroke-dasharray="7 9" stroke-linecap="round"/><g id="pnd"></g></svg>`;
+}
+function placeNodes(list){
+  const p=document.getElementById('prd');if(!p)return;const L=p.getTotalLength();let h='';
+  list.forEach((x,k)=>{const pt=p.getPointAtLength(L*(.03+.94*k/(list.length-1))),up=k%2===0;
+    const body=`<g transform="translate(${pt.x} ${pt.y})">${x.cur?'<circle r="22" fill="#9B6FE8" opacity=".3"/>':''}<circle r="${x.cur?15:12}" fill="${x.done?'#9B6FE8':x.cur?'#fff':'#2A2445'}" stroke="${x.cur?'#9B6FE8':'#0C0A17'}" stroke-width="${x.cur?4:3}"/>${x.done?'<path d="M-4.5 0l3 3 6-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':`<text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="${x.cur?'#5B2FBE':'#8F8AA8'}">${x.n}</text>`}<text class="n" y="${up?-24:34}" text-anchor="middle">${x.l}</text></g>`;
+    h+=x.open?`<a href="#/week/${x.w}">${body}</a>`:body});
+  document.getElementById('pnd').innerHTML=h;
+}
 function homeV(){
-  const N=TK.length,c=totals(ST.p),cw=curWeek(ST.p),m=depthOf(ST.p),st=streak(ST.days),R=2*Math.PI*46;
+  const N=TK.length,c=totals(ST.p),cw=curWeek(ST.p),m=depthOf(ST.p),st=streak(ST.days);
   const nt=cw.tasks.find(t=>['todo','revision'].includes(stOf(t.id)));
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]);
   const rev=TK.filter(t=>stOf(t.id)==='revision'&&isOpen(t.w));
-  const t=today(),dow=WD[new Date(dnum(t)*864e5).getUTCDay()],lk=dueLeft(cw);
-  const nm=ME.name,you=/\sи\s/.test(nm||'')?'вы':'ты';
+  const nm=ME.name,you=/\sи\s/.test(nm||'')?'вы':'ты',lk=dueLeft(cw),pc=Math.round(c.done/N*100);
+  const lvl=Math.min(4,Math.floor(m/1000));
+  const today3=cw.tasks.filter(t=>stOf(t.id)!=='done').slice(0,3);
+  window.AFTER=()=>placeNodes(C.weeks.map(w=>({w:w.n,n:w.n===0?'0':w.n>6?'+':w.n,l:w.n===0?'Старт':w.n>6?'+'+(w.n-6):'Нед. '+w.n,done:wfull(w),cur:w===cw&&!wfull(w),open:isOpen(w)})));
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  <h1 class="t">${nm?esc(nm)+', '+you:'Ты'} на глубине</h1>
-  <div class="hero"><div class="ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="46"/><circle class="rv" cx="50" cy="50" r="46" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-(c.done+c.review)/N)}"/><circle class="fg" cx="50" cy="50" r="46" stroke-dasharray="${R}" stroke-dashoffset="${R*(1-c.done/N)}"/></svg><b>${Math.round(c.done/N*100)}%</b></div>
-  <div class="depth"><div class="m">${fmt(m)} <small>из 5 000 м</small></div><p>Глубина считается по сданным заданиям. Светлая часть кольца: на проверке. Яркая: принято.</p></div></div>
-  <div class="tiles f4"><div class="tile good"><b>${c.done}</b><span>принято из ${N}</span></div><div class="tile vio"><b>${c.review}</b><span>на проверке у Виктории</span></div><div class="tile ${c.revision?'hot':''}"><b>${c.revision}</b><span>вернулось на доработку</span></div><div class="tile"><b>${st}</b><span>дней подряд в кабинете</span></div></div>
-  ${rev.length?`<div class="att"><b style="font-size:14px">Нужна доработка</b>${rev.slice(0,4).map(r=>`<a href="#/task/${r.id}">${esc(r.text)}<small>${esc((ST.p[r.id].feedback||'').slice(0,110))}</small></a>`).join('')}</div>`:''}
-  ${nt?`<a class="next" href="#/task/${nt.id}"><small>Сегодня · ${dow}, ${fdate(t)} · ${wlabel(cw)}</small><b>${esc(nt.text)}</b><div class="row"><span class="chip">${cw.dates}</span>${cw.tasks.length&&!wfull(cw)?(lk<0?`<span class="chip warn">срок прошёл ${-lk} дн. назад</span>`:`<span class="chip">до ${fdate(cw.due)}${leftTxt(lk)}</span>`):''}</div></a>`:`<div class="card" style="margin-top:16px"><b>Все открытые задания сданы. Следующая неделя откроется по расписанию.</b></div>`}
-  <h2 class="t">Маршрут</h2><div class="path">${C.weeks.map(w=>{const op=isOpen(w),cc=wcount(w),T=w.tasks.length||1,d=wfull(w);return `<a class="wk ${d?'done':''} ${w===cw&&!d?'cur':''} ${op?'':'lock'}" href="${op?'#/week/'+w.n:'#/'}" data-lock="${op?'':w.opens}"><span class="n">${w.n===0?'0':w.n>6?'+':w.n}</span><span class="k"><span>${op?w.dates:'откроется '+fdate(w.opens)}</span><span>${op&&w.tasks.length?(cc.done+' из '+w.tasks.length)+(cc.review?' · '+cc.review+' на проверке':''):''}</span></span><b>${esc(w.title)}${op&&w.opens&&dnum(today())-dnum(w.opens)<=2&&dnum(today())>=dnum(w.opens)&&w.tasks.length&&!wfull(w)?'<span class="nw">новая</span>':''}</b><div class="bar"><i style="width:${op?cc.done/T*100:0}%"></i><i class="r" style="width:${op?cc.review/T*100:0}%"></i></div></a>`}).join('')}</div>`;
+  ${hd2(`Привет, <b>${esc(firstName(nm)||'друг')}</b>`,`${esc(wlabel(cw))}: ${esc(cw.title)}${cw.tasks.length&&!wfull(cw)?(lk<0?' · срок прошёл':' · до '+fdate(cw.due)+leftTxt(lk)):''}`,[[ico('tasks'),c.done+'<span style="display:inline;font-size:15px;color:var(--muted)"> / '+N+'</span>','задач принято'],[SV.flag,st,'дней подряд']])}
+  <div class="g12">
+   <div class="t2 pmap c8"><div class="tt"><h3>Твой путь</h3></div><div class="sc">${pathSvg()}</div></div>
+   <div class="t2 dk2 c4"><h3>Сегодня <span class="pl2 d">${esc(wlabel(cw))}</span></h3>
+    <div class="ck2">${today3.length?today3.map(t=>{const s=stOf(t.id);return `<a class="rw2" href="#/task/${t.id}"><div class="b">${ico('doc')}</div><div class="x"><p>${esc(t.text)}</p><small>${SL[s].toLowerCase()}</small></div><div class="o2 ${s==='review'?'k':''}">${s==='review'?SV.check:''}</div></a>`}).join(''):'<p class="mu2" style="padding:12px 0">Все задания недели сданы. Следующая откроется по расписанию.</p>'}</div>
+    ${nt?`<div style="margin-top:12px"><a class="bt2" href="#/task/${nt.id}">Продолжить задачу ${SV.arrow}</a></div>`:''}</div>
+   <div class="t2 c4"><h3>Прогресс</h3><div style="display:flex;align-items:center;gap:14px;margin-top:14px">${rg2(pc,78,9)}<div><div class="mu2">принято ${c.done}</div><div class="mu2">осталось ${N-c.done}</div></div></div></div>
+   <div class="t2 c4"><h3>На проверке</h3><div class="big2" style="margin-top:12px">${c.review}</div><div class="mu2" style="margin-top:6px">${c.review?'ответ обычно за сутки':'пока ничего не отправлено'}</div></div>
+   <div class="t2 c4"><h3>Доработка</h3>${rev.length?`<div style="margin-top:12px"><span class="pl2 w">${rev.length} ${plur(rev.length,'работа','работы','работ')}</span></div>${rev.slice(0,2).map(r=>`<a href="#/task/${r.id}" class="mu2" style="display:block;margin-top:8px;text-decoration:none">«${esc((ST.p[r.id].feedback||r.text).slice(0,70))}»</a>`).join('')}`:`<div class="mu2" style="margin-top:14px">Возвратов нет.</div>`}</div>
+   <div class="c8" style="min-width:0"><div class="mu2" style="padding:0 4px 10px;font-weight:600">Программа</div><div class="wg2">${C.weeks.map(w=>{const op=isOpen(w),cc=wcount(w),T=w.tasks.length||1,cur=w===cw&&!wfull(w);return `<a class="wk2 ${cur?'cur':''} ${op?'':'lock'}" href="${op?'#/week/'+w.n:'#/'}"><div class="tp"><span>${op?esc(w.dates):'откроется '+fdate(w.opens)}</span><span>${w.tasks.length?w.tasks.length+' '+plur(w.tasks.length,'задача','задачи','задач'):''}</span></div><h4>${esc(w.title)}</h4><div class="pr"><div class="tr2"><i style="width:${op?cc.done/T*100:0}%"></i><i class="r" style="width:${op?cc.review/T*100:0}%"></i></div><span>${op&&w.tasks.length?Math.round(cc.done/T*100)+'%':''}</span></div></a>`}).join('')}</div></div>
+   <div class="c4" style="min-width:0;display:flex;flex-direction:column;gap:14px">
+    <div class="t2 lv2"><span class="pl2 d" style="width:max-content">Твоя глубина</span><h2>${LEV[lvl]}</h2><div class="dots2">${LEV.map((_,i)=>`<i class="${i<=lvl?'k':''}"></i>`).join('')}</div><div style="font-size:12px;color:#C9C2E6;margin-top:8px">${fmt(m)} из 5 000 м</div></div>
+    <div class="t2"><h3>Встречи</h3>${cal2()}</div></div>
+  </div>`;
 }
 function stTasks(adm){
   const f=window.FLT||'all',c=totals(ST.p);
@@ -518,18 +639,27 @@ function stat(u){
 }
 function actStrip(days){const s=new Set(days),t=dnum(today());let h='';for(let i=13;i>=0;i--)h+=`<i class="${s.has(ymdOf(t-i))?'on':''}" title="${ymdOf(t-i)}"></i>`;return `<span class="act">${h}</span>`}
 function adOverview(){
-  const S=students().map(stat),N=TK.length,q=(AD.progress||[]).filter(p=>p.status==='review').length;
+  const S=students().map(stat),N=TK.length,rv=(AD.progress||[]).filter(p=>p.status==='review').sort((a,b)=>new Date(a.submitted_at)-new Date(b.submitted_at)),q=rv.length;
   const avg=S.length?S.reduce((a,x)=>a+x.c.done/N,0)/S.length:0,risk=S.filter(x=>x.risk);
-  const wkAvg=C.weeks.map(w=>{if(!w.tasks.length||!S.length)return 0;return S.reduce((a,x)=>a+wcount(w,x.P).done,0)/(S.length*w.tasks.length)});
-  const act=S.filter(x=>x.idle<3).length;
-  return `<h1 class="t">Обзор потока</h1><p class="sub">${fdate(today())}. Участников: ${S.length}.</p>${subnav('#/')}
-  <div class="tiles f4"><div class="tile vio"><b>${q}</b><span>ждут проверки</span></div><div class="tile"><b>${Math.round(avg*100)}%</b><span>среднее выполнение программы</span></div><div class="tile good"><b>${act}</b><span>заходили за последние 3 дня</span></div><div class="tile ${risk.length?'hot':''}"><b>${risk.length}</b><span>в зоне риска${risk.length?': '+risk.map(r=>esc(r.u.name.split(' ')[0])).join(', '):''}</span></div></div>
-  ${q?`<a class="next" href="#/queue"><small>Очередь проверки</small><b>${q} ${plur(q,'работа ждёт','работы ждут','работ ждут')} твоего ответа</b></a>`:''}
-  <h2 class="t">Прогресс по неделям <small>принято, средний по потоку</small></h2><div class="card"><div class="bars">${C.weeks.map((w,i)=>`<div><span>${Math.round(wkAvg[i]*100)}%</span><i style="height:${Math.max(3,wkAvg[i]*88)}px;${isOpen(w,{})?'':'opacity:.3'}"></i><span>${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span></div>`).join('')}</div></div>
-  <h2 class="t">Карта потока <small>строки: участники, столбцы: недели</small></h2><div class="card"><div class="tblw"><div class="heat" style="grid-template-columns:130px repeat(11,minmax(34px,1fr));min-width:560px"><span></span>${C.weeks.map(w=>`<span class="h">${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span>`).join('')}
-  ${S.map(x=>`<a class="nm" href="#/u/${x.u.slot}" style="text-decoration:none">${esc(x.u.name)}</a>${C.weeks.map(w=>{if(!w.tasks.length)return '<span></span>';const op=isOpen(w,x.M),cc=wcount(w,x.P),v=(cc.done+cc.review*.5)/w.tasks.length;return op?`<a href="#/u/${x.u.slot}" class="cell" style="background:rgba(155,111,232,${(.1+v*.8).toFixed(2)});text-decoration:none">${Math.round(cc.done/w.tasks.length*100)}${cc.review?'<span class="dot"></span>':''}</a>`:'<span class="cell lk0">·</span>'}).join('')}`).join('')}</div></div>
-  <p class="sub" style="font-size:12.5px;margin-top:10px">Число: процент принятых заданий недели. Красная точка: есть работы на проверке.</p></div>
-  <h2 class="t">Участники программ</h2>${peopleTable(S)}${(()=>{const cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name);return cl.length?`<h2 class="t">Клиенты <small><a href="#/clients" class="lk">все клиенты</a></small></h2>${clientsTable(cl.map(clientStat))}`:''})()}`;
+  const cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(clientStat);
+  const days=[];for(let i=6;i>=0;i--){const d=ymdOf(dnum(today())-i);days.push([d,(AD.progress||[]).filter(p=>p.submitted_at&&ymd(new Date(p.submitted_at))===d).length])}
+  const tot=days.reduce((a,x)=>a+x[1],0),mx=Math.max(1,...days.map(x=>x[1]));
+  const uname=slot=>((AD.users||[]).find(u=>u.slot===slot)||{}).name||'';
+  return `${hd2('Привет, <b>Виктория</b>',fdate(today())+'. Программа «'+esc(PT||'')+'»',[[ico('users'),S.length,'участников'],[ico('tasks'),q,'на проверке'],[ico('brief'),cl.length,plur(cl.length,'клиент','клиента','клиентов')]])}${subnav('#/')}
+  <div class="g12">
+   <div class="t2 dk2 c5"><h3>Ждут проверки <span class="big2" style="font-size:30px">${q}</span></h3>
+    <div class="ck2">${rv.slice(0,3).map(p=>`<a class="rw2" href="#/queue"><div class="b">${ico('doc')}</div><div class="x"><p>${esc(firstName(uname(p.slot)))}: ${esc(((TM[p.task_id]||{}).text)||p.task_id)}</p><small>ждёт ${agoTxt(p.submitted_at)}</small></div><div class="o2"></div></a>`).join('')||'<p class="mu2" style="padding:12px 0">Очередь пуста.</p>'}</div>
+    ${q?`<div style="margin-top:12px"><a class="bt2" href="#/queue">Открыть очередь ${SV.arrow}</a></div>`:''}</div>
+   <div class="t2 c4"><h3>Сдачи за 7 дней</h3><div class="big2" style="margin-top:12px">${tot}</div><div class="mu2" style="margin-top:4px">${plur(tot,'работа','работы','работ')} за неделю</div>
+    <div class="bars2">${days.map((d,k)=>`<div><i class="${k===6?'f':''}" style="height:${Math.max(4,d[1]/mx*70)}px"></i>${['вс','пн','вт','ср','чт','пт','сб'][new Date(dnum(d[0])*864e5).getUTCDay()]}</div>`).join('')}</div></div>
+   <div class="t2 c3"><h3>Прогресс группы</h3><div style="display:flex;justify-content:center;margin:14px 0 8px">${rg2(Math.round(avg*100),118,13)}</div><div class="mu2" style="text-align:center">${risk.length?'в зоне риска: '+risk.map(r=>esc(firstName(r.u.name))).join(', '):'в среднем по '+S.length+' участникам'}</div></div>
+   <div class="t2 c7"><h3>Участники <a class="go" href="#/people">${SV.arrow}</a></h3>
+    <div style="margin-top:8px">${S.map(x=>`<div class="pp2" data-a="go" data-h="#/u/${x.u.slot}"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.c.review?x.c.review+' на проверке · ':''}${x.risk?esc(x.reasons.join('; ')):x.ls?(x.idle===0?'заходил(а) сегодня':'был(а) '+x.idle+' дн. назад'):'ещё не заходил(а)'}</small></div>${rg2(pct(x.c.done,x.N),44,6)}</div>`).join('')||'<p class="mu2" style="padding:14px 0">Участников пока нет.</p>'}</div></div>
+   <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
+   <div class="t2 c12"><h3>Карта потока <span class="mu2">строки: участники, столбцы: недели</span></h3><div class="tblw" style="margin-top:12px"><div class="heat" style="grid-template-columns:130px repeat(11,minmax(34px,1fr));min-width:560px"><span></span>${C.weeks.map(w=>`<span class="h">${w.n===0?'0':w.n>6?'+'+(w.n-6):w.n}</span>`).join('')}
+   ${S.map(x=>`<a class="nm" href="#/u/${x.u.slot}" style="text-decoration:none">${esc(x.u.name)}</a>${C.weeks.map(w=>{if(!w.tasks.length)return '<span></span>';const op=isOpen(w,x.M),cc=wcount(w,x.P),v=(cc.done+cc.review*.5)/w.tasks.length;return op?`<a href="#/u/${x.u.slot}" class="cell" style="background:rgba(155,111,232,${(.1+v*.8).toFixed(2)});text-decoration:none">${Math.round(cc.done/w.tasks.length*100)}${cc.review?'<span class="dot"></span>':''}</a>`:'<span class="cell lk0">·</span>'}).join('')}`).join('')}</div></div></div>
+   ${cl.length?`<div class="t2 c12"><h3>Клиенты <a class="go" href="#/clients">${SV.arrow}</a></h3>${cl.map(x=>`<div class="it2" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="tp">${ico('brief')}</div><div class="x"><p>${esc(x.u.name)}</p><small>${x.pc+x.pr?x.pc+' контента · '+x.pr+' запросов ждут клиента':'всё согласовано'}${x.ch?' · '+x.ch+' на правках':''}</small></div>${x.pc+x.pr?'<span class="pl2 w">ждём ответ</span>':'<span class="pl2 g">ок</span>'}</div>`).join('')}</div>`:''}
+  </div>`;
 }
 function peopleTable(S){
   return `<div class="card"><div class="tblw"><table class="tbl min"><thead><tr><th>Участник</th><th>Прогресс</th><th>Проверка</th><th>Активность</th><th></th></tr></thead><tbody>${S.map(x=>`<tr class="lnk" data-a="go" data-h="#/u/${x.u.slot}"><td class="nm"><b>${esc(x.u.name)}</b><small>${esc(trNames(x.u.track)||'траектория не задана')}</small></td><td><div class="mini"><i style="width:${x.c.done/x.N*100}%"></i><i class="r" style="width:${x.c.review/x.N*100}%"></i></div><small style="color:var(--muted);font-size:12px">${x.c.done} из ${x.N}</small></td><td>${x.c.review?`<span class="st st-review">${x.c.review} на проверке</span>`:''}${x.c.revision?` <span class="st st-revision">${x.c.revision} возвр.</span>`:''}</td><td>${actStrip(daysOf(x.u.slot))}<br><small style="color:var(--muted);font-size:12px">${x.ls?(x.idle===0?'сегодня':x.idle+' дн. назад'):'не заходил(а)'}</small></td><td>${x.risk?`<span class="risk" title="${esc(x.reasons.join('; '))}">риск</span>`:''}</td></tr>`).join('')}</tbody></table></div></div>`;
@@ -629,13 +759,15 @@ function clHome(){
   const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1);
   const pc=pend.filter(i=>i.kind==='content').length,pr=pend.length-pc,kpi=ST.meta.kpi||[];
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),rep=CI.filter(i=>i.kind==='report')[0];
-  const tile=k=>`<div class="tile"><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`;
+  const row=i=>`<a class="it2" href="#/item/${i.id}"><div class="tp">${ico(i.kind==='request'?'chat':'doc')}</div><div class="x"><p>${esc(i.title)}</p><small>${esc(IK[i.kind])}${i.due?' · до '+fdate(i.due):''}</small></div><span class="bt2" style="padding:9px 16px">Открыть</span></a>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от команды</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  <h1 class="t">${esc(ME.name||'Добро пожаловать')}</h1><p class="sub">Здесь вы согласуете контент, смотрите отчёты и отвечаете на запросы команды.</p>
-  <div class="tiles f4"><div class="tile vio"><b>${pc}</b><span>на согласовании</span></div><div class="tile ${pr?'hot':''}"><b>${pr}</b><span>запросов к вам</span></div>${kpi.slice(0,2).map(tile).join('')}</div>
-  ${kpi.length>2?`<div class="tiles f4" style="margin-top:10px">${kpi.slice(2,6).map(tile).join('')}</div>`:''}
-  <h2 class="t">Ждёт вашего решения</h2>${pend.length?`<div class="card p0">${pend.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<div class="card">Всё согласовано. Новые материалы появятся здесь.</div>'}
-  ${rep?`<h2 class="t">Последний отчёт</h2><div class="card p0">${itemRow(rep,'#/item/'+rep.id)}</div>`:''}
+  ${hd2(`Привет, <b>${esc(ME.name||'')}</b>`,'Здесь вы согласуете контент, смотрите отчёты и отвечаете на запросы команды.',[[ico('tasks'),pc,'на согласовании'],[ico('chat'),pr,plur(pr,'запрос','запроса','запросов')+' к вам']])}
+  <div class="g12">
+   <div class="t2 dk2 c7"><h3>Ждёт вашего решения <span class="big2" style="font-size:30px">${pend.length}</span></h3>${pend.length?pend.map(row).join(''):'<p class="mu2" style="padding:14px 0">Всё согласовано. Новые материалы появятся здесь.</p>'}</div>
+   <div class="t2 c5"><h3>Показатели</h3>${kpi.length?`<div class="kp2">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div>`:'<p class="mu2" style="margin-top:12px">Цифры появятся после первого отчёта.</p>'}</div>
+   <div class="t2 c6"><h3>Запросы команды</h3><p class="mu2" style="margin-top:8px">${pr?pr+' '+plur(pr,'запрос ждёт','запроса ждут','запросов ждут')+' вашего ответа.':'Новых запросов нет.'}</p><div style="margin-top:14px"><a class="bt2 v" href="#/requests">Открыть запросы</a></div></div>
+   <div class="t2 c6"><h3>Последний отчёт</h3>${rep?`<a class="it2" href="#/item/${rep.id}"><div class="tp">${ico('doc')}</div><div class="x"><p>${esc(rep.title)}</p><small>${fdate(rep.created_at)}</small></div></a>`:'<p class="mu2" style="margin-top:8px">Отчётов пока нет.</p>'}</div>
+  </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
 function clList(kind){
