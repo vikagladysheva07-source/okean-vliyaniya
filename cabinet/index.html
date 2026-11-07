@@ -826,6 +826,9 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .main.wide:has(.kb){max-width:1280px}
 
 .lkb{color:#C4A4FF;text-decoration:underline;font:inherit;cursor:pointer;background:none;border:0;padding:0}
+
+.topout{margin-left:12px;font-size:13px;color:var(--muted);text-decoration:underline}
+.top .who{display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -980,7 +983,7 @@ function navItems(){
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
   const c=totals(ST.p);
-  return [['#/','Обзор','home'],['#/tasks','Задания','tasks',c.revision],['#/me','Профиль','user']];
+  return [['#/','Обзор','home'],['#/tasks','Задачи','tasks']];
 }
 function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
@@ -988,7 +991,7 @@ function shell(inner,wide){
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
   return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><header class="tnav"><div class="tin"><div class="logo2"><i class="lg"><img src="shark-mark.png" alt=""></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div><nav class="tnl">${it.map(link).join('')}</nav><div class="tr">${cur==='#/'||cur===''?'':progSel()}${ME.role==='client'?'':`<span class="tn">${esc(ME.name||'')}</span>`}<button data-a="out">Выйти</button></div></div></header>
-  <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span></div>${inner}</div>
+  <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span>${(!adm&&ME.role!=='client')?'<button class="topout" data-a="out">Выйти</button>':''}</div>${inner}</div>
   <nav class="tabbar"><div>${it.map(link).join('')}</div></nav></div>`;
 }
 function gate(msg){
@@ -1131,16 +1134,15 @@ function homeV(){
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
   /* цель программы + кольцо прогресса */
-  const R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT;
+  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT;
   const ring=`<div class="sx sxr"><div class="sxgh"><span>Цель программы</span>${!gedit?`<button class="sxar" data-a="gedit" aria-label="Записать цель" title="${gv?'Изменить цель':'Записать цель'}">✎</button>`:''}</div>
    ${gedit?`<textarea id="wg-t" class="sxgt" maxlength="300" placeholder="Например: 5 клиентов по 80 000 ₽ к концу программы">${esc(gv)}</textarea><div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
    :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>`}
-   <div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${pp}%</b></div></div>
-   <div class="sxgf">Принято ${c.done} из ${N} ${plur(N,'задания','заданий','заданий')}</div></div>`;
+   <div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
+   <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div>`;
   /* программа: блок на каждую неделю */
   const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.filter(vis).length,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
-    const segs=[...Array(Math.max(T,1))].map((_,k)=>`<i class="${op&&k<cc.done?'on':''}"></i>`).join('');
-    return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><em>${esc(num)}${cur?' · сейчас':''}</em><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2g">${segs}${op&&T?`<span>${f?'принята':cc.done+' из '+T}</span>`:''}</div><i class="sxw2a">${f?SV.check:ico('chev')}</i></a>`}).join('');
+    return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><em>${esc(num)}${cur?' · сейчас':''}</em><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2g">${f?'<span>неделя принята</span>':''}</div><i class="sxw2a">${f?SV.check:ico('chev')}</i></a>`}).join('');
   const prog=`<div class="sx sxa0"><div class="sxh">Программа</div><div class="sxwg">${wb}</div></div>`;
   /* задачи: один список (задания недели + свои), листание недель */
   const VT=V.filter(w=>w.tasks.length);let ti=VT.findIndex(w=>w.n===window.TKW);if(ti<0)ti=Math.max(0,VT.findIndex(w=>wcur(w,cw)));
@@ -1157,10 +1159,10 @@ function homeV(){
     const t=it.t,st2=it.s;
     return it.o?trow(t.id,'p',ttx(t),st2==='done',nid===t.id,stateOfP(t.id)==='doing'):`<div class="sxtd lk"><span class="sxck2"></span><span class="sxtt">${esc(ttx(t))}</span></div>`}).join('');
   const add=top?`<div class="sxadd"><input id="td-i" type="text" maxlength="140" data-w="${TW.n}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`:'';
-  const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?tdn+' из '+items.length:'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
+  const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?(TW.due&&!TW.sup?'до '+fdate(TW.due):''):'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
    <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('tasks')}</span><div><b>${c.done}</b><small>принято из ${N}</small></div></div><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
+  <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
   
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal2()}`;
 }
@@ -1198,8 +1200,8 @@ function stTasks(adm){
   const addc=`<div class="sxadd" style="margin:0 0 10px"><input id="td-i" type="text" maxlength="140" data-w="${cwn===undefined?'':cwn}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`;
   return `<h1 class="t">${adm?'Программа':'Задачи'}</h1>
   <div class="fbar2" style="margin-top:14px"><div class="fsrch"><input type="search" id="pf-q" placeholder="Поиск по задачам" value="${esc(f.q)}"></div><button class="ftb ${n?'on':''}" data-a="pbfx">Фильтры${n?` <b>${n}</b>`:''}</button></div>${n?`<div class="fpills">${pills.join('')}<button class="fclr" data-a="pbfreset">Сбросить</button></div>`:''}${panel}
-  <div class="ktabs" style="margin-top:14px">${COLS.map(([k,nm])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${nm} <em>${cards[k].length}</em></button>`).join('')}</div>
-  <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b><span class="pl2">${cards[k].length}</span></div>${k==='todo'?addc:''}<div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">Пусто</div>'}</div></div>`).join('')}</div>
+  <div class="ktabs" style="margin-top:14px">${COLS.map(([k,nm])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${nm}</button>`).join('')}</div>
+  <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b></div>${k==='todo'?addc:''}<div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">Пусто</div>'}</div></div>`).join('')}</div>
   ${Object.keys(((ST.meta.refl||{}).hid)||{}).length?`<p class="mu2" style="margin-top:12px">Удалено задач: ${Object.keys(ST.meta.refl.hid).length}. <button class="lkb" data-a="hidreset">Вернуть</button></p>`:''}${locked.length?`<p class="mu2" style="margin-top:12px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}${taskModal2()}`;
 }
 function taskV(id){
@@ -1233,7 +1235,7 @@ function weekV(n){
     <div class="sxrow"><button class="sxbtn" data-a="prisave" data-n="${n}">Сохранить</button><button class="sxbtn g" data-a="pricancel">Отмена</button>${Array.isArray(own)?`<button class="sxbtn g" data-a="prireset" data-n="${n}">Вернуть как в программе</button>`:''}</div></div>`
    :`<div class="sx wk3"><div class="sxh">Приоритеты недели${ME.role==='student'?`<button class="sxar" data-a="priedit" data-n="${n}" aria-label="Изменить приоритеты" title="Изменить">✎</button>`:''}</div>${PR.length?PR.map((x,i)=>`<div class="wkp"><span>${i+1}</span><div><b>${esc(x.t)}</b>${x.h?`<small>${esc(x.h)}</small>`:''}</div></div>`).join(''):'<p class="sxsub">Приоритеты на эту неделю ещё не заданы.</p>'}</div>`;
   const TXw=((ST.meta.refl||{}).tx)||{};
-  const tasks=`<div class="sx wk3"><div class="sxh">Задания<span class="sxsub">${cc.done} из ${w.tasks.filter(vis).length}</span></div><div class="wktl">${w.tasks.filter(vis).map(t=>{const d=stOf(t.id)==='done';return `<div class="sxtd td"><button class="sxcb" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${t.id}" data-k="p">${esc(TXw[t.id]||t.text)}</button></div>`}).join('')}</div></div>`;
+  const tasks=`<div class="sx wk3"><div class="sxh">Задания</div><div class="wktl">${w.tasks.filter(vis).map(t=>{const d=stOf(t.id)==='done';return `<div class="sxtd td"><button class="sxcb" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${t.id}" data-k="p">${esc(TXw[t.id]||t.text)}</button></div>`}).join('')}</div></div>`;
   const F=[['a','Что сделал','Факты и цифры, ссылки на результаты'],['b','Главный результат недели','Одно число или одна фраза'],['c','Что мешало','Коротко'],['d','Что беру на следующую неделю','Один шаг']];
   const rep=`<div class="sx wk3"><div class="sxh">Отчёт<span class="sxsub">${rs==='done'?'принят':rs==='review'?'на проверке':'сдаёшь в конце недели'}</span></div>
    ${rs==='revision'?`<div class="fbk bad"><small>Вернулось на доработку${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback||'Посмотри комментарий и доработай.')}</p></div>`:''}${rs==='done'&&r.feedback?`<div class="fbk"><small>Комментарий${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback)}</p></div>`:''}
@@ -1254,11 +1256,11 @@ function libV(){
   <div style="margin-top:16px"><a class="btn" style="width:100%" href="https://t.me/${C.telegram}" target="_blank" rel="noopener">Написать Виктории</a></div>`;
 }
 function meV(){
-  const tn=trNames(ME.track),idx=ST.meta.idx||{start:'',final:''};
-  return `<h1 class="t">Профиль</h1>
-  <div class="card"><small class="l">Имя</small><b>${esc(ME.name)}</b>${ME.plan?`<small class="l" style="margin-top:12px">Программа</small><b>${esc(ME.plan)}</b>`:''}<small class="l" style="margin-top:14px">Моя точка Б через 3 месяца</small><textarea id="gl" data-m="goal" style="min-height:80px" placeholder="Например: 5 клиентов по 80 000 ₽">${esc(ST.meta.goal||'')}</textarea></div>
-  <h2 class="t">Индекс влияния</h2><div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="numeric" id="i1" placeholder="из 50" value="${esc(idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="numeric" id="i2" placeholder="из 50" value="${esc(idx.final)}"></div></div>
-  <p class="sub" style="font-size:13px;margin-top:10px">Тест на странице программы. ${idx.start&&idx.final?'Рост: <b style="color:#fff">'+(+idx.final-+idx.start>=0?'+':'')+(+idx.final-+idx.start)+'</b>':''}</p><div style="margin-top:10px"><a class="btn g s" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a></div></div>
+  const idx=ST.meta.idx||{start:'',final:''};
+  return `<a class="back" href="#/">← Обзор</a><h1 class="t" style="margin-top:6px">Индекс влияния</h1>
+  <p class="sub">Результат теста из 50. Стартовый вписываешь сейчас, итоговый в конце программы.</p>
+  <div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="decimal" id="i1" placeholder="из 50" value="${esc(idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="decimal" id="i2" placeholder="из 50" value="${esc(idx.final)}"></div></div>
+  <div style="margin-top:14px"><a class="btn g s" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a></div></div>
   <div style="margin-top:20px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
 /* ================= управление ================= */
