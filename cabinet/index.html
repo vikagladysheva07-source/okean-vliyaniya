@@ -925,6 +925,17 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 @media(max-width:700px){.sxgm{grid-template-columns:1fr}}
 
 @media(min-width:1181px){.sxp{align-self:start!important;aspect-ratio:4/5;min-height:0!important}}
+
+/* ученики в обзоре и проверка внутри кабинета */
+.asg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px}
+.asc{display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(196,164,255,.14);cursor:pointer;position:relative;flex-wrap:wrap}
+.asc:hover{border-color:rgba(196,164,255,.4)}
+.asa{width:52px;height:52px;border-radius:50%;overflow:hidden;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(196,164,255,.25);font-size:20px;font-weight:500}.asa img{width:100%;height:100%;object-fit:cover}
+.asx{flex:1;min-width:0}.asx b{display:block;font-weight:500;font-size:15.5px}.asx small{color:var(--muted);font-size:12px}
+.asp{flex:none}.asc .bt2{flex:none}
+.asrv{margin:0 0 18px;padding:16px;border-radius:22px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.04)}.asrv h3{font-size:15px;font-weight:500;margin:0 0 8px}
+
+.asp{background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.18)!important}.asp b{color:#fff!important}
 </style>
 </head>
 <body>
@@ -1142,10 +1153,12 @@ function asView(slot,rest){
   if(pg){C=pg.content;PT=pg.title;CURP=u.program;rebuildTK()}
   ME=Object.assign({},u,{h:real.ME.h});ST={p:pmap(slot),meta:mmap(slot),days:daysOf(slot)};CI=AI.filter(i=>i.slot===slot);
   window.ASPFX='#/as/'+slot+'/';
-  try{html=route('#/'+String(rest||'').replace(/^\//,''))}finally{ME=real.ME;ST=real.ST;CI=real.CI;if(pg){C=real.C;PT=real.PT;CURP=real.CURP;rebuildTK()}}
+  let rvh='';
+  try{html=route('#/'+String(rest||'').replace(/^\//,''));rvh=(AD.progress||[]).filter(p=>p.slot===slot&&p.status==='review').map(p=>reviewCard(p,false)).join('')}finally{ME=real.ME;ST=real.ST;CI=real.CI;if(pg){C=real.C;PT=real.PT;CURP=real.CURP;rebuildTK()}}
   html=html.replace(/(href|data-h)="#\//g,'$1="#/as/'+slot+'/').replace(/<button[^>]*data-a="out"[^>]*>[^<]*<\/button>/g,'');
   const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
   hash='#/as/'+slot+(rest||'');
+  if(rvh)html=`<div class="asrv"><h3>Ждёт твоей проверки</h3>${rvh}</div>`+html;
   return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Доска задач и фильтры здесь работают, остальное только просмотр.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
 }
 function render(keep){
@@ -1402,17 +1415,16 @@ function adOverview(){
      <div class="acts"><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Кабинет клиента</button></div></div>`}});
   const mineAll=cards.reduce((a,c)=>a+c.mine,0),waitAll=cl.reduce((a,x)=>a+x.pc+x.pr,0),chgAll=cl.reduce((a,x)=>a+x.ch,0);
   const tile=(h,ic,n,cap)=>`<a class="t2 bgt c3" href="${h}"><div class="ib">${ic}</div><b>${n}</b><span>${cap}</span></a>`;
+  const sts=(AD.users||[]).filter(u=>u.role==='student'&&u.name),pend=sl=>(AD.progress||[]).filter(p=>p.slot===sl&&p.status==='review').length;
   return `${hd2('Привет, <b>Виктория</b>',fdate(td0),[])}<div class="flt" style="margin-top:12px"><a href="#/settings" class="sn">Уведомления</a></div>
   <div class="g12">
    ${tile('#/clients',ico('tasks'),mineAll,'на мне на неделю')}
    ${tile('#/clients',ico('users'),waitAll,'ждут клиентов')}
    ${tile('#/clients',SV.check,chgAll,'на правках')}
-   ${tile('#/learn',ico('book'),L.q,'ждут проверки')}
+   ${tile('#/queue',ico('book'),L.q,'ждут проверки')}
    ${cards.map(c=>c.html).join('')||'<div class="t2 c12"><p class="mu2">Клиентов пока нет.</p></div>'}
    ${all.length?wkStrip(all,x=>x.t.who!=='client','на мне','клиент','awk'):''}
-   <div class="t2 c7"><h3>Обучение <a class="go" href="#/learn">${SV.arrow}</a></h3>
-    <div style="display:flex;align-items:center;gap:22px;margin-top:16px;flex-wrap:wrap">${rg2(Math.round(L.avg*100),96,11)}<div class="mg2">${ms(np,plur(np,'программа','программы','программ'))}${ms(L.S.length,'участников')}${ms(L.q,'ждут проверки')}${ms(L.tot,'сдач за неделю')}</div></div>
-    ${L.risk.length?`<p class="mu2" style="margin-top:14px">В зоне риска: ${L.risk.map(r=>esc(firstName(r.u.name))).join(', ')}</p>`:''}</div>
+   <div class="t2 c12"><h3>Ученики</h3><div class="asg">${sts.map(u=>{const ph=mmap(u.slot).photo,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99,pn=pend(u.slot);return `<div class="asc" data-a="go" data-h="#/as/${u.slot}"><div class="asa">${ph?`<img src="${esc(ph)}" alt="">`:`<span>${esc((u.name||'?')[0])}</span>`}</div><div class="asx"><b>${esc(u.name)}</b><small>${ls?(idle===0?'заходил сегодня':'заходил '+idle+' дн. назад'):'ещё не заходил'}</small></div>${pn?`<span class="bdg w asp"><b>${pn}</b>на проверке</span>`:''}<button class="bt2 sm2" data-a="go" data-h="#/as/${u.slot}">Кабинет</button></div>`}).join('')||'<p class="mu2">Учеников пока нет.</p>'}</div></div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
   </div>`;
 }
@@ -2115,7 +2127,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','rev','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
