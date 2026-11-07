@@ -936,6 +936,15 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .asrv{margin:0 0 18px;padding:16px;border-radius:22px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.04)}.asrv h3{font-size:15px;font-weight:500;margin:0 0 8px}
 
 .asp{background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.18)!important}.asp b{color:#fff!important}
+
+.asth{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.asf{flex:none;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;color:#E6DEFF;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);cursor:pointer;white-space:nowrap}.asf.g{color:#F2EDE6;border-style:dashed}.asf:hover{border-color:rgba(196,164,255,.5)}
+
+.asl{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.asr{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(196,164,255,.14);cursor:pointer}.asr:hover{border-color:rgba(196,164,255,.4)}
+.asp2{flex:none;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);white-space:nowrap}
+.asn{flex:none;color:var(--muted);display:grid}.asn svg{width:16px;height:16px}
+@media(max-width:700px){.asr{flex-wrap:wrap}.asx{flex:1 1 140px}}
 </style>
 </head>
 <body>
@@ -1086,18 +1095,18 @@ const wlabel=w=>w.n===0?'Подготовка':w.n>6?'Сопровождение
 let hash='#/';
 function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
-    return [['#/','Обзор','chart'],['#/learn','Обучение','book',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
+    return [['#/','Обзор','chart'],['#/students','Ученики','users',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
   const c=totals(ST.p);
   return [['#/','Обзор','home'],['#/tasks','Задачи','tasks']];
 }
-function isOn(h,cur){if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
+function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
-  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><header class="tnav"><div class="tin"><div class="logo2"><i class="lg"><img src="shark-mark.png" alt=""></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div><nav class="tnl">${it.map(link).join('')}</nav><div class="tr">${cur==='#/'||cur===''?'':progSel()}${ME.role==='client'?'':`<span class="tn">${esc(ME.name||'')}</span>`}<button data-a="out">Выйти</button></div></div></header>
+  return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><header class="tnav"><div class="tin"><div class="logo2"><i class="lg"><img src="shark-mark.png" alt=""></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div><nav class="tnl">${it.map(link).join('')}</nav><div class="tr">${/^#\/(learn|prog|edit|people|funnel|nudge)/.test(cur)?progSel():''}${ME.role==='client'?'':`<span class="tn">${esc(ME.name||'')}</span>`}<button data-a="out">Выйти</button></div></div></header>
   <div class="main ${wide?'wide':''}"><div class="top"><span class="brand">WIKKI.OCEAN</span><span class="who">${esc(ME.name||'')}${adm?' · управление':''}</span>${(!adm&&ME.role!=='client')?'<button class="topout" data-a="out">Выйти</button>':''}</div>${inner}</div>
   <nav class="tabbar"><div>${it.map(link).join('')}</div></nav></div>`;
 }
@@ -1119,6 +1128,7 @@ function route(h){
     else html=shell(clHome(),true);
   }else if(ME.role==='admin'){
     if(r===''||r===undefined)html=shell(adOverview(),true);
+    else if(r==='students')html=shell(adStudents(),true);
     else if(r==='learn')html=shell(adLearn(),true);
     else if(r==='queue')html=shell(adQueue(),true);
     else if(r==='people')html=shell(adPeople(),true);
@@ -1402,6 +1412,14 @@ function learnData(){
   const days=[];for(let i=6;i>=0;i--){const d=ymdOf(dnum(today())-i);days.push([d,(AD.progress||[]).filter(p=>p.submitted_at&&ymd(new Date(p.submitted_at))===d).length])}
   return {S,N,rv,q:rv.length,avg,risk,days,tot:days.reduce((a,x)=>a+x[1],0)};
 }
+const isGroup=u=>/групп/i.test(u.plan||'');
+function adStudents(){
+  const sts=(AD.users||[]).filter(u=>u.role==='student'&&u.name),pend=sl=>(AD.progress||[]).filter(p=>p.slot===sl&&p.status==='review').length;
+  const cards=sts.map(u=>{const ph=mmap(u.slot).photo,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99,pn=pend(u.slot),g=isGroup(u);
+    return `<div class="asr" data-a="go" data-h="#/as/${u.slot}"><div class="asa">${ph?`<img src="${esc(ph)}" alt="">`:`<span>${esc((u.name||'?')[0])}</span>`}</div><div class="asx"><b>${esc(u.name)}</b><small>${ls?(idle===0?'заходил сегодня':'заходил '+idle+' дн. назад'):'ещё не заходил'}</small></div>${pn?`<span class="asp2">${pn} на проверке</span>`:''}<button class="asf ${g?'g':''}" data-a="fmt" data-u="${u.slot}" title="Нажми, чтобы сменить формат">${g?'Групповое':'Личное обучение'}</button><i class="asn">${ico('chev')}</i></div>`}).join('');
+  return `<div class="asth"><h1 class="t">Ученики</h1><a class="bt2 sm2" href="#/people">Добавить ученика</a></div><p class="sub">${sts.length} ${plur(sts.length,'ученик','ученика','учеников')}. Нажми на карточку, чтобы открыть кабинет.</p>
+  <div class="asl">${cards||'<div class="card">Учеников пока нет.</div>'}</div>
+  <p class="mu2" style="margin-top:18px"><a class="lk" href="#/learn">Программы и редактор недель</a></p>`}
 function adOverview(){
   const L=learnData(),cl=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(clientStat);
   const np=Math.max(1,PL.length),ms=(n,l)=>`<div class="ms2"><b>${n}</b><span>${l}</span></div>`,td0=today(),all=[];
@@ -1424,7 +1442,6 @@ function adOverview(){
    ${tile('#/queue',ico('book'),L.q,'ждут проверки')}
    ${cards.map(c=>c.html).join('')||'<div class="t2 c12"><p class="mu2">Клиентов пока нет.</p></div>'}
    ${all.length?wkStrip(all,x=>x.t.who!=='client','на мне','клиент','awk'):''}
-   <div class="t2 c12"><h3>Ученики</h3><div class="asg">${sts.map(u=>{const ph=mmap(u.slot).photo,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99,pn=pend(u.slot);return `<div class="asc" data-a="go" data-h="#/as/${u.slot}"><div class="asa">${ph?`<img src="${esc(ph)}" alt="">`:`<span>${esc((u.name||'?')[0])}</span>`}</div><div class="asx"><b>${esc(u.name)}</b><small>${ls?(idle===0?'заходил сегодня':'заходил '+idle+' дн. назад'):'ещё не заходил'}</small></div>${pn?`<span class="bdg w asp"><b>${pn}</b>на проверке</span>`:''}<button class="bt2 sm2" data-a="go" data-h="#/as/${u.slot}">Кабинет</button></div>`}).join('')||'<p class="mu2">Учеников пока нет.</p>'}</div></div>
    <div class="t2 c5"><h3>Ближайшее</h3>${cal2()}</div>
   </div>`;
 }
@@ -2100,6 +2117,8 @@ const A={
  async news(el){const u=el.dataset.u,t=$('#newsT').value.trim();if(!t)return;const M=mmap(u);await setM(u,'news',(M.news||[]).concat({id:'n'+Date.now(),text:t}));toast('Отправлено');render(true)},
  async newsdel(el){const u=el.dataset.u,M=mmap(u);await setM(u,'news',(M.news||[]).filter(n=>n.id!==el.dataset.id));render(true)},
  async note(el){await setM(el.dataset.u,'notes',$('#noteT').value);toast('Заметка сохранена')},
+ async fmt(el){const u=AD.users.find(x=>x.slot===el.dataset.u);if(!u)return;const np=isGroup(u)?'Индивидуальная программа':'Групповая программа';
+  if(!await call(()=>rpc('okean_admin_profile',{p_slot:ME.slot,p_h:ME.h,p_target:u.slot,p_name:u.name,p_track:u.track||'',p_plan:np})))return;u.plan=np;toast(u.name+': '+(isGroup(u)?'групповое':'личное обучение'));render(true)},
  async prof(el){const u=el.dataset.u,tr=[...document.querySelectorAll('[data-tr]:checked')].map(c=>c.dataset.tr).join('+');
   const ok=await call(()=>rpc('okean_admin_profile',{p_slot:ME.slot,p_h:ME.h,p_target:u,p_name:$('#pn').value.trim(),p_track:tr,p_plan:$('#pp').value.trim()}));if(!ok)return;
   const x=AD.users.find(q=>q.slot===u);x.name=$('#pn').value.trim();x.track=tr;x.plan=$('#pp').value.trim();toast('Профиль сохранён');render(true)}
