@@ -1230,17 +1230,13 @@ function homeV(){
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
   /* цель программы + кольцо прогресса */
-  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,RF=ST.meta.refl||{},GP=(RF.gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(RF.gp||[])[i]||''),GX=RF.gx||{},SM=GX.sm||{};
-  const SMF=[['s','Конкретно'],['m','Измеримо'],['a','Достижимо'],['r','Значимо'],['t','Срок']];
-  const hasMore=!!(GX.f||GX.ift||SMF.some(x=>SM[x[0]]));
-  const more=hasMore&&window.GMORE?`<div class="sxgm">${SMF.filter(x=>SM[x[0]]).map(x=>`<div><small>${x[1]}</small><p>${esc(SM[x[0]])}</p></div>`).join('')}${GX.f?`<div><small>Формула</small><p>${esc(GX.f)}</p></div>`:''}${GX.ift?`<div class="ift"><small>Если риск, то</small><p>${esc(GX.ift)}</p></div>`:''}</div>`:'';
+  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,RF=ST.meta.refl||{},GP=(RF.gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(RF.gp||[])[i]||''),GX=RF.gx||{};
   const ring=`<div class="sx sxr"><div class="sxgh"><span>Цель программы</span>${!gedit?`<button class="sxar" data-a="gedit" aria-label="Записать цель" title="${gv?'Изменить цель':'Записать цель'}">✎</button>`:''}</div>
    <div class="sxrl">${gedit?`<textarea id="wg-t" class="sxgt" maxlength="400" placeholder="Например: К 19 декабря у меня 5 оплаченных клиентов">${esc(gv)}</textarea>
      <input id="wg-w" class="sxgpi" type="text" maxlength="220" placeholder="Зачем тебе это: что изменится, когда цель достигнута" value="${esc(GX.why||'')}">
      <div class="sxgpe"><small>Три главных результата, чтобы достичь цель (с метрикой и сроком)</small>${GPe.map((x,i)=>`<input class="sxgpi" type="text" maxlength="220" placeholder="Результат ${i+1}" value="${esc(x)}">`).join('')}</div>
-     <details class="sxgd" ${hasMore?'open':''}><summary>SMART, формула и план «если–то»</summary>${SMF.map(x=>`<input class="sxgsm" data-k="${x[0]}" type="text" maxlength="260" placeholder="${x[1]}" value="${esc(SM[x[0]]||'')}">`).join('')}<input id="wg-f" class="sxgpi" type="text" maxlength="260" placeholder="Формула: из чего складывается цель" value="${esc(GX.f||'')}"><input id="wg-i" class="sxgpi" type="text" maxlength="260" placeholder="Главный риск и ответ: если..., то..." value="${esc(GX.ift||'')}"></details>
      <div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
-   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}${GP.length?`<div class="sxgp"><small>Три главных результата</small>${GP.map((x,i)=>`<div><span>${i+1}</span><b>${esc(x)}</b></div>`).join('')}</div>`:''}${hasMore?`<button class="sxmb" data-a="gmore">${window.GMORE?'Скрыть':'Подробнее'}</button>`:''}${more}`}</div>
+   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}${GP.length?`<div class="sxgp"><small>Три главных результата</small>${GP.map((x,i)=>`<div><span>${i+1}</span><b>${esc(x)}</b></div>`).join('')}</div>`:''}`}</div>
    <div class="sxrg2"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
    <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div></div>`;
   /* программа: блок на каждую неделю */
@@ -1986,10 +1982,8 @@ const A={
  async rwd(el){const n=+el.dataset.n;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
  gedit(){window.GEDIT=true;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
  gcancel(){window.GEDIT=false;render(true)},
- gmore(){window.GMORE=!window.GMORE;render(true)},
  async gsave(){const t=($('#wg-t').value||'').trim(),gp=[...document.querySelectorAll('.sxgpi')].filter(x=>!x.id).map(x=>x.value.trim()).filter(Boolean).slice(0,3);
-  const sm={};document.querySelectorAll('.sxgsm').forEach(x=>{if(x.value.trim())sm[x.dataset.k]=x.value.trim()});
-  const gx={why:($('#wg-w')||{}).value?$('#wg-w').value.trim():'',f:($('#wg-f')||{}).value?$('#wg-f').value.trim():'',ift:($('#wg-i')||{}).value?$('#wg-i').value.trim():'',sm};
+  const gx={why:($('#wg-w')||{}).value?$('#wg-w').value.trim():''};
   if(!await putMeta('goal',t))return;const r=Object.assign({},CM().refl||{});r.gp=gp;r.gx=gx;if(!await putMeta('refl',r))return;
   window.GEDIT=false;toast('Цель сохранена');render(true)},
  priedit(el){window.PEDN=+el.dataset.n;render(true)},
@@ -2121,7 +2115,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','gmore','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
