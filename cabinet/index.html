@@ -773,6 +773,20 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxi.sxi2{grid-column:3/5!important;grid-row:1}
 @media(max-width:1180px){.sxr{grid-column:auto;grid-row:auto}.sxi.sxi2{grid-column:span 2!important;grid-row:auto}}
 @media(max-width:700px){.sxi.sxi2{grid-column:auto!important;grid-row:auto}.sxgl{font-size:19px}}
+
+/* блоки недель: сегменты по заданиям */
+.sxwg{gap:14px!important}
+.sxw2{padding:18px 18px 16px!important;min-height:140px!important;gap:12px!important;border-radius:24px!important;border:1px solid rgba(196,164,255,.14)!important;background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.015))!important;box-shadow:none!important}
+.sxw2:hover{border-color:rgba(196,164,255,.4)!important}
+.sxw2t{align-items:center;font-size:12px}.sxw2t em{font-style:normal;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#E6DEFF;white-space:nowrap}.sxw2t span{color:var(--muted);text-align:right;white-space:nowrap}
+.sxw2 h4{font-size:19px!important;font-weight:500;line-height:1.22!important;letter-spacing:-.01em;padding-right:38px!important}
+.sxw2g{display:flex;gap:5px;align-items:center}.sxw2g i{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.1);min-width:6px}.sxw2g i.on{background:linear-gradient(90deg,#8A5FE0,#C4A4FF);box-shadow:0 0 10px rgba(155,111,232,.7)}.sxw2g span{font-size:12px;color:var(--muted);margin-left:6px;white-space:nowrap}
+.sxw2a{top:46px!important;width:30px!important;height:30px!important}
+.sxw2.cur{border:1px solid transparent!important;background:linear-gradient(#120F24,#120F24) padding-box,linear-gradient(140deg,rgba(225,208,255,.8),rgba(139,95,224,.25) 45%,rgba(196,164,255,.5)) border-box!important;box-shadow:0 26px 50px -30px rgba(155,111,232,1)!important}
+.sxw2.cur .sxw2t em{background:rgba(155,111,232,.28);border-color:rgba(225,208,255,.5);color:#fff}.sxw2.cur .sxw2a{background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.4)!important;color:#fff!important}
+.sxw2.ok .sxw2t em{color:#C4A4FF}.sxw2.ok .sxw2a svg{width:14px;height:14px}
+.sxw2.lk{opacity:.58}
+@media(max-width:700px){.sxw2 h4{font-size:18px!important}}
 </style>
 </head>
 <body>
@@ -1075,8 +1089,9 @@ function homeV(){
    <div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${pp}%</b></div></div>
    <div class="sxgf">Принято ${c.done} из ${N} ${plur(N,'задания','заданий','заданий')}</div></div>`;
   /* программа: блок на каждую неделю */
-  const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.length,pc=T?Math.round(cc.done/T*100):0,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
-    return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><span>${esc(num)}</span><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2b"><div class="sxw2p"><i style="width:${op?pc:0}%"></i></div>${op&&T?`<span>${pc}%</span>`:''}</div><i class="sxw2a">${ico('chev')}</i></a>`}).join('');
+  const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.length,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
+    const segs=[...Array(Math.max(T,1))].map((_,k)=>`<i class="${op&&k<cc.done?'on':''}"></i>`).join('');
+    return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><em>${esc(num)}${cur?' · сейчас':''}</em><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2g">${segs}${op&&T?`<span>${f?'принята':cc.done+' из '+T}</span>`:''}</div><i class="sxw2a">${f?SV.check:ico('chev')}</i></a>`}).join('');
   const prog=`<div class="sx sxa0"><div class="sxh">Программа</div><div class="sxwg">${wb}</div></div>`;
   /* задачи: один список (задания недели + свои), листание недель */
   const VT=V.filter(w=>w.tasks.length);let ti=VT.findIndex(w=>w.n===window.TKW);if(ti<0)ti=Math.max(0,VT.findIndex(w=>wcur(w,cw)));
