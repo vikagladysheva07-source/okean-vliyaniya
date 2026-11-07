@@ -1202,9 +1202,9 @@ function homeV(){
   let idxT;
   if(IP&&Array.isArray(IP.p)&&IP.p.length===5){
     const P0=IP.p.map(Number),T0=Array.isArray(IP.t)&&IP.t.length===5?IP.t.map(Number):null,ai=+IP.ai||1,aiT=+IP.at||ai,v0=avg(P0)*ai,vT=T0?avg(T0)*aiT:null;
-    idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния</div><div class="sxix"><div><div class="sxn">${fx(v0)}<small>из 50</small></div><div class="sxsub">Глубина ${fx(avg(P0))} × уровень AI ${ai}${vT!=null?`<br>Цель на 18 декабря: ${fx(vT)}`:''}</div>
+    idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния</div><div class="sxix"><div><div class="sxn">${fx(v0)}<small>из 50</small></div><div class="sxsub">Глубина ${fx(avg(P0))} × уровень AI ${ai}${vT!=null?`<br>Цель на 19 декабря: ${fx(vT)}`:''}</div>
      <div class="sxpr">${PN.map((n,k)=>`<div><span>${n}</span><b>${P0[k]}${T0?`<i>→ ${T0[k]}</i>`:''}</b></div>`).join('')}</div></div>
-     <div class="sxrd">${radar(P0,T0)}<div class="sxlg"><span><i class="a"></i>сейчас</span>${T0?'<span><i class="b"></i>цель на 18 декабря</span>':''}</div></div></div></div>`;
+     <div class="sxrd">${radar(P0,T0)}<div class="sxlg"><span><i class="a"></i>сейчас</span>${T0?'<span><i class="b"></i>цель на 19 декабря</span>':''}</div></div></div></div>`;
   }else{
     idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
