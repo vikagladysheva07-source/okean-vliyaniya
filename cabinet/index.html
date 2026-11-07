@@ -881,6 +881,18 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
  .sxr .sxgf{grid-row:4!important}
  .sxr .sxgl{font-size:clamp(22px,2vw,28px)!important}
 }
+
+/* индекс влияния в самом низу */
+@media(min-width:1181px){
+ .sxa0{grid-row:2!important}.sxt{grid-row:2!important}
+ .sxi.sxi2{grid-column:1/5!important;grid-row:3!important}
+}
+@media(max-width:1180px){.sxi.sxi2{order:20!important}}
+@media(max-width:700px){.sxi.sxi2{order:20!important}.sxa0{order:6}}
+
+@media(min-width:1181px){.sxi2 .sxix{grid-template-columns:minmax(0,1.4fr) minmax(0,1.3fr)!important}.sxrd svg{max-height:340px!important}}
+
+@media(max-width:700px){.sxrd svg text{font-size:17px!important}}
 </style>
 </head>
 <body>
@@ -1169,12 +1181,12 @@ function homeV(){
    <div class="sxpc"><b>${esc(nm)}</b></div></div>`;
   /* индекс влияния: тест из 50 + параметры из анкеты */
   const IP=ST.meta.idxp,PN=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
-  const radar=(p,t)=>{const cx=160,cy=140,R=92,pt=(k,v,r)=>{const an=(-90+k*72)*Math.PI/180,rr=(r||R)*v/10;return [cx+rr*Math.cos(an),cy+rr*Math.sin(an)]},poly=(a)=>a.map((v,k)=>pt(k,v).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const radar=(p,t)=>{const cx=250,cy=142,R=92,pt=(k,v,r)=>{const an=(-90+k*72)*Math.PI/180,rr=(r||R)*v/10;return [cx+rr*Math.cos(an),cy+rr*Math.sin(an)]},poly=(a)=>a.map((v,k)=>pt(k,v).map(n=>n.toFixed(1)).join(',')).join(' ');
     const grid=[2.5,5,7.5,10].map(g=>`<polygon points="${[0,1,2,3,4].map(k=>pt(k,g).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="rgba(196,164,255,.14)"/>`).join('');
     const axes=[0,1,2,3,4].map(k=>{const q=pt(k,10);return `<line x1="${cx}" y1="${cy}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="rgba(196,164,255,.12)"/>`}).join('');
-    const lb=['Ценность','Позиц.','Оффер','Привлеч.','Продажи'].map((n,k)=>{const q=pt(k,10,R+16),an=(-90+k*72),anc=Math.abs(Math.cos(an*Math.PI/180))<.2?'middle':Math.cos(an*Math.PI/180)>0?'start':'end';return `<text x="${q[0].toFixed(1)}" y="${(q[1]+4).toFixed(1)}" text-anchor="${anc}" fill="#C9C2E6" font-size="12.5">${n}</text>`}).join('');
+    const lb=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'].map((n,k)=>{const q=pt(k,10,R+16),an=(-90+k*72),anc=Math.abs(Math.cos(an*Math.PI/180))<.2?'middle':Math.cos(an*Math.PI/180)>0?'start':'end';return `<text x="${q[0].toFixed(1)}" y="${(q[1]+4).toFixed(1)}" text-anchor="${anc}" fill="#C9C2E6" font-size="15">${n}</text>`}).join('');
     const dots=p.map((v,k)=>{const q=pt(k,v);return `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="4.5" fill="#fff" stroke="#9B6FE8" stroke-width="2.5"/>`}).join('');
-    return `<svg viewBox="0 0 320 280" role="img" aria-label="Параметры индекса влияния"><defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9B6FE8" stop-opacity=".55"/><stop offset="1" stop-color="#9B6FE8" stop-opacity=".16"/></radialGradient></defs>${grid}${axes}${t?`<polygon points="${poly(t)}" fill="none" stroke="rgba(196,164,255,.6)" stroke-width="2" stroke-dasharray="5 5"/>`:''}<polygon points="${poly(p)}" fill="url(#rdg)" stroke="#C4A4FF" stroke-width="2.5" stroke-linejoin="round"/>${dots}${lb}</svg>`};
+    return `<svg viewBox="0 0 500 290" role="img" aria-label="Параметры индекса влияния"><defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9B6FE8" stop-opacity=".55"/><stop offset="1" stop-color="#9B6FE8" stop-opacity=".16"/></radialGradient></defs>${grid}${axes}${t?`<polygon points="${poly(t)}" fill="none" stroke="rgba(196,164,255,.6)" stroke-width="2" stroke-dasharray="5 5"/>`:''}<polygon points="${poly(p)}" fill="url(#rdg)" stroke="#C4A4FF" stroke-width="2.5" stroke-linejoin="round"/>${dots}${lb}</svg>`};
   let idxT;
   if(IP&&Array.isArray(IP.p)&&IP.p.length===5){
     const P0=IP.p.map(Number),T0=Array.isArray(IP.t)&&IP.t.length===5?IP.t.map(Number):null,ai=+IP.ai||1,aiT=+IP.at||ai,v0=avg(P0)*ai,vT=T0?avg(T0)*aiT:null;
@@ -1932,6 +1944,10 @@ const A={
  async gsave(){const t=($('#wg-t').value||'').trim(),gp=[...document.querySelectorAll('.sxgpi')].map(x=>x.value.trim()).filter(Boolean).slice(0,3);
   if(!await putMeta('goal',t))return;const r=Object.assign({},CM().refl||{});r.gp=gp;if(!await putMeta('refl',r))return;
   window.GEDIT=false;toast('Цель сохранена');render(true)},
+ priedit(el){window.PEDN=+el.dataset.n;render(true)},
+ pricancel(){window.PEDN=null;render(true)},
+ async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
+ async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
  async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
