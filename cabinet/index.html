@@ -811,6 +811,12 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxtd.td.go{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.07)}
 .sxtl{display:block}.wktl{display:block}.wktl .sxtd.td{margin-top:6px}
 .tmx{max-width:480px}.tmh{font-size:14px;line-height:1.5;color:#C9C2E6;margin-top:4px}
+
+/* доска задач */
+.kb{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.kb .kcol{max-height:none!important}
+.kb .tc{align-items:flex-start;gap:12px;padding:12px;cursor:grab}.kb .tc .sxcb{margin-top:1px}.kb .tc .tx{flex:1;min-width:0}
+.kb .tc .sxtt2{display:-webkit-box;width:100%;padding:0}
 </style>
 </head>
 <body>
@@ -1160,7 +1166,9 @@ function stTasks(adm){
       else{a=f.from||'0000-00-00';b=f.to||'9999-99-99'}
       if(!d||d<a||d>b)return false}
     return true};
-  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);cards[s==='done'?'done':'todo'].push({w,t,s})})});
+  const TXb=((ST.meta.refl||{}).tx)||{};
+  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);cards[s==='done'?'done':'todo'].push({k:'p',id:t.id,w,t,s,text:TXb[t.id]||t.text})})});
+  (Array.isArray(ST.meta.todo)?ST.meta.todo:[]).forEach(x=>{if(f.st!=='all'&&String(x.w)!==String(f.st))return;if(f.q&&String(x.text).toLowerCase().indexOf(f.q.toLowerCase())<0)return;if(f.mode!=='all')return;cards[x.done?'done':'todo'].push({k:'m',id:x.id,x,s:x.done?'done':'todo',text:x.text})});
   const ac=cards[window.PBC]?window.PBC:'todo';
   const MODE={week:'Эта неделя',next:'Следующая неделя',late:'Просрочено',range:'Свой срок'},pills=[];
   const pill=(k,t)=>pills.push(`<span class="fpl">${t}<button data-a="pbfr" data-k="${k}" title="Убрать">✕</button></span>`);
@@ -1173,14 +1181,15 @@ function stTasks(adm){
    ${f.mode==='range'?`<div class="fdates" style="margin:-4px 0 12px"><input type="date" id="pf-a" value="${esc(f.from)}"><span class="mu2">до</span><input type="date" id="pf-b" value="${esc(f.to)}"></div>`:''}
    <small class="l">Неделя</small><div style="margin:6px 0 12px">${ddHtml('pf-s',[['all','Любая неделя']].concat(WK.filter(w=>isOpen(w)).map(w=>[w.n,esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))])),f.st,'pbf','data-k="st"')}</div>
    <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbfx">Показать задачи</button><button class="bt2" data-a="pbfreset">Сбросить всё</button></div></div></div>`:'';
-  const card=({w,t,s})=>{const late=s!=='done'&&s!=='review'&&w.due&&w.due<td,fb=s==='revision'&&ST.p[t.id]&&ST.p[t.id].feedback;
-    return `<div class="tc ${s==='done'?'done':''}" draggable="true" data-a="chk" data-id="${t.id}" data-sid="${t.id}"><span class="tcb ${s==='done'?'done':s==='review'?'doing':''}" style="pointer-events:none"></span><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,30))}</span>${s==='revision'?'<span class="pri high">Доработка</span>':s==='review'?'<span class="pl2">на проверке</span>':''}</div><p>${esc(t.text)}</p>${fb?`<div class="tm"><small>${esc(fb.slice(0,90))}</small></div>`:''}<div class="tm">${s!=='done'?`<small class="${late?'late':''}">${late?'просрочено · ':'до '}${fdate(w.due)}</small>`:''}</div></div></div>`};
-  return `<h1 class="t">${adm?'Программа':'Задания'}</h1><p class="sub">${adm?'Как видят программу участники. У тебя открыты все недели.':'Открой карточку, напиши ответ или добавь ссылку и отправь на проверку.'}</p>
+  const asb=!!window.ASPFX,cwn=(curWeek(ST.p)||{}).n;
+  const card=c=>{const d=c.s==='done',late=!d&&c.w&&c.w.due&&c.w.due<td,chip=c.k==='m'?(c.x.w!==undefined&&c.x.w!==null&&!isNaN(c.x.w)?'Моя · нед. '+c.x.w:'Моя задача'):(c.w.n>6?'Сопровождение':'Неделя '+c.w.n);
+    return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><div class="tx"><div class="tm" style="margin:0 0 4px"><span class="pl2 kst">${esc(chip)}</span>${late?'<small class="late">срок прошёл</small>':''}</div><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button></div></div>`};
+  const addc=`<div class="sxadd" style="margin:0 0 10px"><input id="td-i" type="text" maxlength="140" data-w="${cwn===undefined?'':cwn}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`;
+  return `<h1 class="t">${adm?'Программа':'Задачи'}</h1>
   <div class="fbar2" style="margin-top:14px"><div class="fsrch"><input type="search" id="pf-q" placeholder="Поиск по задачам" value="${esc(f.q)}"></div><button class="ftb ${n?'on':''}" data-a="pbfx">Фильтры${n?` <b>${n}</b>`:''}</button></div>${n?`<div class="fpills">${pills.join('')}<button class="fclr" data-a="pbfreset">Сбросить</button></div>`:''}${panel}
   <div class="ktabs" style="margin-top:14px">${COLS.map(([k,nm])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${nm} <em>${cards[k].length}</em></button>`).join('')}</div>
-  <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b><span class="pl2">${cards[k].length}</span></div><div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">'+'Пусто'+'</div>'}</div></div>`).join('')}</div>
-  <p class="mu2" style="margin-top:10px">Нажми на задание, чтобы отметить его выполненным. Отчёт за неделю сдаётся на странице недели.</p>
-  ${locked.length?`<p class="mu2" style="margin-top:6px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}`;
+  <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b><span class="pl2">${cards[k].length}</span></div>${k==='todo'?addc:''}<div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">Пусто</div>'}</div></div>`).join('')}</div>
+  ${locked.length?`<p class="mu2" style="margin-top:12px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}${taskModal2()}`;
 }
 function taskV(id){
   const t=TM[id];if(!t)return '<p class="sub">Задание не найдено.</p>';
@@ -1987,8 +1996,8 @@ root.addEventListener('click',e=>{
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
 root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
-root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.tc[data-sid]');if(c){e.dataTransfer.setData('text/plain','sid:'+c.dataset.sid);e.dataTransfer.effectAllowed='move';c.classList.add('drag');e.stopImmediatePropagation()}},true);
-root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0)return;const id=d.slice(4),s0=stOf(id);if((col.dataset.sst==='done')!==(s0==='done'))A.chk({dataset:{id}})},true);
+root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.tc[data-sid]');if(c){e.dataTransfer.setData('text/plain','sid:'+c.dataset.sid+'|'+(c.dataset.k||'p'));e.dataTransfer.effectAllowed='move';c.classList.add('drag');e.stopImmediatePropagation()}},true);
+root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0||window.ASPFX)return;const pr=d.slice(4).split('|'),id=pr[0],k=pr[1]||'p',cur=k==='m'?!!((ST.meta.todo||[]).find(x=>x.id===id)||{}).done:stOf(id)==='done';if((col.dataset.sst==='done')!==cur){if(k==='m')A.todotg({dataset:{id}});else A.chk({dataset:{id}})}},true);
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.tc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'));document.querySelectorAll('.dropline').forEach(x=>x.remove())});
 function dropIdx(list,y){const cards=[...list.querySelectorAll('.tc:not(.drag)')];for(const c of cards){const r=c.getBoundingClientRect();if(y<r.top+r.height/2)return {el:c,idx:+c.dataset.t}}return {el:null,idx:null}}
 root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();const d=dropIdx(tl,e.clientY);document.querySelectorAll('.dropline').forEach(x=>x.remove());const ln=document.createElement('div');ln.className='dropline';const box=tl.querySelector('.tcards');if(d.el)d.el.before(ln);else box.appendChild(ln);return}
