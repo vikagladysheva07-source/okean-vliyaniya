@@ -760,6 +760,8 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxgt{width:100%;min-height:96px;font-size:14.5px;margin:6px 0 4px}
 .sxr .sxrg{margin:10px 0 2px}.sxr .sxrg svg{width:min(130px,100%)}.sxr .sxrc b{font-size:28px}.sxr .sxrc span{font-size:11.5px;display:block;max-width:90px;text-align:center}
 .sxr .sxh .sxar{cursor:pointer;font-size:15px}
+
+.sxhd{margin-bottom:20px!important}
 </style>
 </head>
 <body>
@@ -1054,12 +1056,12 @@ function homeV(){
     idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
-  /* цель недели + кольцо прогресса */
-  const R=46,L=2*Math.PI*R,wgv=(((ST.meta.refl||{})[cw.n])||{}).g||'',wgd=wgv||cw.outcome||'',gedit=window.GEDIT===cw.n&&!as;
-  const ring=`<div class="sx sxr"><div class="sxh">Цель недели${!as&&!gedit?`<button class="sxar" data-a="gedit" data-n="${cw.n}" aria-label="Записать цель" title="Записать свою цель">✎</button>`:''}</div>
-   ${gedit?`<textarea id="wg-t" class="sxgt" maxlength="200" placeholder="Что хочешь достичь за эту неделю">${esc(wgv||cw.outcome||'')}</textarea><div class="sxrow"><button class="sxbtn" data-a="gsave" data-n="${cw.n}">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
-   :`<p class="sxgl">${wgd?esc(wgd):'Запиши, что хочешь достичь за эту неделю.'}</p>`}
-   <div class="sxrg"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="8" stroke-dasharray="2 5"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-wp/100)).toFixed(1)}" transform="rotate(-90 60 60)"/><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C4A4FF"/><stop offset="1" stop-color="#7C4FD4"/></linearGradient></defs></svg><div class="sxrc"><b>${wp}%</b><span>${wc.done} из ${WT} ${plur(WT,'задание','задания','заданий')}</span></div></div></div>`;
+  /* цель программы + кольцо прогресса */
+  const R=46,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT&&!as;
+  const ring=`<div class="sx sxr"><div class="sxh">Цель программы${!as&&!gedit?`<button class="sxar" data-a="gedit" aria-label="Записать цель" title="Записать цель">✎</button>`:''}</div>
+   ${gedit?`<textarea id="wg-t" class="sxgt" maxlength="300" placeholder="Например: 5 клиентов по 80 000 ₽ к концу программы">${esc(gv)}</textarea><div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
+   :`<p class="sxgl ${gv?'':'mu'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>`}
+   <div class="sxrg"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="8" stroke-dasharray="2 5"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 60 60)"/><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C4A4FF"/><stop offset="1" stop-color="#7C4FD4"/></linearGradient></defs></svg><div class="sxrc"><b>${pp}%</b><span>${c.done} из ${N} ${plur(N,'задание','задания','заданий')}</span></div></div></div>`;
   /* программа: блок на каждую неделю */
   const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.length,pc=T?Math.round(cc.done/T*100):0,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
     return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><span>${esc(num)}</span><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2b"><div class="sxw2p"><i style="width:${op?pc:0}%"></i></div>${op&&T?`<span>${pc}%</span>`:''}</div><i class="sxw2a">${ico('chev')}</i></a>`}).join('');
@@ -1081,7 +1083,7 @@ function homeV(){
    <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('tasks')}</span><div><b>${c.done}</b><small>принято из ${N}</small></div></div><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
-  <div class="sxcs">${cap('Программа',pp+'%',pp,'')}${cap('Неделя',wp+'%',wp,'a')}</div>
+  
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>`;
 }
 function stTasks(adm){
@@ -1789,9 +1791,9 @@ const A={
  async rsub(el){const n=+el.dataset.n,f=rfields();if(!f.a.trim()&&!f.b.trim()){toast('Напиши, что сделал, и главный результат');return}el.disabled=true;if(await rsave(n,'submit',f)){toast('Отчёт отправлен');render(true)}else el.disabled=false},
  async rdraft(el){const n=+el.dataset.n;if(await rsave(n,'draft',rfields())){toast('Черновик сохранён');render(true)}},
  async rwd(el){const n=+el.dataset.n;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
- gedit(el){window.GEDIT=+el.dataset.n;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
- gcancel(){window.GEDIT=null;render(true)},
- async gsave(el){const n=+el.dataset.n,t=($('#wg-t').value||'').trim(),r=Object.assign({},ST.meta.refl||{});r[n]=Object.assign({},r[n],{g:t});if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'refl',p_v:r})))return;ST.meta.refl=r;window.GEDIT=null;toast('Цель сохранена');render(true)},
+ gedit(){window.GEDIT=true;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
+ gcancel(){window.GEDIT=false;render(true)},
+ async gsave(){const t=($('#wg-t').value||'').trim();if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'goal',p_v:t})))return;ST.meta.goal=t;window.GEDIT=false;toast('Цель сохранена');render(true)},
  priedit(el){window.PEDN=+el.dataset.n;render(true)},
  pricancel(){window.PEDN=null;render(true)},
  async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},ST.meta.prio||{});pr[n]=a;if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'prio',p_v:pr})))return;ST.meta.prio=pr;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
