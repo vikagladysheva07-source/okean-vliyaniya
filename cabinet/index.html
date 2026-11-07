@@ -858,13 +858,29 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
  .sxi.sxi2{grid-column:1/5!important;grid-row:2!important}
  .sxi2 .sxix{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:28px}
  .sxi2 .sxix>div:first-child{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:32px;align-items:center}
- .sxi2 .sxn{grid-column:1;grid-row:1;align-self:end}.sxi2 .sxsub{grid-column:1;grid-row:2;align-self:start}
- .sxi2 .sxpr{grid-column:2;grid-row:1/3;margin-top:0}
+ .sxi2 .sxix .sxn{grid-column:1;grid-row:1;align-self:end}.sxi2 .sxix .sxsub{grid-column:1;grid-row:2;align-self:start}
+ .sxi2 .sxix .sxpr{grid-column:2;grid-row:1/3;margin-top:0}
  .sxa0{grid-column:1/3!important;grid-row:3!important}
  .sxt{grid-column:3/5!important;grid-row:3!important}
 }
 
-@media(min-width:1181px){.sxi2 .sxix>div:first-child{align-content:center;grid-template-rows:auto auto;row-gap:2px}.sxi2 .sxn{align-self:end}.sxi2 .sxix{align-items:center}}
+@media(min-width:1181px){.sxi2 .sxix>div:first-child{align-content:center;grid-template-rows:auto auto;row-gap:2px}.sxi2 .sxix .sxn{align-self:end}.sxi2 .sxix{align-items:center}}
+
+/* приоритеты цели */
+.sxgp{margin:6px 0 4px}.sxgp small,.sxgpe small{display:block;font-size:12px;color:var(--muted);margin:0 0 8px}
+.sxgp>div{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px solid rgba(196,164,255,.1)}.sxgp>div:first-of-type{border-top:0}
+.sxgp span{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:rgba(255,255,255,.07);border:1px solid rgba(196,164,255,.3)}
+.sxgp b{font-weight:500;font-size:15px;line-height:1.4}
+.sxgpe{margin:8px 0 4px;display:grid;gap:8px}.sxgpi{width:100%;padding:11px 14px;border-radius:14px;font-size:14.5px}
+@media(min-width:1181px){
+ .sxr{grid-template-rows:auto auto auto auto!important}
+ .sxr .sxgl,.sxr .sxgt{grid-row:2!important}
+ .sxr .sxgp,.sxr .sxgpe{grid-column:1;grid-row:3}
+ .sxr .sxrow{grid-row:4!important}
+ .sxr .sxrg{grid-row:2/4!important}
+ .sxr .sxgf{grid-row:4!important}
+ .sxr .sxgl{font-size:clamp(22px,2vw,28px)!important}
+}
 </style>
 </head>
 <body>
@@ -1170,10 +1186,10 @@ function homeV(){
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
   /* цель программы + кольцо прогресса */
-  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT;
+  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,GP=((ST.meta.refl||{}).gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(((ST.meta.refl||{}).gp||[])[i])||'');
   const ring=`<div class="sx sxr"><div class="sxgh"><span>Цель программы</span>${!gedit?`<button class="sxar" data-a="gedit" aria-label="Записать цель" title="${gv?'Изменить цель':'Записать цель'}">✎</button>`:''}</div>
-   ${gedit?`<textarea id="wg-t" class="sxgt" maxlength="300" placeholder="Например: 5 клиентов по 80 000 ₽ к концу программы">${esc(gv)}</textarea><div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
-   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>`}
+   ${gedit?`<textarea id="wg-t" class="sxgt" maxlength="300" placeholder="Например: 5 клиентов по 80 000 ₽ к концу программы">${esc(gv)}</textarea><div class="sxgpe"><small>Три главных приоритета, чтобы достичь цель</small>${GPe.map((x,i)=>`<input class="sxgpi" type="text" maxlength="140" placeholder="Приоритет ${i+1}" value="${esc(x)}">`).join('')}</div><div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
+   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GP.length?`<div class="sxgp"><small>Три главных приоритета</small>${GP.map((x,i)=>`<div><span>${i+1}</span><b>${esc(x)}</b></div>`).join('')}</div>`:''}`}
    <div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
    <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div>`;
   /* программа: блок на каждую неделю */
@@ -1913,14 +1929,9 @@ const A={
  async rwd(el){const n=+el.dataset.n;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
  gedit(){window.GEDIT=true;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
  gcancel(){window.GEDIT=false;render(true)},
- async gsave(){const t=($('#wg-t').value||'').trim(),am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);
-  if(am){await setM(am[1],'goal',t);const m=(AD.meta||[]).find(x=>x.slot===am[1]&&x.k==='goal');if(!m||m.v!==t)return}
-  else{if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'goal',p_v:t})))return;ST.meta.goal=t}
+ async gsave(){const t=($('#wg-t').value||'').trim(),gp=[...document.querySelectorAll('.sxgpi')].map(x=>x.value.trim()).filter(Boolean).slice(0,3);
+  if(!await putMeta('goal',t))return;const r=Object.assign({},CM().refl||{});r.gp=gp;if(!await putMeta('refl',r))return;
   window.GEDIT=false;toast('Цель сохранена');render(true)},
- priedit(el){window.PEDN=+el.dataset.n;render(true)},
- pricancel(){window.PEDN=null;render(true)},
- async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
- async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
  async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
