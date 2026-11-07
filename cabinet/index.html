@@ -813,7 +813,7 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .tmx{max-width:480px}.tmh{font-size:14px;line-height:1.5;color:#C9C2E6;margin-top:4px}
 
 /* доска задач */
-.kb{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.kb{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 .kb .kcol{max-height:none!important}
 .kb .tc{align-items:flex-start;gap:12px;padding:12px;cursor:grab}.kb .tc .sxcb{margin-top:1px}.kb .tc .tx{flex:1;min-width:0}
 .kb .tc .sxtt2{display:-webkit-box;width:100%;padding:0}
@@ -1004,7 +1004,7 @@ function route(h){
     else if(r==='clients')html=shell(adClients(),true);
     else if(r==='c')html=shell(adClient(a),true);
     else if(r==='u')html=shell(adUser(a),true);
-    else if(r==='my')html=shell(stTasks(true),false);
+    else if(r==='my')html=shell(stTasks(true),true);
     else if(r==='funnel')html=shell(adFunnel(),true);
     else if(r==='nudge')html=shell(adNudge(),true);
     else if(r==='settings')html=shell(adSettings(),true);
@@ -1015,7 +1015,7 @@ function route(h){
     else if(r==='lib')html=shell(libV(),false);
     else html=shell(adOverview(),true);
   }else{
-    if(r==='tasks')html=shell(stTasks(),false);
+    if(r==='tasks')html=shell(stTasks(),true);
     else if(r==='week')html=shell(weekV(+a),false);
     else if(r==='task')html=shell(taskV(a),false);
     else if(r==='lib')html=shell(libV(),false);
@@ -1081,13 +1081,13 @@ function placeNodes(list){
     h+=x.open?`<a href="${window.ASPFX||'#/'}week/${x.w}">${body}</a>`:body});
   document.getElementById('pnd').innerHTML=h;
 }
-function taskModal2(){const m=window.TMOD;if(!m)return '';const as=!!window.ASPFX;let text,hint='',d,own=m.k==='m',over=false,meta='';
-  if(own){const x=(Array.isArray(ST.meta.todo)?ST.meta.todo:[]).find(y=>y.id===m.id);if(!x)return '';text=x.text;d=!!x.done;meta='Моя задача'}
-  else{const t=TM[m.id];if(!t)return '';const TXo=((ST.meta.refl||{}).tx)||{};text=TXo[t.id]||t.text;over=!!TXo[t.id];hint=t.hint||'';d=stOf(t.id)==='done';meta=t.w?(t.w.n>6?'Сопровождение':'Неделя '+t.w.n)+(t.w.due?' · до '+fdate(t.w.due):''):''}
+function taskModal2(){const m=window.TMOD;if(!m)return '';const as=!!window.ASPFX;let text,hint='',d,own=m.k==='m',over=false,meta='',stt='todo';
+  if(own){const x=(Array.isArray(ST.meta.todo)?ST.meta.todo:[]).find(y=>y.id===m.id);if(!x)return '';text=x.text;d=!!x.done;stt=x.done?'done':x.doing?'doing':'todo';meta='Моя задача'}
+  else{const t=TM[m.id];if(!t)return '';const TXo=((ST.meta.refl||{}).tx)||{};text=TXo[t.id]||t.text;over=!!TXo[t.id];hint=t.hint||'';d=stOf(t.id)==='done';stt=stateOfP(t.id);meta=t.w?(t.w.n>6?'Сопровождение':'Неделя '+t.w.n)+(t.w.due?' · до '+fdate(t.w.due):''):''}
   return `<div class="mdl" data-a="tclose"><div class="mbox tmx" data-a="noop"><div class="mh"><b>${esc(meta)}</b><button class="rbt" data-a="tclose" aria-label="Закрыть">✕</button></div>
    <small class="l">Задача</small><textarea id="tm-t" maxlength="200" style="min-height:76px">${esc(text)}</textarea>
    ${hint?`<small class="l" style="margin-top:12px">Как делать</small><p class="tmh">${esc(hint)}</p>`:''}
-   <small class="l" style="margin-top:12px">Статус</small><div class="chp"><button class="${d?'':'on'}" ${as?'disabled':`data-a="tmst" data-v="0"`}>Не выполнено</button><button class="${d?'on':''}" ${as?'disabled':`data-a="tmst" data-v="1"`}>Выполнено</button></div>
+   <small class="l" style="margin-top:12px">Статус</small><div class="chp">${[['todo','Не выполнено'],['doing','В работе'],['done','Выполнено']].map(o=>`<button class="${stt===o[0]?'on':''}" ${as?'disabled':`data-a="tmst" data-v="${o[0]}"`}>${o[1]}</button>`).join('')}</div>
    <div class="row" style="margin-top:16px"><button class="bt2 v" data-a="tmsave">Сохранить</button>${over?`<button class="bt2" data-a="trst" data-id="${esc(m.id)}">Как в программе</button>`:''}${own?`<button class="bt2" data-a="tmdel">Удалить</button>`:''}</div></div></div>`}
 function homeV(){
   const N=TK.length,c=totals(ST.p),cw=curWeek(ST.p),st=streak(ST.days),V=wview();
@@ -1142,9 +1142,9 @@ function homeV(){
   const TX=((ST.meta.refl||{}).tx)||{},ttx=t=>TX[t.id]||t.text;
   const trow=(id,k,text,d,go,rv)=>`<div class="sxtd td ${go?'go':''}"><button class="sxcb" ${as?'disabled':`data-a="${k==='m'?'todotg':'chk'}" data-id="${esc(id)}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':rv?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(id)}" data-k="${k}">${esc(text)}</button></div>`;
   const rows=items.map(it=>{
-    if(it.k==='m')return trow(it.x.id,'m',it.x.text,!!it.x.done,false,false);
+    if(it.k==='m')return trow(it.x.id,'m',it.x.text,!!it.x.done,false,!!it.x.doing&&!it.x.done);
     const t=it.t,st2=it.s;
-    return it.o?trow(t.id,'p',ttx(t),st2==='done',nid===t.id,st2==='review'):`<div class="sxtd lk"><span class="sxck2"></span><span class="sxtt">${esc(ttx(t))}</span></div>`}).join('');
+    return it.o?trow(t.id,'p',ttx(t),st2==='done',nid===t.id,stateOfP(t.id)==='doing'):`<div class="sxtd lk"><span class="sxck2"></span><span class="sxtt">${esc(ttx(t))}</span></div>`}).join('');
   const add=top?`<div class="sxadd"><input id="td-i" type="text" maxlength="140" data-w="${TW.n}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`:'';
   const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?tdn+' из '+items.length:'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
    <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
@@ -1154,7 +1154,7 @@ function homeV(){
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal2()}`;
 }
 function stTasks(adm){
-  const COLS=[['todo','Не выполнено'],['done','Готово']],cards={todo:[],done:[]},locked=[];
+  const COLS=[['todo','Не выполнено'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]},locked=[];
   const f=Object.assign({},PBD,window.PBF),td=today(),WK=C.weeks.filter(w=>w.tasks.length);
   const pass=(w,t)=>{const s=stOf(t.id),d=w.due;
     if(f.st!=='all'&&String(w.n)!==String(f.st))return false;
@@ -1167,8 +1167,8 @@ function stTasks(adm){
       if(!d||d<a||d>b)return false}
     return true};
   const TXb=((ST.meta.refl||{}).tx)||{};
-  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);cards[s==='done'?'done':'todo'].push({k:'p',id:t.id,w,t,s,text:TXb[t.id]||t.text})})});
-  (Array.isArray(ST.meta.todo)?ST.meta.todo:[]).forEach(x=>{if(f.st!=='all'&&String(x.w)!==String(f.st))return;if(f.q&&String(x.text).toLowerCase().indexOf(f.q.toLowerCase())<0)return;if(f.mode!=='all')return;cards[x.done?'done':'todo'].push({k:'m',id:x.id,x,s:x.done?'done':'todo',text:x.text})});
+  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);{const st3=stateOfP(t.id);cards[st3].push({k:'p',id:t.id,w,t,s:st3,text:TXb[t.id]||t.text})}})});
+  (Array.isArray(ST.meta.todo)?ST.meta.todo:[]).forEach(x=>{if(f.st!=='all'&&String(x.w)!==String(f.st))return;if(f.q&&String(x.text).toLowerCase().indexOf(f.q.toLowerCase())<0)return;if(f.mode!=='all')return;{const st3=x.done?'done':x.doing?'doing':'todo';cards[st3].push({k:'m',id:x.id,x,s:st3,text:x.text})}});
   const ac=cards[window.PBC]?window.PBC:'todo';
   const MODE={week:'Эта неделя',next:'Следующая неделя',late:'Просрочено',range:'Свой срок'},pills=[];
   const pill=(k,t)=>pills.push(`<span class="fpl">${t}<button data-a="pbfr" data-k="${k}" title="Убрать">✕</button></span>`);
@@ -1183,7 +1183,7 @@ function stTasks(adm){
    <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbfx">Показать задачи</button><button class="bt2" data-a="pbfreset">Сбросить всё</button></div></div></div>`:'';
   const asb=!!window.ASPFX,cwn=(curWeek(ST.p)||{}).n;
   const card=c=>{const d=c.s==='done',late=!d&&c.w&&c.w.due&&c.w.due<td,chip=c.k==='m'?(c.x.w!==undefined&&c.x.w!==null&&!isNaN(c.x.w)?'Моя · нед. '+c.x.w:'Моя задача'):(c.w.n>6?'Сопровождение':'Неделя '+c.w.n);
-    return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><div class="tx"><div class="tm" style="margin:0 0 4px"><span class="pl2 kst">${esc(chip)}</span>${late?'<small class="late">срок прошёл</small>':''}</div><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button></div></div>`};
+    return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':c.s==='doing'?'r':''}">${d?SV.check:''}</span></button><div class="tx"><div class="tm" style="margin:0 0 4px"><span class="pl2 kst">${esc(chip)}</span>${late?'<small class="late">срок прошёл</small>':''}</div><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button></div></div>`};
   const addc=`<div class="sxadd" style="margin:0 0 10px"><input id="td-i" type="text" maxlength="140" data-w="${cwn===undefined?'':cwn}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`;
   return `<h1 class="t">${adm?'Программа':'Задачи'}</h1>
   <div class="fbar2" style="margin-top:14px"><div class="fsrch"><input type="search" id="pf-q" placeholder="Поиск по задачам" value="${esc(f.q)}"></div><button class="ftb ${n?'on':''}" data-a="pbfx">Фильтры${n?` <b>${n}</b>`:''}</button></div>${n?`<div class="fpills">${pills.join('')}<button class="fclr" data-a="pbfreset">Сбросить</button></div>`:''}${panel}
@@ -1872,12 +1872,10 @@ const A={
  pricancel(){window.PEDN=null;render(true)},
  async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
  async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
- async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});render(true)},
+ async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
- async tmst(el){const m=window.TMOD,want=el.dataset.v==='1';if(!m)return;
-  if(m.k==='m'){const x=(CM().todo||[]).find(y=>y.id===m.id);if(x&&!!x.done!==want)await A.todotg({dataset:{id:m.id}})}
-  else if((stOf(m.id)==='done')!==want)await A.chk({dataset:{id:m.id}})},
+ async tmst(el){const m=window.TMOD;if(!m)return;await setState(m.id,m.k,el.dataset.v);render(true)},
  async tmsave(){const m=window.TMOD,v=($('#tm-t').value||'').trim();if(!m)return;if(!v){toast('Напиши текст задачи');return}
   let ok;if(m.k==='m')ok=await putMeta('todo',(CM().todo||[]).map(x=>x.id===m.id?Object.assign({},x,{text:v.slice(0,200)}):x));
   else{const r=Object.assign({},CM().refl||{}),tx=Object.assign({},r.tx||{}),t=TM[m.id];if(t&&v===t.text)delete tx[m.id];else tx[m.id]=v.slice(0,200);r.tx=tx;ok=await putMeta('refl',r)}
@@ -1981,6 +1979,11 @@ const CM=()=>{const am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);return am?mmap
 async function putMeta(k,v){const am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);
   if(am){await setM(am[1],k,v);const m=(AD.meta||[]).find(x=>x.slot===am[1]&&x.k===k);return !!m&&JSON.stringify(m.v)===JSON.stringify(v)}
   const ok=await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:k,p_v:v}));if(!ok)return false;ST.meta[k]=v;return true}
+const stateOfP=id=>stOf(id)==='done'?'done':((((ST.meta.refl||{}).dg)||{})[id]?'doing':'todo');
+async function setState(id,k,want){
+  if(k==='m'){return putMeta('todo',(CM().todo||[]).map(x=>x.id===id?Object.assign({},x,{done:want==='done',doing:want==='doing'}):x))}
+  const cur=stOf(id)==='done';if(cur!==(want==='done'))await A.chk({dataset:{id}});
+  const r=Object.assign({},CM().refl||{}),dg=Object.assign({},r.dg||{});if(want==='doing')dg[id]=1;else delete dg[id];r.dg=dg;return putMeta('refl',r)}
 function rfields(){const g=k=>(($('#rp-'+k)||{}).value||'').trim();return {a:g('a'),b:g('b'),c:g('c'),d:g('d')}}
 async function rsave(n,action,f){const id='rep'+n,a=JSON.stringify(f),r=await call(()=>rpc('okean_save',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_answer:a,p_link:'',p_action:action}));if(!r)return false;
   const row=Object.assign({task_id:id,feedback:'',reviewed_at:null},ST.p[id],{answer:a,link:'',status:r.status,updated_at:new Date().toISOString()});if(action==='submit')row.submitted_at=new Date().toISOString();ST.p[id]=row;ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];return true}
@@ -1997,7 +2000,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
 root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.tc[data-sid]');if(c){e.dataTransfer.setData('text/plain','sid:'+c.dataset.sid+'|'+(c.dataset.k||'p'));e.dataTransfer.effectAllowed='move';c.classList.add('drag');e.stopImmediatePropagation()}},true);
-root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0||window.ASPFX)return;const pr=d.slice(4).split('|'),id=pr[0],k=pr[1]||'p',cur=k==='m'?!!((ST.meta.todo||[]).find(x=>x.id===id)||{}).done:stOf(id)==='done';if((col.dataset.sst==='done')!==cur){if(k==='m')A.todotg({dataset:{id}});else A.chk({dataset:{id}})}},true);
+root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0||window.ASPFX)return;const pr=d.slice(4).split('|'),id=pr[0],k=pr[1]||'p',want=col.dataset.sst;setState(id,k,want);},true);
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.tc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'));document.querySelectorAll('.dropline').forEach(x=>x.remove())});
 function dropIdx(list,y){const cards=[...list.querySelectorAll('.tc:not(.drag)')];for(const c of cards){const r=c.getBoundingClientRect();if(y<r.top+r.height/2)return {el:c,idx:+c.dataset.t}}return {el:null,idx:null}}
 root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();const d=dropIdx(tl,e.clientY);document.querySelectorAll('.dropline').forEach(x=>x.remove());const ln=document.createElement('div');ln.className='dropline';const box=tl.querySelector('.tcards');if(d.el)d.el.before(ln);else box.appendChild(ln);return}
