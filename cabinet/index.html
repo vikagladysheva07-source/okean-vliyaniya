@@ -824,6 +824,8 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .kb .tc{padding:16px 16px!important}
 .kb .tc .sxtt2{-webkit-line-clamp:unset!important;display:block!important;font-size:15.5px;line-height:1.4;overflow:visible!important}
 .main.wide:has(.kb){max-width:1280px}
+
+.lkb{color:#C4A4FF;text-decoration:underline;font:inherit;cursor:pointer;background:none;border:0;padding:0}
 </style>
 </head>
 <body>
@@ -947,7 +949,9 @@ async function refresh(){
 function today(){const q=new URLSearchParams(location.search).get('d');if(ME&&ME.role==='admin'&&/^\d{4}-\d\d-\d\d$/.test(q||''))return q;return ymd(new Date())}
 const isOpen=(w,m)=>{const un=((m||ST.meta).unlock||[]);return (ME.role==='admin'&&!m)||un.includes(w.n)||dnum(today())>=dnum(w.opens)};
 const stOf=(id,P)=>((P||ST.p)[id]||{}).status||'todo';
-const wcount=(w,P)=>{const c={todo:0,review:0,revision:0,done:0};w.tasks.forEach(t=>c[stOf(t.id,P)]++);return c};
+const vis=t=>!((((ST&&ST.meta||{}).refl||{}).hid||{})[t.id]);
+const isOwnP=P=>!P||(ST&&P===ST.p);
+const wcount=(w,P)=>{const c={todo:0,review:0,revision:0,done:0},own=isOwnP(P);w.tasks.forEach(t=>{if(own&&!vis(t))return;c[stOf(t.id,P)]++});return c};
 const wsub=(w,P)=>{const c=wcount(w,P);return (c.done+c.review)/(w.tasks.length||1)};
 const wfull=(w,P)=>!!w.tasks.length&&stOf('rep'+w.n,P)==='done';
 const wsubm=(w,P)=>w.tasks.length>0&&['review','done'].includes(stOf('rep'+w.n,P));
@@ -957,7 +961,7 @@ function wview(){const base=C.weeks.filter(w=>w.n<=6),sp=C.weeks.filter(w=>w.n>6
 const wcur=(v,cw)=>v.sup?cw.n>6:v===cw;
 
 function depthOf(P){let m=0;C.weeks.forEach((w,i)=>{const prev=i?C.weeks[i-1].depth:0;m+=(w.depth-prev)*wsub(w,P)});return m}
-function totals(P){const c={todo:0,review:0,revision:0,done:0};TK.forEach(t=>c[stOf(t.id,P)]++);return c}
+function totals(P){const c={todo:0,review:0,revision:0,done:0},own=isOwnP(P);TK.forEach(t=>{if(own&&!vis(t))return;c[stOf(t.id,P)]++});return c}
 function dueLeft(w){return dnum(w.due)-dnum(today())}
 const leftTxt=k=>k>2?'':k===0?' · сегодня последний день':k===1?' · остался 1 день':' · осталось '+k+' дня';
 function streak(days){const s=new Set(days||[]);let n=0,d=dnum(today());if(!s.has(ymdOf(d)))d--;while(s.has(ymdOf(d))){n++;d--}return n}
@@ -1095,12 +1099,12 @@ function taskModal2(){const m=window.TMOD;if(!m)return '';const as=!!window.ASPF
    <small class="l">Задача</small><textarea id="tm-t" maxlength="200" style="min-height:76px">${esc(text)}</textarea>
    ${hint?`<small class="l" style="margin-top:12px">Как делать</small><p class="tmh">${esc(hint)}</p>`:''}
    <small class="l" style="margin-top:12px">Статус</small><div class="chp">${[['todo','Не выполнено'],['doing','В работе'],['done','Выполнено']].map(o=>`<button class="${stt===o[0]?'on':''}" ${as?'disabled':`data-a="tmst" data-v="${o[0]}"`}>${o[1]}</button>`).join('')}</div>
-   <div class="row" style="margin-top:16px"><button class="bt2 v" data-a="tmsave">Сохранить</button>${over?`<button class="bt2" data-a="trst" data-id="${esc(m.id)}">Как в программе</button>`:''}${own?`<button class="bt2" data-a="tmdel">Удалить</button>`:''}</div></div></div>`}
+   <div class="row" style="margin-top:16px"><button class="bt2 v" data-a="tmsave">Сохранить</button>${over?`<button class="bt2" data-a="trst" data-id="${esc(m.id)}">Как в программе</button>`:''}<button class="bt2" data-a="tmdel">Удалить</button></div></div></div>`}
 function homeV(){
-  const N=TK.length,c=totals(ST.p),cw=curWeek(ST.p),st=streak(ST.days),V=wview();
+  const N=TK.filter(vis).length,c=totals(ST.p),cw=curWeek(ST.p),st=streak(ST.days),V=wview();
   const nt=cw.tasks.find(t=>['todo','revision'].includes(stOf(t.id)));
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]);
-  const nm=firstName(ME.name)||'друг',wc=wcount(cw),WT=cw.tasks.length,wp=WT?Math.round(wc.done/WT*100):0,pp=pct(c.done,N);
+  const nm=firstName(ME.name)||'друг',wc=wcount(cw),WT=cw.tasks.filter(vis).length,wp=WT?Math.round(wc.done/WT*100):0,pp=pct(c.done,N);
   const pn=v=>parseFloat(String(v).replace(',','.'))||0,fx=n=>String(Math.round(n*10)/10).replace('.',','),ix=ST.meta.idx||{},i0=pn(ix.start),i1=pn(ix.final),has0=String(ix.start||'')!=='',has1=String(ix.final||'')!=='',iv=has1?i1:has0?i0:null;
   const ci=Math.max(0,V.findIndex(w=>wcur(w,cw))),wnum=cw.n>6?'Сопровождение':cw.n===0?'Подготовка':'Неделя '+cw.n;
   const as=!!window.ASPFX,ph=ST.meta.photo;
@@ -1134,7 +1138,7 @@ function homeV(){
    <div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-pp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${pp}%</b></div></div>
    <div class="sxgf">Принято ${c.done} из ${N} ${plur(N,'задания','заданий','заданий')}</div></div>`;
   /* программа: блок на каждую неделю */
-  const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.length,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
+  const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.filter(vis).length,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
     const segs=[...Array(Math.max(T,1))].map((_,k)=>`<i class="${op&&k<cc.done?'on':''}"></i>`).join('');
     return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><em>${esc(num)}${cur?' · сейчас':''}</em><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2g">${segs}${op&&T?`<span>${f?'принята':cc.done+' из '+T}</span>`:''}</div><i class="sxw2a">${f?SV.check:ico('chev')}</i></a>`}).join('');
   const prog=`<div class="sx sxa0"><div class="sxh">Программа</div><div class="sxwg">${wb}</div></div>`;
@@ -1143,7 +1147,7 @@ function homeV(){
   const TW=VT[ti]||cw;window.TKCUR=TW.n;const top=isOpen(TW),parts2=TW.sup?TW.parts:[TW],isCW=TW===V.find(w=>wcur(w,cw)),nid=nt&&isCW?nt.id:null;
   const TD=Array.isArray(ST.meta.todo)?ST.meta.todo:[];
   const own=TD.filter(x=>x.w===undefined?isCW:x.w===TW.n);
-  let items=[].concat(...parts2.map(q=>q.tasks.map(t=>({k:'p',t,o:isOpen(q),s:stOf(t.id)})))).concat(own.map(x=>({k:'m',x,s:x.done?'done':'todo'})));
+  let items=[].concat(...parts2.map(q=>q.tasks.filter(vis).map(t=>({k:'p',t,o:isOpen(q),s:stOf(t.id)})))).concat(own.map(x=>({k:'m',x,s:x.done?'done':'todo'})));
   items=items.map((it,i)=>Object.assign(it,{i})).sort((a,b)=>((a.s==='done')-(b.s==='done'))||(a.i-b.i));
   const tdn=items.filter(x=>x.s==='done').length,tnm=TW.n===0?'Подготовка':TW.sup?'Сопровождение':'Неделя '+TW.n;
   const TX=((ST.meta.refl||{}).tx)||{},ttx=t=>TX[t.id]||t.text;
@@ -1174,7 +1178,7 @@ function stTasks(adm){
       if(!d||d<a||d>b)return false}
     return true};
   const TXb=((ST.meta.refl||{}).tx)||{};
-  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);{const st3=stateOfP(t.id);cards[st3].push({k:'p',id:t.id,w,t,s:st3,text:TXb[t.id]||t.text})}})});
+  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!vis(t)||!pass(w,t))return;const s=stOf(t.id);{const st3=stateOfP(t.id);cards[st3].push({k:'p',id:t.id,w,t,s:st3,text:TXb[t.id]||t.text})}})});
   (Array.isArray(ST.meta.todo)?ST.meta.todo:[]).forEach(x=>{if(f.st!=='all'&&String(x.w)!==String(f.st))return;if(f.q&&String(x.text).toLowerCase().indexOf(f.q.toLowerCase())<0)return;if(f.mode!=='all')return;{const st3=x.done?'done':x.doing?'doing':'todo';cards[st3].push({k:'m',id:x.id,x,s:st3,text:x.text})}});
   const ac=cards[window.PBC]?window.PBC:'todo';
   const MODE={week:'Эта неделя',next:'Следующая неделя',late:'Просрочено',range:'Свой срок'},pills=[];
@@ -1196,7 +1200,7 @@ function stTasks(adm){
   <div class="fbar2" style="margin-top:14px"><div class="fsrch"><input type="search" id="pf-q" placeholder="Поиск по задачам" value="${esc(f.q)}"></div><button class="ftb ${n?'on':''}" data-a="pbfx">Фильтры${n?` <b>${n}</b>`:''}</button></div>${n?`<div class="fpills">${pills.join('')}<button class="fclr" data-a="pbfreset">Сбросить</button></div>`:''}${panel}
   <div class="ktabs" style="margin-top:14px">${COLS.map(([k,nm])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${nm} <em>${cards[k].length}</em></button>`).join('')}</div>
   <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b><span class="pl2">${cards[k].length}</span></div>${k==='todo'?addc:''}<div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">Пусто</div>'}</div></div>`).join('')}</div>
-  ${locked.length?`<p class="mu2" style="margin-top:12px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}${taskModal2()}`;
+  ${Object.keys(((ST.meta.refl||{}).hid)||{}).length?`<p class="mu2" style="margin-top:12px">Удалено задач: ${Object.keys(ST.meta.refl.hid).length}. <button class="lkb" data-a="hidreset">Вернуть</button></p>`:''}${locked.length?`<p class="mu2" style="margin-top:12px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}${taskModal2()}`;
 }
 function taskV(id){
   const t=TM[id];if(!t)return '<p class="sub">Задание не найдено.</p>';
@@ -1229,7 +1233,7 @@ function weekV(n){
     <div class="sxrow"><button class="sxbtn" data-a="prisave" data-n="${n}">Сохранить</button><button class="sxbtn g" data-a="pricancel">Отмена</button>${Array.isArray(own)?`<button class="sxbtn g" data-a="prireset" data-n="${n}">Вернуть как в программе</button>`:''}</div></div>`
    :`<div class="sx wk3"><div class="sxh">Приоритеты недели${ME.role==='student'?`<button class="sxar" data-a="priedit" data-n="${n}" aria-label="Изменить приоритеты" title="Изменить">✎</button>`:''}</div>${PR.length?PR.map((x,i)=>`<div class="wkp"><span>${i+1}</span><div><b>${esc(x.t)}</b>${x.h?`<small>${esc(x.h)}</small>`:''}</div></div>`).join(''):'<p class="sxsub">Приоритеты на эту неделю ещё не заданы.</p>'}</div>`;
   const TXw=((ST.meta.refl||{}).tx)||{};
-  const tasks=`<div class="sx wk3"><div class="sxh">Задания<span class="sxsub">${cc.done} из ${w.tasks.length}</span></div><div class="wktl">${w.tasks.map(t=>{const d=stOf(t.id)==='done';return `<div class="sxtd td"><button class="sxcb" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${t.id}" data-k="p">${esc(TXw[t.id]||t.text)}</button></div>`}).join('')}</div></div>`;
+  const tasks=`<div class="sx wk3"><div class="sxh">Задания<span class="sxsub">${cc.done} из ${w.tasks.filter(vis).length}</span></div><div class="wktl">${w.tasks.filter(vis).map(t=>{const d=stOf(t.id)==='done';return `<div class="sxtd td"><button class="sxcb" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${t.id}" data-k="p">${esc(TXw[t.id]||t.text)}</button></div>`}).join('')}</div></div>`;
   const F=[['a','Что сделал','Факты и цифры, ссылки на результаты'],['b','Главный результат недели','Одно число или одна фраза'],['c','Что мешало','Коротко'],['d','Что беру на следующую неделю','Один шаг']];
   const rep=`<div class="sx wk3"><div class="sxh">Отчёт<span class="sxsub">${rs==='done'?'принят':rs==='review'?'на проверке':'сдаёшь в конце недели'}</span></div>
    ${rs==='revision'?`<div class="fbk bad"><small>Вернулось на доработку${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback||'Посмотри комментарий и доработай.')}</p></div>`:''}${rs==='done'&&r.feedback?`<div class="fbk"><small>Комментарий${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback)}</p></div>`:''}
@@ -1887,7 +1891,10 @@ const A={
   let ok;if(m.k==='m')ok=await putMeta('todo',(CM().todo||[]).map(x=>x.id===m.id?Object.assign({},x,{text:v.slice(0,200)}):x));
   else{const r=Object.assign({},CM().refl||{}),tx=Object.assign({},r.tx||{}),t=TM[m.id];if(t&&v===t.text)delete tx[m.id];else tx[m.id]=v.slice(0,200);r.tx=tx;ok=await putMeta('refl',r)}
   if(ok){window.TMOD=null;toast('Сохранено');render(true)}},
- async tmdel(){const m=window.TMOD;if(!m||m.k!=='m')return;if(await putMeta('todo',(CM().todo||[]).filter(x=>x.id!==m.id))){window.TMOD=null;render(true)}},
+ async tmdel(){const m=window.TMOD;if(!m)return;
+  if(m.k==='m'){if(await putMeta('todo',(CM().todo||[]).filter(x=>x.id!==m.id))){window.TMOD=null;render(true)}return}
+  const r=Object.assign({},CM().refl||{}),hid=Object.assign({},r.hid||{});hid[m.id]=1;r.hid=hid;if(await putMeta('refl',r)){window.TMOD=null;toast('Задача удалена');render(true)}},
+ async hidreset(){const r=Object.assign({},CM().refl||{});delete r.hid;if(await putMeta('refl',r)){toast('Удалённые задачи вернулись');render(true)}},
  async trst(el){const id=el.dataset.id,r=Object.assign({},CM().refl||{}),tx=Object.assign({},r.tx||{});delete tx[id];r.tx=tx;if(await putMeta('refl',r)){window.TMOD=null;render(true)}},
  async todosave(a){const ok=await putMeta('todo',a);if(ok)render(true);return ok},
  async todoadd(){const i=$('#td-i'),v=(i&&i.value||'').trim();if(!v)return;const a=(CM().todo||[]).slice();if(a.length>=60){toast('Список полон, удали выполненные задачи.');return}a.unshift({id:Math.random().toString(36).slice(2,9),text:v.slice(0,140),done:false,w:+(i.dataset.w)});window.AFTER=()=>{const x=$('#td-i');if(x)x.focus()};await A.todosave(a)},
@@ -2001,7 +2008,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
