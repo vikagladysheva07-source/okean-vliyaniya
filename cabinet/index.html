@@ -744,6 +744,15 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxr{grid-column:4;grid-row:1}
 @media(max-width:1180px){.sxi.sxi2{grid-column:span 2}.sxr{grid-column:auto;grid-row:auto}}
 @media(max-width:700px){.sxi.sxi2{grid-column:auto}.sxix{grid-template-columns:1fr}.sxi2 .sxn{font-size:48px}}
+
+/* страница недели: приоритеты, задания, отчёт */
+.wk3{margin-top:14px}.wk3 .sxh{margin-bottom:8px}.wk3 .sxh .sxar{cursor:pointer;font-size:15px}
+.wkp{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(196,164,255,.09)}.wkp:last-child{border:0}.wkp>span{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:13px;background:rgba(255,255,255,.07);border:1px solid rgba(196,164,255,.3)}.wkp b{display:block;font-weight:500;font-size:15.5px;line-height:1.35}.wkp small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.wkpe{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-top:8px}.wkpe input{min-width:0}
+.wkt{display:flex;gap:14px;align-items:flex-start;width:100%;padding:13px 4px;border-bottom:1px solid rgba(196,164,255,.09);text-align:left;color:var(--text);font:inherit;background:none;border-left:0;border-right:0;border-top:0;border-radius:0;cursor:pointer}.wkt:last-child{border-bottom:0}.wkt:hover{background:rgba(255,255,255,.03)}.wkt[disabled]{cursor:default}
+.wkt .sxck2{margin-top:2px}.wktx{min-width:0}.wktx b{display:block;font-weight:500;font-size:15px;line-height:1.4}.wktx small{display:block;color:var(--muted);font-size:13px;line-height:1.4;margin-top:3px}.wkt.dn .wktx b{color:var(--muted);text-decoration:line-through}
+.wkrf{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}.wkrf textarea{min-height:92px;width:100%}.wkro{margin-top:10px}.wkro small{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.wkro p{font-size:14.5px;line-height:1.5;white-space:pre-wrap}
+@media(max-width:700px){.wkpe,.wkrf{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -869,8 +878,8 @@ const isOpen=(w,m)=>{const un=((m||ST.meta).unlock||[]);return (ME.role==='admin
 const stOf=(id,P)=>((P||ST.p)[id]||{}).status||'todo';
 const wcount=(w,P)=>{const c={todo:0,review:0,revision:0,done:0};w.tasks.forEach(t=>c[stOf(t.id,P)]++);return c};
 const wsub=(w,P)=>{const c=wcount(w,P);return (c.done+c.review)/(w.tasks.length||1)};
-const wfull=(w,P)=>w.tasks.length&&wcount(w,P).done===w.tasks.length;
-const wsubm=(w,P)=>{const c=wcount(w,P);return c.done+c.review===w.tasks.length&&w.tasks.length>0};
+const wfull=(w,P)=>!!w.tasks.length&&stOf('rep'+w.n,P)==='done';
+const wsubm=(w,P)=>w.tasks.length>0&&['review','done'].includes(stOf('rep'+w.n,P));
 /* недели сопровождения (n>6) показываем одной ячейкой */
 function wview(){const base=C.weeks.filter(w=>w.n<=6),sp=C.weeks.filter(w=>w.n>6);if(!sp.length)return base;
  const f=sp[0],l=sp[sp.length-1];return base.concat([{n:f.n,sup:true,parts:sp,title:'Сопровождение',goal:f.goal,opens:f.opens,due:l.due,dates:(f.dates||'').split('–')[0].trim()+(l.dates?' – '+(l.dates.split('–').pop()||'').trim():''),tasks:[].concat(...sp.map(x=>x.tasks)),meetings:[].concat(...sp.map(x=>x.meetings||[]))}])}
@@ -1057,7 +1066,7 @@ function homeV(){
   const tdn=items.filter(x=>x.s==='done').length,tnm=TW.n===0?'Подготовка':TW.sup?'Сопровождение':'Неделя '+TW.n;
   const rows=items.map(it=>{
     if(it.k==='m'){const x=it.x,d=x.done;return `<div class="sxtd td"><button class="sxtdb" data-a="todotg" data-id="${esc(x.id)}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span><span class="sxtt ${d?'dn':''}">${esc(x.text)}</span></button><button class="sxx" data-a="tododel" data-id="${esc(x.id)}" aria-label="Удалить">×</button></div>`}
-    const t=it.t,st2=it.s,d=st2==='done',sf=!!t.self&&it.o;const inner=`<span class="sxck2 ${d?'d':st2==='review'?'r':''}">${d?SV.check:''}</span><span class="sxtt ${d?'dn':''}">${esc(t.text)}</span>`;
+    const t=it.t,st2=it.s,d=st2==='done',sf=it.o;const inner=`<span class="sxck2 ${d?'d':st2==='review'?'r':''}">${d?SV.check:''}</span><span class="sxtt ${d?'dn':''}">${esc(t.text)}</span>`;
     return sf?`<button class="sxtd sf ${nid===t.id?'go':''}" data-a="chk" data-id="${t.id}" aria-pressed="${d}">${inner}</button>`:it.o?`<a class="sxtd ${nid===t.id?'go':''}" href="#/task/${t.id}">${inner}</a>`:`<div class="sxtd lk">${inner}</div>`}).join('');
   const add=(!as&&top)?`<div class="sxadd"><input id="td-i" type="text" maxlength="140" data-w="${TW.n}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`:'';
   const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?tdn+' из '+items.length:'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
@@ -1068,7 +1077,7 @@ function homeV(){
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>`;
 }
 function stTasks(adm){
-  const COLS=[['todo','Не выполнено'],['review','В работе'],['done','Готово']],cards={todo:[],review:[],done:[]},locked=[];
+  const COLS=[['todo','Не выполнено'],['done','Готово']],cards={todo:[],done:[]},locked=[];
   const f=Object.assign({},PBD,window.PBF),td=today(),WK=C.weeks.filter(w=>w.tasks.length);
   const pass=(w,t)=>{const s=stOf(t.id),d=w.due;
     if(f.st!=='all'&&String(w.n)!==String(f.st))return false;
@@ -1080,7 +1089,7 @@ function stTasks(adm){
       else{a=f.from||'0000-00-00';b=f.to||'9999-99-99'}
       if(!d||d<a||d>b)return false}
     return true};
-  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);cards[s==='revision'?'todo':s].push({w,t,s})})});
+  WK.forEach(w=>{if(!isOpen(w)){locked.push(w);return}w.tasks.forEach(t=>{if(!pass(w,t))return;const s=stOf(t.id);cards[s==='done'?'done':'todo'].push({w,t,s})})});
   const ac=cards[window.PBC]?window.PBC:'todo';
   const MODE={week:'Эта неделя',next:'Следующая неделя',late:'Просрочено',range:'Свой срок'},pills=[];
   const pill=(k,t)=>pills.push(`<span class="fpl">${t}<button data-a="pbfr" data-k="${k}" title="Убрать">✕</button></span>`);
@@ -1094,12 +1103,12 @@ function stTasks(adm){
    <small class="l">Неделя</small><div style="margin:6px 0 12px">${ddHtml('pf-s',[['all','Любая неделя']].concat(WK.filter(w=>isOpen(w)).map(w=>[w.n,esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: '))])),f.st,'pbf','data-k="st"')}</div>
    <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbfx">Показать задачи</button><button class="bt2" data-a="pbfreset">Сбросить всё</button></div></div></div>`:'';
   const card=({w,t,s})=>{const late=s!=='done'&&s!=='review'&&w.due&&w.due<td,fb=s==='revision'&&ST.p[t.id]&&ST.p[t.id].feedback;
-    return `<div class="tc ${s==='done'?'done':''}" draggable="true" data-a="stopen" data-sid="${t.id}"><span class="tcb ${s==='done'?'done':s==='review'?'doing':''}" style="pointer-events:none"></span><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,30))}</span>${s==='revision'?'<span class="pri high">Доработка</span>':s==='review'?'<span class="pl2">на проверке</span>':''}</div><p>${esc(t.text)}</p>${fb?`<div class="tm"><small>${esc(fb.slice(0,90))}</small></div>`:''}<div class="tm">${s!=='done'?`<small class="${late?'late':''}">${late?'просрочено · ':'до '}${fdate(w.due)}</small>`:''}</div></div></div>`};
+    return `<div class="tc ${s==='done'?'done':''}" draggable="true" data-a="chk" data-id="${t.id}" data-sid="${t.id}"><span class="tcb ${s==='done'?'done':s==='review'?'doing':''}" style="pointer-events:none"></span><div class="tx"><div class="tm" style="margin:0 0 6px"><span class="pl2 kst">${esc(wt(w).replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,30))}</span>${s==='revision'?'<span class="pri high">Доработка</span>':s==='review'?'<span class="pl2">на проверке</span>':''}</div><p>${esc(t.text)}</p>${fb?`<div class="tm"><small>${esc(fb.slice(0,90))}</small></div>`:''}<div class="tm">${s!=='done'?`<small class="${late?'late':''}">${late?'просрочено · ':'до '}${fdate(w.due)}</small>`:''}</div></div></div>`};
   return `<h1 class="t">${adm?'Программа':'Задания'}</h1><p class="sub">${adm?'Как видят программу участники. У тебя открыты все недели.':'Открой карточку, напиши ответ или добавь ссылку и отправь на проверку.'}</p>
   <div class="fbar2" style="margin-top:14px"><div class="fsrch"><input type="search" id="pf-q" placeholder="Поиск по задачам" value="${esc(f.q)}"></div><button class="ftb ${n?'on':''}" data-a="pbfx">Фильтры${n?` <b>${n}</b>`:''}</button></div>${n?`<div class="fpills">${pills.join('')}<button class="fclr" data-a="pbfreset">Сбросить</button></div>`:''}${panel}
   <div class="ktabs" style="margin-top:14px">${COLS.map(([k,nm])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${nm} <em>${cards[k].length}</em></button>`).join('')}</div>
   <div class="kb" style="margin-top:14px">${COLS.map(([k,nm])=>`<div class="kcol ${ac===k?'act':''}" data-sst="${k}"><div class="kh"><b>${nm}</b><span class="pl2">${cards[k].length}</span></div><div class="tcards" style="max-height:none">${cards[k].map(card).join('')||'<div class="kempty">'+'Пусто'+'</div>'}</div></div>`).join('')}</div>
-  <p class="mu2" style="margin-top:10px">Нажми на карточку, чтобы открыть задание и отправить ответ. Принимаю работы и возвращаю на доработку я.</p>
+  <p class="mu2" style="margin-top:10px">Нажми на задание, чтобы отметить его выполненным. Отчёт за неделю сдаётся на странице недели.</p>
   ${locked.length?`<p class="mu2" style="margin-top:6px">Ещё закрыто: ${locked.map(w=>esc(w.title)+' (откроется '+fdate(w.opens)+')').join(', ')}.</p>`:''}`;
 }
 function taskV(id){
@@ -1123,21 +1132,25 @@ function taskV(id){
   :`<div class="card">${r.answer?`<div class="ans">${esc(r.answer)}</div>`:'<span class="sub">Ответ без текста.</span>'}${r.link?`<div style="margin-top:10px"><a class="lk" href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.link)}</a></div>`:''}${r.submitted_at?`<p class="sub" style="font-size:12.5px;margin-top:10px">Отправлено ${fdt(r.submitted_at)}</p>`:''}</div>
   ${s==='review'?`<div class="row"><button class="btn g" data-a="withdraw" data-id="${id}">Забрать и изменить</button></div>`:''}`}`;
 }
+function repOf(id){try{return JSON.parse((ST.p[id]||{}).answer||'{}')||{}}catch(e){return {}}}
 function weekV(n){
   const w=C.weeks.find(x=>x.n===n);if(!w||!isOpen(w))return '<a class="back" href="#/">← Обзор</a><p class="sub">Эта неделя ещё закрыта.</p>';
-  const tn=trNames(ME.track),txs=trIds(ME.track).map(i=>w.tracks&&w.tracks[i]).filter(Boolean);
-  const sc=(ST.meta.scale||{})[w.n]||0,rf=((ST.meta.refl||{})[w.n])||{},fb=(ST.meta.fb||{})[w.n],lk=dueLeft(w),cc=wcount(w);
+  const as=!!window.ASPFX,rid='rep'+n,r=ST.p[rid]||{},rs=r.status||'todo',ed=(rs==='todo'||rs==='revision')&&!as,rp=repOf(rid),cc=wcount(w),lk=dueLeft(w);
+  const own=(ST.meta.prio||{})[n],PR=(Array.isArray(own)&&own.length?own:(w.priorities||[])).filter(x=>x&&x.t),pe=window.PEDN===n&&!as&&ME.role==='student';
+  const chip=rs==='done'?'<span class="chip ok">неделя принята</span>':rs==='review'?'<span class="chip">отчёт на проверке</span>':rs==='revision'?'<span class="chip warn">отчёт вернулся на доработку</span>':lk<0?`<span class="chip warn">срок прошёл ${-lk} дн. назад</span>`:`<span class="chip">до ${fdate(w.due)}</span>`;
+  const prb=pe?`<div class="sx wk3"><div class="sxh">Приоритеты недели</div>${[0,1,2].map(i=>{const x=PR[i]||{t:'',h:''};return `<div class="wkpe"><input class="pri-t" type="text" maxlength="140" placeholder="Приоритет ${i+1}" value="${esc(x.t||'')}"><input class="pri-h" type="text" maxlength="160" placeholder="Готово, когда" value="${esc(x.h||'')}"></div>`}).join('')}
+    <div class="sxrow"><button class="sxbtn" data-a="prisave" data-n="${n}">Сохранить</button><button class="sxbtn g" data-a="pricancel">Отмена</button>${Array.isArray(own)?`<button class="sxbtn g" data-a="prireset" data-n="${n}">Вернуть как в программе</button>`:''}</div></div>`
+   :`<div class="sx wk3"><div class="sxh">Приоритеты недели${(!as&&ME.role==='student')?`<button class="sxar" data-a="priedit" data-n="${n}" aria-label="Изменить приоритеты" title="Изменить">✎</button>`:''}</div>${PR.length?PR.map((x,i)=>`<div class="wkp"><span>${i+1}</span><div><b>${esc(x.t)}</b>${x.h?`<small>${esc(x.h)}</small>`:''}</div></div>`).join(''):'<p class="sxsub">Приоритеты на эту неделю ещё не заданы.</p>'}</div>`;
+  const tasks=`<div class="sx wk3"><div class="sxh">Задания<span class="sxsub">${cc.done} из ${w.tasks.length}</span></div>${w.tasks.map(t=>{const d=stOf(t.id)==='done';return `<button class="wkt ${d?'dn':''}" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span><span class="wktx"><b>${esc(t.text)}</b>${t.hint?`<small>${esc(t.hint)}</small>`:''}</span></button>`}).join('')}</div>`;
+  const F=[['a','Что сделал','Факты и цифры, ссылки на результаты'],['b','Главный результат недели','Одно число или одна фраза'],['c','Что мешало','Коротко'],['d','Что беру на следующую неделю','Один шаг']];
+  const rep=`<div class="sx wk3"><div class="sxh">Отчёт<span class="sxsub">${rs==='done'?'принят':rs==='review'?'на проверке':'сдаёшь в конце недели'}</span></div>
+   ${rs==='revision'?`<div class="fbk bad"><small>Вернулось на доработку${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback||'Посмотри комментарий и доработай.')}</p></div>`:''}${rs==='done'&&r.feedback?`<div class="fbk"><small>Комментарий${r.reviewed_at?' · '+fdt(r.reviewed_at):''}</small><p>${esc(r.feedback)}</p></div>`:''}
+   ${ed?`<div class="wkrf">${F.map(f=>`<div><small class="l">${f[1]}</small><textarea id="rp-${f[0]}" maxlength="1500" placeholder="${f[2]}">${esc(rp[f[0]]||'')}</textarea></div>`).join('')}</div><div class="sxrow"><button class="sxbtn" data-a="rsub" data-n="${n}">Отправить отчёт</button><button class="sxbtn g" data-a="rdraft" data-n="${n}">Сохранить черновик</button></div>`
+   :`${F.map(f=>rp[f[0]]?`<div class="wkro"><small>${f[1]}</small><p>${esc(rp[f[0]])}</p></div>`:'').join('')||'<p class="sxsub">Отчёт пока не заполнен.</p>'}${rs==='review'&&!as?`<div class="sxrow"><button class="sxbtn g" data-a="rwd" data-n="${n}">Забрать и изменить</button></div>`:''}`}</div>`;
   return `<a class="back" href="${ME.role==='admin'?'#/my':'#/'}">← Все недели</a>
-  <div class="row" style="margin-top:2px"><span class="pill">${w.dates}${w.n===0?'':' · глубина '+fmt(w.depth)+' м'}</span>${w.tasks.length?(wfull(w)?'<span class="chip ok">неделя принята</span>':lk<0?`<span class="chip warn">срок прошёл ${-lk} дн. назад</span>`:`<span class="chip">до ${fdate(w.due)}${leftTxt(lk)}</span>`):''}</div>
-  <h1 class="t" style="margin-top:10px">${w.n===0||w.n>6?'':'Неделя '+w.n+'. '}${esc(w.title)}</h1><p class="goal">${esc(w.goal)}</p>
-  ${fb?`<div class="fbk"><small>Комментарий от Виктории</small><p>${esc(fb)}</p></div>`:''}
-  ${w.topics.length?`<div class="chips">${w.topics.map(t=>`<span class="pill" style="font-weight:600">${esc(t)}</span>`).join('')}</div>`:''}
-  ${txs.length?`<div class="trackbox"><small>Для твоей траектории</small>${txs.map(esc).join('<br>')}</div>`:''}
-  <h2 class="t">Задания <small>${cc.done} принято · ${cc.review} на проверке</small></h2><div class="card p0">${w.tasks.map(t=>{const s=stOf(t.id);return `<a class="tr ${s}" href="#/task/${t.id}"><div><b>${esc(t.text)}</b>${t.hint?`<small>${esc(t.hint.slice(0,100))}</small>`:''}</div>${badge(s)}</a>`}).join('')}</div>
-  ${w.meetings.length?`<h2 class="t">Личные встречи</h2><div class="card p0">${w.meetings.map((m,k)=>`<div class="meet"><b>${esc(m.t)}</b><small>${m.when?esc(whenTxt(m)):esc(m.d)}</small>${m.when?`<div style="margin-top:6px">${m.url?`<a class="lk" href="${esc(m.url)}" target="_blank" rel="noopener">Ссылка на встречу</a>`:''}<span class="cal" data-a="ics" data-w="${w.n}" data-k="${k}">В календарь</span></div>`:''}</div>`).join('')}</div>`:''}
-  ${w.materials.length?`<h2 class="t">Материалы</h2>${w.materials.map(matCard).join('')}`:''}
-  ${ME.role==='admin'?'':`<h2 class="t">Оценка твоего результата</h2><div class="seg">${C.scale.map(s=>`<button data-a="scale" data-w="${w.n}" data-n="${s.n}" class="${sc===s.n?'on':''}">${s.n}. ${s.t}</button>`).join('')}</div><div class="segd">${sc?esc(C.scale[sc-1].d):'Оцени честно: к следующему разбору черновик доводится до «Работает».'}</div>
-  <h2 class="t">Итоги недели</h2><div class="card"><small class="l">Что получилось</small><textarea data-r="a" data-w="${w.n}" style="min-height:64px" placeholder="Главный результат недели">${esc(rf.a||'')}</textarea><small class="l" style="margin-top:12px">Что мешало</small><textarea data-r="b" data-w="${w.n}" style="min-height:64px" placeholder="Что тормозило, где застрял">${esc(rf.b||'')}</textarea><small class="l" style="margin-top:12px">Что беру на следующую неделю</small><textarea data-r="c" data-w="${w.n}" style="min-height:64px" placeholder="Один главный шаг">${esc(rf.c||'')}</textarea></div>`}`;
+  <div class="row" style="margin-top:2px"><span class="pill">${w.n>6?'Сопровождение':'Неделя '+w.n+' из 6'}</span><span class="pill">${esc(w.dates||'')}</span>${w.tasks.length?chip:''}</div>
+  <h1 class="t" style="margin-top:10px">${esc(w.title)}</h1>${(w.goal||w.outcome)?`<p class="goal">${esc(w.outcome||w.goal)}</p>`:''}
+  ${prb}${tasks}${rep}`;
 }
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
 function whenTxt(m){const d=new Date(m.when);return isNaN(d)?'':d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
@@ -1234,10 +1247,11 @@ function adQueue(){
   const q=(AD.progress||[]).filter(p=>p.status==='review').sort((a,b)=>new Date(a.submitted_at)-new Date(b.submitted_at));
   return `<h1 class="t">Проверка</h1><p class="sub">${q.length?'Сначала самые старые.':'Очередь пуста.'}</p><div style="margin-top:14px">${q.map(p=>reviewCard(p,true)).join('')||'<div class="card">Все работы проверены.</div>'}</div>`;
 }
+function repHtml(a){let f={};try{f=JSON.parse(a||'{}')||{}}catch(e){return esc(a||'')}return [['a','Что сделал'],['b','Главный результат'],['c','Что мешало'],['d','Следующий шаг']].map(x=>f[x[0]]?`<div class="wkro"><small>${x[1]}</small><p>${esc(f[x[0]])}</p></div>`:'').join('')||'<span class="sub">Без текста</span>'}
 function reviewCard(p,who){
   const t=TM[p.task_id],u=(AD.users||[]).find(x=>x.slot===p.slot)||{name:p.slot};if(!t)return '';
   return `<div class="rv" id="rv-${p.slot}-${p.task_id}"><h3>${esc(t.text)}</h3><div class="meta">${who?esc(u.name)+' · ':''}${wlabel(t.w)} · ${p.submitted_at?'отправлено '+fdt(p.submitted_at):''} ${badge(p.status)}</div>
-  <div class="ans">${p.answer?esc(p.answer):'<span class="sub">Без текста</span>'}${p.link?`<div style="margin-top:8px"><a class="lk" href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.link)}</a></div>`:''}</div>
+  <div class="ans">${p.task_id.indexOf('rep')===0?repHtml(p.answer):(p.answer?esc(p.answer):'<span class="sub">Без текста</span>')}${p.link?`<div style="margin-top:8px"><a class="lk" href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.link)}</a></div>`:''}</div>
   <textarea placeholder="Комментарий. Для возврата на доработку обязателен.">${esc(p.feedback||'')}</textarea>
   <div class="row" style="margin-top:0"><button class="btn ok s" data-a="rev" data-s="done" data-u="${p.slot}" data-id="${p.task_id}">Принять</button><button class="btn wr s" data-a="rev" data-s="revision" data-u="${p.slot}" data-id="${p.task_id}">На доработку</button>${p.status!=='review'?`<button class="btn g s" data-a="rev" data-s="todo" data-u="${p.slot}" data-id="${p.task_id}">Сбросить</button>`:''}</div></div>`;
 }
@@ -1684,7 +1698,7 @@ const userBody=(u,over)=>({p_slot:ME.slot,p_h:ME.h,p_target:u.slot,p_new_h:null,
 const clone=o=>JSON.parse(JSON.stringify(o));
 function setPath(o,path,v){const k=path.split('.');let x=o;for(let i=0;i<k.length-1;i++)x=x[k[i]];x[k[k.length-1]]=v}
 function getPath(o,path){return path.split('.').reduce((x,k)=>x==null?x:x[k],o)}
-function rebuildTK(){TK=C.weeks.flatMap(w=>w.tasks.map(t=>Object.assign({},t,{w})));TM={};TK.forEach(t=>TM[t.id]=t)}
+function rebuildTK(){TK=C.weeks.flatMap(w=>w.tasks.map(t=>Object.assign({},t,{w})));TM={};TK.forEach(t=>TM[t.id]=t);C.weeks.forEach(w=>{TM['rep'+w.n]={id:'rep'+w.n,text:'Отчёт за неделю '+w.n,w,rep:true}})}
 function normWeek(w){const o=w.opens,d=w.due;if(o&&d){w.dates=o.slice(0,7)===d.slice(0,7)?(+o.slice(8,10))+'–'+fdate(d):fdate(o)+' – '+fdate(d)}}
 const fld=(label,path,val,ph,type)=>`<div><small class="l">${label}</small><input type="${type||'text'}" data-ed="${path}" value="${esc(val||'')}" placeholder="${esc(ph||'')}"></div>`;
 const rowBtns=(path,i)=>`<span class="rb"><button data-a="edmv" data-p="${path}" data-i="${i}" data-d="-1" title="Выше">↑</button><button data-a="edmv" data-p="${path}" data-i="${i}" data-d="1" title="Ниже">↓</button><button data-a="eddel" data-p="${path}" data-i="${i}" title="Удалить">✕</button></span>`;
@@ -1702,16 +1716,12 @@ function adProg(){
 }
 function adEdit(i){
   if(!PD)PD=clone(C);const w=PD.weeks[+i];if(!w)return '<a class="back" href="#/prog">← Программа</a><p class="sub">Неделя не найдена.</p>';const b='weeks.'+i;
-  const tl=C.tracks||[];
+  w.priorities=(w.priorities||[]).slice(0,3);while(w.priorities.length<3)w.priorities.push({t:'',h:''});
   return `<a class="back" href="#/prog">← Программа</a><h1 class="t" style="margin-top:6px;font-size:clamp(22px,4.6vw,30px)">${esc(w.n===0?'Подготовка':w.n>6?'Сопровождение':'Неделя '+w.n)}</h1>
-  <div class="card"><div class="idx"><div style="grid-column:1/-1">${fld('Название недели',b+'.title',w.title)}</div>${fld('Открывается',b+'.opens',w.opens,'','date')}${fld('Срок сдачи',b+'.due',w.due,'','date')}</div>
-  <small class="l" style="margin-top:12px">Цель недели</small><textarea data-ed="${b}.goal" style="min-height:80px">${esc(w.goal||'')}</textarea>
-  <small class="l" style="margin-top:12px">Что разбираем <span style="opacity:.7">(по строке)</span></small><textarea data-edl="${b}.topics" style="min-height:80px">${esc((w.topics||[]).join('\n'))}</textarea>
-  <div style="margin-top:12px">${fld('Глубина после недели, метров (нарастающим итогом, до 5000)',b+'.depth',w.depth,'','number')}</div></div>
-  ${tl.length?`<h2 class="t">Для траекторий <small>что добавить конкретной траектории</small></h2><div class="card">${tl.map(t=>`<small class="l">${esc(t.name)}</small><textarea data-ed="${b}.tracks.${t.id}" style="min-height:60px;margin-bottom:10px">${esc((w.tracks||{})[t.id]||'')}</textarea>`).join('')}</div>`:''}
+  <div class="card"><div class="idx"><div style="grid-column:1/-1">${fld('Название недели',b+'.title',w.title)}</div>${fld('Открывается',b+'.opens',w.opens,'','date')}${fld('Срок отчёта',b+'.due',w.due,'','date')}</div>
+  <div style="margin-top:12px">${fld('Итог недели, одной строкой',b+'.outcome',w.outcome||'')}</div></div>
+  <h2 class="t">Приоритеты <small>до трёх, ученик может их править</small></h2><div class="card">${w.priorities.map((x,k)=>`<div class="erow"><div class="g2">${fld('Приоритет '+(k+1),b+'.priorities.'+k+'.t',x.t)}${fld('Готово, когда',b+'.priorities.'+k+'.h',x.h)}</div></div>`).join('')}</div>
   <h2 class="t">Задания <small>${w.tasks.length}</small></h2><div class="card">${w.tasks.map((t,k)=>`<div class="erow"><div class="g2">${fld('Задание',b+'.tasks.'+k+'.text',t.text)}${fld('Подсказка или критерий',b+'.tasks.'+k+'.hint',t.hint)}</div><label class="edc"><input type="checkbox" data-edc="${b}.tasks.${k}.self" ${t.self?'checked':''}> Простая задача: ученик отмечает кружком на главной, без проверки</label>${rowBtns(b+'.tasks',k)}</div>`).join('')||'<p class="sub">Заданий нет.</p>'}<div class="row"><button class="btn g s" data-a="edadd" data-p="${b}.tasks" data-k="task" data-w="${w.n}">Добавить задание</button></div></div>
-  <h2 class="t">Личные встречи <small>время по Москве</small></h2><div class="card">${w.meetings.map((m,k)=>`<div class="erow"><div class="g3">${fld('Название',b+'.meetings.'+k+'.t',m.t)}${fld('Когда',b+'.meetings.'+k+'.when',(m.when||'').slice(0,16),'','datetime-local')}${fld('Ссылка на встречу',b+'.meetings.'+k+'.url',m.url,'https://')}</div>${rowBtns(b+'.meetings',k)}</div>`).join('')||'<p class="sub">Встреч нет.</p>'}<div class="row"><button class="btn g s" data-a="edadd" data-p="${b}.meetings" data-k="meet">Добавить встречу</button></div></div>
-  <h2 class="t">Материалы недели</h2><div class="card">${w.materials.map((m,k)=>`<div class="erow"><div class="g3">${fld('Название',b+'.materials.'+k+'.t',m.t)}${fld('Описание',b+'.materials.'+k+'.d',m.d)}${fld('Ссылка (запись, файл)',b+'.materials.'+k+'.url',m.url,'https://')}</div>${rowBtns(b+'.materials',k)}</div>`).join('')||'<p class="sub">Материалов нет.</p>'}<div class="row"><button class="btn g s" data-a="edadd" data-p="${b}.materials" data-k="mat">Добавить материал</button></div></div>
   <div class="row" style="margin-top:22px"><button class="btn" data-a="psave">Сохранить программу</button><a class="btn g" href="#/prog">Назад</a></div>`;
 }
 /* ================= действия ================= */
@@ -1768,6 +1778,13 @@ const A={
  pbfr(el){window.PBF=Object.assign({v:'status'},PBD,window.PBF);const k=el.dataset.k;window.PBF[k]=PBD[k];if(k==='mode'){PBF.from='';PBF.to=''}render(true)},
  pbfreset(){const v=(window.PBF&&PBF.v)||'status';window.PBF=Object.assign({v},PBD);render(true)},
  stopen(el){location.hash=(window.ASPFX||'#/')+'task/'+el.dataset.sid},
+ async rsub(el){const n=+el.dataset.n,f=rfields();if(!f.a.trim()&&!f.b.trim()){toast('Напиши, что сделал, и главный результат');return}el.disabled=true;if(await rsave(n,'submit',f)){toast('Отчёт отправлен');render(true)}else el.disabled=false},
+ async rdraft(el){const n=+el.dataset.n;if(await rsave(n,'draft',rfields())){toast('Черновик сохранён');render(true)}},
+ async rwd(el){const n=+el.dataset.n;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
+ priedit(el){window.PEDN=+el.dataset.n;render(true)},
+ pricancel(){window.PEDN=null;render(true)},
+ async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},ST.meta.prio||{});pr[n]=a;if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'prio',p_v:pr})))return;ST.meta.prio=pr;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
+ async prireset(el){const n=+el.dataset.n,pr=Object.assign({},ST.meta.prio||{});delete pr[n];if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'prio',p_v:pr})))return;ST.meta.prio=pr;window.PEDN=null;render(true)},
  async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});render(true)},
  async todosave(a){ST.meta.todo=a;const ok=await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'todo',p_v:a}));if(!ok)return false;render(true);return true},
  async todoadd(){const i=$('#td-i'),v=(i&&i.value||'').trim();if(!v)return;const a=(ST.meta.todo||[]).slice();if(a.length>=60){toast('Список полон, удали выполненные задачи.');return}a.unshift({id:Math.random().toString(36).slice(2,9),text:v.slice(0,140),done:false,w:+(i.dataset.w)});window.AFTER=()=>{const x=$('#td-i');if(x)x.focus()};await A.todosave(a)},
@@ -1862,6 +1879,9 @@ async function call(f){try{const r=await f();if(r===null||r===false)throw new Er
 function readCF(slot){if(!$('#cf-title'))return;const f=window.CF&&window.CF.slot===slot?window.CF:{slot,id:null,kind:'content'};window.CF=Object.assign({},f,{title:$('#cf-title').value,body:$('#cf-body').value,link:$('#cf-link').value,due:($('#cf-due')||{}).value||''})}
 async function setM(u,k,v){const ok=await call(()=>rpc('okean_admin_meta',{p_slot:ME.slot,p_h:ME.h,p_target:u,p_k:k,p_v:v}));if(!ok)return;
   const m=AD.meta.find(x=>x.slot===u&&x.k===k);if(m)m.v=v;else AD.meta.push({slot:u,k,v})}
+function rfields(){const g=k=>(($('#rp-'+k)||{}).value||'').trim();return {a:g('a'),b:g('b'),c:g('c'),d:g('d')}}
+async function rsave(n,action,f){const id='rep'+n,a=JSON.stringify(f),r=await call(()=>rpc('okean_save',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_answer:a,p_link:'',p_action:action}));if(!r)return false;
+  const row=Object.assign({task_id:id,feedback:'',reviewed_at:null},ST.p[id],{answer:a,link:'',status:r.status,updated_at:new Date().toISOString()});if(action==='submit')row.submitted_at=new Date().toISOString();ST.p[id]=row;ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];return true}
 async function persist(id,action,noText){
   const a=noText?(ST.p[id]||{}).answer||'':($('#ans')||{}).value||'',l=noText?(ST.p[id]||{}).link||'':($('#lnk')||{}).value||'';
   const r=await call(()=>rpc('okean_save',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_answer:a.trim(),p_link:l.trim(),p_action:action}));if(!r)return false;
@@ -1875,7 +1895,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.kc[draggable],.tc[draggable]');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.s+':'+c.dataset.t);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
 root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.tc[data-sid]');if(c){e.dataTransfer.setData('text/plain','sid:'+c.dataset.sid);e.dataTransfer.effectAllowed='move';c.classList.add('drag');e.stopImmediatePropagation()}},true);
-root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0)return;const id=d.slice(4),s0=stOf(id);if(col.dataset.sst==='review'&&(s0==='todo'||s0==='revision')){toast('Чтобы отправить на проверку, напиши ответ в задании.');location.hash=(window.ASPFX||'#/')+'task/'+id}else if(col.dataset.sst!==(s0==='revision'?'todo':s0))toast('Принятые работы и доработки ставлю я после проверки.')},true);
+root.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.kcol[data-sst]');if(!col)return;e.preventDefault();e.stopImmediatePropagation();const d=e.dataTransfer.getData('text/plain')||'';document.querySelectorAll('.kcol.over').forEach(x=>x.classList.remove('over'));if(d.indexOf('sid:')!==0)return;const id=d.slice(4),s0=stOf(id);if((col.dataset.sst==='done')!==(s0==='done'))A.chk({dataset:{id}})},true);
 root.addEventListener('dragend',e=>{document.querySelectorAll('.kc.drag,.tc.drag,.kcol.over').forEach(x=>x.classList.remove('drag','over'));document.querySelectorAll('.dropline').forEach(x=>x.remove())});
 function dropIdx(list,y){const cards=[...list.querySelectorAll('.tc:not(.drag)')];for(const c of cards){const r=c.getBoundingClientRect();if(y<r.top+r.height/2)return {el:c,idx:+c.dataset.t}}return {el:null,idx:null}}
 root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();const d=dropIdx(tl,e.clientY);document.querySelectorAll('.dropline').forEach(x=>x.remove());const ln=document.createElement('div');ln.className='dropline';const box=tl.querySelector('.tcards');if(d.el)d.el.before(ln);else box.appendChild(ln);return}
