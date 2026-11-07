@@ -924,7 +924,7 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxr .sxgt{min-height:84px}
 @media(max-width:700px){.sxgm{grid-template-columns:1fr}}
 
-@media(min-width:1181px){.sxp{align-self:start!important;aspect-ratio:4/5;min-height:0!important}}
+@media(min-width:1181px){.sxp{align-self:stretch!important;aspect-ratio:auto;min-height:340px!important}}
 
 /* ученики в обзоре и проверка внутри кабинета */
 .asg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px}
@@ -1169,7 +1169,7 @@ function asView(slot,rest){
   const back=u.role==='client'?'#/c/'+slot:'#/u/'+slot;
   hash='#/as/'+slot+(rest||'');
   if(rvh)html=`<div class="asrv"><h3>Ждёт твоей проверки</h3>${rvh}</div>`+html;
-  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Доска задач и фильтры здесь работают, остальное только просмотр.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
+  return `<div class="asb"><span>Просмотр кабинета: <b>${esc(u.name)}</b> (${u.role==='client'?'клиент':'участник'}). Ты видишь то же, что видит он(а). Здесь ты можешь всё: менять фото, цель, фокусы, задачи, статусы и приоритеты. Отчёт он(а) пишет сам(а), а ты проверяешь его ниже.</span><a class="bt2" href="${back}">Назад к управлению</a></div>${html}`;
 }
 function render(keep){
   const y=scrollY;hash=location.hash||'#/';window.ASPFX='';
@@ -1232,7 +1232,7 @@ function homeV(){
   const as=!!window.ASPFX,ph=ST.meta.photo;
   const cap=(l,v,w,cls)=>`<div class="sxc"><span>${l}</span><div class="sxct ${cls||''}"><i style="width:${Math.max(18,w)}%">${v}</i></div></div>`;
   /* фото */
-  const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${as?'':`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
+  const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
    <div class="sxpc"><b>${esc(nm)}</b></div></div>`;
   /* индекс влияния: тест из 50 + параметры из анкеты */
   const IP=ST.meta.idxp,PN=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
@@ -1275,7 +1275,7 @@ function homeV(){
   items=items.map((it,i)=>Object.assign(it,{i})).sort((a,b)=>((a.s==='done')-(b.s==='done'))||(a.i-b.i));
   const tdn=items.filter(x=>x.s==='done').length,tnm=TW.n===0?'Подготовка':TW.sup?'Сопровождение':'Неделя '+TW.n;
   const TX=((ST.meta.refl||{}).tx)||{},ttx=t=>TX[t.id]||t.text;
-  const trow=(id,k,text,d,go,rv)=>`<div class="sxtd td ${go?'go':''}"><button class="sxcb" ${as?'disabled':`data-a="${k==='m'?'todotg':'chk'}" data-id="${esc(id)}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':rv?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(id)}" data-k="${k}">${esc(text)}</button></div>`;
+  const trow=(id,k,text,d,go,rv)=>`<div class="sxtd td ${go?'go':''}"><button class="sxcb" ${`data-a="${k==='m'?'todotg':'chk'}" data-id="${esc(id)}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':rv?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(id)}" data-k="${k}">${esc(text)}</button></div>`;
   const rows=items.map(it=>{
     if(it.k==='m')return trow(it.x.id,'m',it.x.text,!!it.x.done,false,!!it.x.doing&&!it.x.done);
     const t=it.t,st2=it.s;
@@ -2019,7 +2019,7 @@ const A={
  pricancel(){window.PEDN=null;render(true)},
  async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
  async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
- async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
+ async chk(el){const id=el.dataset.id,am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);if(am){const sl=am[1],on=!curDone(id);const ok=await call(()=>rpc('okean_admin_review',{p_slot:ME.slot,p_h:ME.h,p_target:sl,p_task:id,p_status:on?'done':'todo',p_feedback:''}));if(!ok)return;const row=(AD.progress||[]).find(x=>x.slot===sl&&x.task_id===id);if(row)row.status=on?'done':'todo';else AD.progress.push({slot:sl,task_id:id,status:on?'done':'todo'});const dg=((CM().refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},CM().refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true);return}const on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
  async tmst(el){const m=window.TMOD;if(!m)return;await setState(m.id,m.k,el.dataset.v);render(true)},
@@ -2131,10 +2131,12 @@ const CM=()=>{const am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);return am?mmap
 async function putMeta(k,v){const am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);
   if(am){await setM(am[1],k,v);const m=(AD.meta||[]).find(x=>x.slot===am[1]&&x.k===k);return !!m&&JSON.stringify(m.v)===JSON.stringify(v)}
   const ok=await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:k,p_v:v}));if(!ok)return false;ST.meta[k]=v;return true}
+const curDone=id=>{const am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);return am?((pmap(am[1])[id]||{}).status==='done'):stOf(id)==='done'};
+async function savePhoto(f){const img=new Image(),u=URL.createObjectURL(f);try{await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src=u});let w=img.width,h=img.height,k=Math.min(1,900/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);let q=.86,d=c.toDataURL('image/jpeg',q);while(d.length>140000&&q>.3){q-=.1;d=c.toDataURL('image/jpeg',q)}if(d.length>145000){toast('Фото слишком тяжёлое');return}if(await putMeta('photo',d)){toast('Фото обновлено');render(true)}}catch(e){toast('Не удалось открыть фото')}finally{URL.revokeObjectURL(u)}}
 const stateOfP=id=>stOf(id)==='done'?'done':((((ST.meta.refl||{}).dg)||{})[id]?'doing':'todo');
 async function setState(id,k,want){
   if(k==='m'){return putMeta('todo',(CM().todo||[]).map(x=>x.id===id?Object.assign({},x,{done:want==='done',doing:want==='doing'}):x))}
-  const cur=stOf(id)==='done';if(cur!==(want==='done'))await A.chk({dataset:{id}});
+  const cur=curDone(id);if(cur!==(want==='done'))await A.chk({dataset:{id}});
   const r=Object.assign({},CM().refl||{}),dg=Object.assign({},r.dg||{});if(want==='doing')dg[id]=1;else delete dg[id];r.dg=dg;return putMeta('refl',r)}
 function rfields(){const g=k=>(($('#rp-'+k)||{}).value||'').trim();return {a:g('a'),b:g('b'),c:g('c'),d:g('d')}}
 async function rsave(n,action,f){const id='rep'+n,a=JSON.stringify(f),r=await call(()=>rpc('okean_save',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_answer:a,p_link:'',p_action:action}));if(!r)return false;
