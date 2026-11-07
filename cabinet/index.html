@@ -1207,11 +1207,11 @@ function repOf(id){try{return JSON.parse((ST.p[id]||{}).answer||'{}')||{}}catch(
 function weekV(n){
   const w=C.weeks.find(x=>x.n===n);if(!w||!isOpen(w))return '<a class="back" href="#/">← Обзор</a><p class="sub">Эта неделя ещё закрыта.</p>';
   const as=!!window.ASPFX,rid='rep'+n,r=ST.p[rid]||{},rs=r.status||'todo',ed=(rs==='todo'||rs==='revision')&&!as,rp=repOf(rid),cc=wcount(w),lk=dueLeft(w);
-  const own=(ST.meta.prio||{})[n],PR=(Array.isArray(own)&&own.length?own:(w.priorities||[])).filter(x=>x&&x.t),pe=window.PEDN===n&&!as&&ME.role==='student';
+  const own=(ST.meta.prio||{})[n],PR=(Array.isArray(own)&&own.length?own:(w.priorities||[])).filter(x=>x&&x.t),pe=window.PEDN===n&&ME.role==='student';
   const chip=rs==='done'?'<span class="chip ok">неделя принята</span>':rs==='review'?'<span class="chip">отчёт на проверке</span>':rs==='revision'?'<span class="chip warn">отчёт вернулся на доработку</span>':lk<0?`<span class="chip warn">срок прошёл ${-lk} дн. назад</span>`:`<span class="chip">до ${fdate(w.due)}</span>`;
   const prb=pe?`<div class="sx wk3"><div class="sxh">Приоритеты недели</div>${[0,1,2].map(i=>{const x=PR[i]||{t:'',h:''};return `<div class="wkpe"><input class="pri-t" type="text" maxlength="140" placeholder="Приоритет ${i+1}" value="${esc(x.t||'')}"><input class="pri-h" type="text" maxlength="160" placeholder="Готово, когда" value="${esc(x.h||'')}"></div>`}).join('')}
     <div class="sxrow"><button class="sxbtn" data-a="prisave" data-n="${n}">Сохранить</button><button class="sxbtn g" data-a="pricancel">Отмена</button>${Array.isArray(own)?`<button class="sxbtn g" data-a="prireset" data-n="${n}">Вернуть как в программе</button>`:''}</div></div>`
-   :`<div class="sx wk3"><div class="sxh">Приоритеты недели${(!as&&ME.role==='student')?`<button class="sxar" data-a="priedit" data-n="${n}" aria-label="Изменить приоритеты" title="Изменить">✎</button>`:''}</div>${PR.length?PR.map((x,i)=>`<div class="wkp"><span>${i+1}</span><div><b>${esc(x.t)}</b>${x.h?`<small>${esc(x.h)}</small>`:''}</div></div>`).join(''):'<p class="sxsub">Приоритеты на эту неделю ещё не заданы.</p>'}</div>`;
+   :`<div class="sx wk3"><div class="sxh">Приоритеты недели${ME.role==='student'?`<button class="sxar" data-a="priedit" data-n="${n}" aria-label="Изменить приоритеты" title="Изменить">✎</button>`:''}</div>${PR.length?PR.map((x,i)=>`<div class="wkp"><span>${i+1}</span><div><b>${esc(x.t)}</b>${x.h?`<small>${esc(x.h)}</small>`:''}</div></div>`).join(''):'<p class="sxsub">Приоритеты на эту неделю ещё не заданы.</p>'}</div>`;
   const TXw=((ST.meta.refl||{}).tx)||{};
   const tasks=`<div class="sx wk3"><div class="sxh">Задания<span class="sxsub">${cc.done} из ${w.tasks.length}</span></div><div class="wktl">${w.tasks.map(t=>{const d=stOf(t.id)==='done';return `<div class="sxtd td"><button class="sxcb" ${as?'disabled':`data-a="chk" data-id="${t.id}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${t.id}" data-k="p">${esc(TXw[t.id]||t.text)}</button></div>`}).join('')}</div></div>`;
   const F=[['a','Что сделал','Факты и цифры, ссылки на результаты'],['b','Главный результат недели','Одно число или одна фраза'],['c','Что мешало','Коротко'],['d','Что беру на следующую неделю','Один шаг']];
@@ -1861,8 +1861,8 @@ const A={
   window.GEDIT=false;toast('Цель сохранена');render(true)},
  priedit(el){window.PEDN=+el.dataset.n;render(true)},
  pricancel(){window.PEDN=null;render(true)},
- async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},ST.meta.prio||{});pr[n]=a;if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'prio',p_v:pr})))return;ST.meta.prio=pr;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
- async prireset(el){const n=+el.dataset.n,pr=Object.assign({},ST.meta.prio||{});delete pr[n];if(!await call(()=>rpc('okean_set_meta',{p_slot:ME.slot,p_h:ME.h,p_k:'prio',p_v:pr})))return;ST.meta.prio=pr;window.PEDN=null;render(true)},
+ async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
+ async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
  async chk(el){const id=el.dataset.id,on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
@@ -1982,7 +1982,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','trst','todoadd','tododel','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','topen','tclose','tmsave','tmdel','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm'].includes(el0.dataset.a)){e.preventDefault();toast('В просмотре кабинета клиента работают доска задач и фильтры. Остальное только для просмотра, править в карточке клиента: «Назад к управлению».');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
