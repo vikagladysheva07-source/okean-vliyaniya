@@ -1216,7 +1216,7 @@ function placeNodes(list){
 }
 function taskModal2(){const m=window.TMOD;if(!m)return '';const as=!!window.ASPFX;let text,hint='',d,own=m.k==='m',over=false,meta='',stt='todo';
   if(own){const x=(Array.isArray(ST.meta.todo)?ST.meta.todo:[]).find(y=>y.id===m.id);if(!x)return '';text=x.text;d=!!x.done;stt=x.done?'done':x.doing?'doing':'todo';meta='Моя задача'}
-  else{const t=TM[m.id];if(!t)return '';const TXo=((ST.meta.refl||{}).tx)||{};text=TXo[t.id]||t.text;over=!!TXo[t.id];hint=t.hint||'';d=stOf(t.id)==='done';stt=stateOfP(t.id);meta=t.w?(t.w.n>6?'Сопровождение':'Неделя '+t.w.n)+(t.w.due?' · до '+fdate(t.w.due):''):''}
+  else{const t=TM[m.id];if(!t)return '';const TXo=((ST.meta.refl||{}).tx)||{};text=TXo[t.id]||t.text;over=!!TXo[t.id];hint=((((ST.meta.refl||{}).hn)||{})[t.id])||t.hint||'';d=stOf(t.id)==='done';stt=stateOfP(t.id);meta=t.w?(t.w.n>6?'Сопровождение':'Неделя '+t.w.n)+(t.w.due?' · до '+fdate(t.w.due):''):''}
   return `<div class="mdl" data-a="tclose"><div class="mbox tmx" data-a="noop"><div class="mh"><b>${esc(meta)}</b><button class="rbt" data-a="tclose" aria-label="Закрыть">✕</button></div>
    <small class="l">Задача</small><textarea id="tm-t" maxlength="200" style="min-height:76px">${esc(text)}</textarea>
    ${hint?`<small class="l" style="margin-top:12px">Как делать</small><p class="tmh">${esc(hint)}</p>`:''}
