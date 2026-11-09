@@ -2213,7 +2213,7 @@ async function persist(id,action,noText){
   ST.days=[...new Set([...(ST.days||[]),ymd(new Date())])];
   try{localStorage.removeItem('okean:d:'+ME.slot+':'+id)}catch(e){}return true}
 root.addEventListener('click',e=>{
-  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','rev','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','noop','pbtoggle','pbsave','pbcm','pbm','chk','todotg','tmst','fcopy','fdl'].includes(el0.dataset.a)){e.preventDefault();toast('Отчёт пишет сам ученик, здесь его не отправить. Остальное можно править.');return}}
+  if(location.hash.startsWith('#/as/')){const el0=e.target.closest('[data-a]');if(el0&&!['go','wkgo','pbf','pbfr','pbfreset','ddt','pbfx','pbc','psel','tkw','stopen','gedit','gsave','gcancel','rev','topen','tclose','tmsave','tmdel','hidreset','trst','todoadd','tododel','priedit','pricancel','prisave','prireset','pbopen','pbclose','rmopen','rmclose','noop','pbtoggle','pbsave','pbcm','pbm','chk','todotg','tmst','fcopy','fdl'].includes(el0.dataset.a)){e.preventDefault();toast('Отчёт пишет сам ученик, здесь его не отправить. Остальное можно править.');return}}
   const lock=e.target.closest('[data-lock]');if(lock&&lock.dataset.lock){e.preventDefault();toast('Эта неделя откроется '+fdate(lock.dataset.lock));return}
   const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a]){e.preventDefault();A[el.dataset.a](el,e)}
 });
