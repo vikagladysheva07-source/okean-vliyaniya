@@ -413,6 +413,30 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .bdgs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.bdg{display:flex;flex-direction:column;gap:2px;padding:10px;border-radius:14px;background:rgba(255,255,255,.04);font-size:11px;color:var(--muted)}.bdg b{font-size:20px;color:var(--text);font-weight:600}.bdg.on b{color:#C9A8FF}.bdg.w{background:rgba(255,180,90,.1)}.bdg.w b{color:#FFC98A}
 .acts{display:flex;justify-content:flex-end}
 @media(max-width:640px){.bdgs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rdw{margin-top:18px}.rdm{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:64px 32px;padding:14px 48px 20px}
+.rdsvg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}.rdsvg .rdbg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}.rdsvg .rdfg{fill:none;stroke:url(#rdg);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px rgba(155,111,232,.55))}
+.rmn{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;background:none;border:0;padding:0;color:var(--text);cursor:pointer;font:inherit}
+.rmic{position:relative;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#16122B;border:3px solid #2C2452;margin-bottom:8px}
+.rmic svg{width:28px;height:28px;stroke:#BBA2F0;fill:none;stroke-width:1.6}.rmic em{position:absolute;right:-4px;top:-4px;min-width:24px;height:24px;border-radius:12px;background:#2C2452;color:#C9B8F5;font-style:normal;font-size:12px;font-weight:700;display:grid;place-items:center;padding:0 6px}
+.rmn.d .rmic{background:linear-gradient(145deg,#9B6FE8,#5B2FBE);border-color:transparent}.rmn.d .rmic svg{stroke:#fff;stroke-width:2.4}.rmn.d .rmic em{background:#fff;color:#5B2FBE}
+.rmn.c .rmic{border-color:#C4A4FF;box-shadow:0 0 0 6px rgba(155,111,232,.18),0 0 30px rgba(155,111,232,.55)}.rmn.c .rmic svg{stroke:#fff}.rmn.c .rmic em{background:#9B6FE8;color:#fff}
+.rmk{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9B8FC9;font-weight:700}.rmn b{font-size:17px;line-height:1.25;letter-spacing:-.01em}
+.rmn small{font-size:13px;line-height:1.45;color:var(--muted);max-width:260px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rmp{width:120px;height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px}.rmp i{display:block;height:100%;background:#9B6FE8}
+.rmn:hover .rmic{transform:translateY(-2px);transition:transform .2s}.rmn:hover b{color:#E1D0FF}
+.rdm.mob{grid-template-columns:1fr;gap:26px;padding:6px 0 10px 4px}.rdm.mob .rdsvg{display:none}.rdm.mob .rmn{grid-column:1!important;grid-row:auto!important;display:grid;grid-template-columns:64px 1fr;column-gap:16px;row-gap:3px;align-items:start}.rdm.mob .rmic{grid-row:1/5;width:56px;height:56px;margin:0}
+.rdm.mob::before{content:"";position:absolute;left:32px;top:30px;bottom:30px;width:6px;border-radius:4px;background:linear-gradient(180deg,#9B6FE8,rgba(255,255,255,.1))}
+.rmm{position:fixed;inset:0;z-index:60;background:rgba(5,4,12,.72);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;overflow:auto}
+.rmbox{position:relative;width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;background:#110F1E;border:1px solid rgba(196,164,255,.25);border-radius:26px;padding:26px 26px 22px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 60px -20px rgba(155,111,232,.5)}
+.rmx{position:absolute;right:16px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:26px;line-height:34px;padding:0;cursor:pointer;text-align:center}
+.rmh{display:flex;align-items:center;gap:16px;margin-bottom:14px;padding-right:40px}.rmh small{color:#9B8FC9;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.rmh h2{margin:2px 0 0;font-size:22px;line-height:1.2}
+.rmbig{width:52px;height:52px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:700;background:linear-gradient(145deg,#9B6FE8,#5B2FBE)}
+.rmpr{display:flex;align-items:center;gap:12px;margin-bottom:6px}.rmpr .tr2{flex:1}.rmpr span{font-size:13px;color:var(--muted);white-space:nowrap}
+.rmbox h4{margin:20px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#C9B8F5}
+.rmul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}.rmul li{position:relative;padding-left:22px;font-size:14.5px;line-height:1.5}.rmul li::before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:50%;background:#9B6FE8}
+.rmul.rgo li::before{background:#C4A4FF;box-shadow:0 0 10px rgba(196,164,255,.7)}
+.rmtk{display:flex;flex-direction:column;gap:2px}
+@media(max-width:720px){.rmbox{padding:22px 18px 18px;border-radius:22px}.rmh h2{font-size:19px}}
 .rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
 .sgl{display:flex;flex-direction:column;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,164,255,.14)}
 .sgr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:12.5px;color:var(--muted)}.sgr em{font-style:normal;font-variant-numeric:tabular-nums}
@@ -1652,16 +1676,48 @@ function ganttHtml(stg,curI,short,pc){
 function roadmap(stg,curI,short){
   return `<div class="rmw"><div class="rm">${stg.map((x,i)=>`<div class="rn ${x.done?'d':i===curI?'c':''}"><div class="dot">${x.done?SV.check:i+1}</div><b>${esc(short(x.st.title,x.st))}</b><small>${esc((x.st.period||'').replace(' ноября','.11').replace(' декабря','.12'))}</small></div>`).join('')}</div></div>`;
 }
+const RMICON=['file','book','user','tasks','link','inbox','flag','chat','method'];
+function rmParts(st){const m=String(st.title||'').match(/^Неделя (\d+)\.\s*(.*)$/);return m?{kick:'Неделя '+m[1],name:m[2]}:{kick:'',name:st.title||''}}
 function clPlan(){
-  const pl=planOf(ST.meta),ps=planStat(pl),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
+  const pl=planOf(ST.meta),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
   if(!stg.length)return `${hd2('Траектория','План работы по проекту',[])}<div class="g12"><div class="t2 c12"><p class="mu2">План работы скоро появится.</p></div></div>`;
-  return `${hd2('Траектория','План работы: этапы, сроки и что происходит на каждом',[])}
-  <div class="tl">${stg.map((x,i)=>`<div class="ts ${x.done?'d':i===curI?'c':''}"><div class="tdot">${x.done?SV.check:i+1}</div>
-   <details class="t2" ${i===curI?'open':''}><summary><div><span class="mu2">${esc(x.st.period||'')}</span><b>${esc(x.st.title)}</b></div><span class="pl2 ${x.done?'g':''}">${x.done?'готово':x.d+' из '+x.n}</span></summary>
-    ${x.st.desc?`<p class="sdesc">${esc(x.st.desc)}</p>`:''}
-    <div class="tr2 big"><i style="width:${x.n?x.d/x.n*100:0}%"></i></div>
-    ${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}
-   </details></div>`).join('')}</div>`;
+  const nodes=stg.map((x,i)=>{const P=rmParts(x.st),info=x.st.info||{},cls=x.done?'d':i===curI?'c':'';
+    const row=Math.floor(i/3),col=row%2===0?i%3:2-i%3;
+    return `<button class="rmn ${cls}" data-a="rmopen" data-i="${i}" style="grid-row:${row+1};grid-column:${col+1}"><span class="rmic">${x.done?SV.check:ico(RMICON[i%RMICON.length])}<em>${i+1}</em></span><span class="rmk">${esc(P.kick||x.st.period||'')}</span><b>${esc(P.name)}</b><small>${esc(info.short||x.st.desc||'')}</small><span class="rmp"><i style="width:${x.n?Math.round(x.d/x.n*100):0}%"></i></span></button>`}).join('');
+  const o=window.RM,mod=(o!=null&&stg[o])?rmModal(stg[o],o,stg.length):'';
+  window.AFTER=drawRoad;
+  return `${hd2('Траектория','Нажмите на этап: что мы делаем и что будет готово',[])}
+  <div class="rdw"><div class="rdm" id="rdm"><svg class="rdsvg" id="rdsvg"></svg>${nodes}</div></div>${mod}`;
+}
+function rmModal(x,i,n){
+  const P=rmParts(x.st),info=x.st.info||{},does=info.does||(x.st.desc?[x.st.desc]:[]),res=info.result||[];
+  const li=a=>a.map(s=>`<li>${esc(s)}</li>`).join('');
+  return `<div class="rmm" data-a="rmclose"><div class="rmbox" data-a="noop"><button class="rmx" data-a="rmclose" aria-label="Закрыть">×</button>
+   <div class="rmh"><span class="rmbig">${i+1}</span><div><small>${esc([P.kick,x.st.period].filter(Boolean).join(' · '))}</small><h2>${esc(P.name)}</h2></div></div>
+   <div class="rmpr"><div class="tr2 big"><i style="width:${x.n?Math.round(x.d/x.n*100):0}%"></i></div><span>${x.d} из ${x.n} задач</span></div>
+   ${does.length?`<h4>Что делаем</h4><ul class="rmul">${li(does)}</ul>`:''}
+   ${res.length?`<h4>Что будет готово</h4><ul class="rmul rgo">${li(res)}</ul>`:''}
+   <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>
+  </div></div>`;
+}
+function drawRoad(){
+  const box=document.getElementById('rdm'),svg=document.getElementById('rdsvg');if(!box||!svg)return;
+  const N=[...box.querySelectorAll('.rmn')];svg.innerHTML='';
+  if(box.clientWidth<720){box.classList.add('mob');return}box.classList.remove('mob');
+  const br=box.getBoundingClientRect(),pts=N.map(n=>{const c=n.querySelector('.rmic').getBoundingClientRect();return {x:c.left+c.width/2-br.left,y:c.top+c.height/2-br.top,cur:n.classList.contains('c'),done:n.classList.contains('d')}});
+  const W=box.clientWidth,H=box.clientHeight,rad=34;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width',W);svg.setAttribute('height',H);
+  let d=`M ${pts[0].x} ${pts[0].y}`;
+  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];
+    if(Math.abs(a.y-b.y)<5){d+=` L ${b.x} ${b.y}`}
+    else{const right=a.x>W/2,xe=right?W-10:10,s=right?1:-1;
+      d+=` L ${xe-s*rad} ${a.y} Q ${xe} ${a.y} ${xe} ${a.y+rad} L ${xe} ${b.y-rad} Q ${xe} ${b.y} ${xe-s*rad} ${b.y} L ${b.x} ${b.y}`}}
+  const ns='http://www.w3.org/2000/svg',mk=(dd,cls)=>{const e=document.createElementNS(ns,'path');e.setAttribute('d',dd);e.setAttribute('class',cls);svg.appendChild(e);return e};
+  svg.innerHTML=`<defs><linearGradient id="rdg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="${H}"><stop offset="0" stop-color="#9B6FE8"/><stop offset="1" stop-color="#E1D0FF"/></linearGradient></defs>`;
+  mk(d,'rdbg');const pr=mk(d,'rdfg');const L=pr.getTotalLength();
+  const idx=pts.findIndex(p=>p.cur),upto=idx<0?(pts.every(p=>p.done)?pts.length-1:0):idx;
+  // длина до узла: ищем по сегментам
+  let acc=0,prev=pts[0],lens=[0];for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];acc+=Math.abs(a.y-b.y)<5?Math.abs(b.x-a.x):(Math.abs((a.x>W/2?W-10:10)-a.x)+Math.abs(b.y-a.y)+Math.abs((a.x>W/2?W-10:10)-b.x));lens.push(acc)}
+  const frac=lens[upto]/(lens[lens.length-1]||1);pr.setAttribute('stroke-dasharray',`${L*frac} ${L}`);
 }
 function clTasks(){
   const pl=planOf(ST.meta);window.PLD={slot:ME.slot,plan:pl};
@@ -2049,6 +2105,8 @@ const A={
  pbm(el){const x=$('#pe-x');if(x&&window.PEF){PEF.x=x.value;PEF.d=($('#pe-d')||{}).value||''}const v=el.dataset.v;PEF[el.dataset.k]=el.dataset.k==='stage'?+v:v;window.DDO=null;render(true)},
  pbclose(){window.PLE=null;window.DDO=null;render(true)},
  async pbtoggle(el){const si=+el.dataset.s,ti=+el.dataset.t,t=PLD.plan.stages[si].tasks[ti];t.status=t.status==='done'?'todo':'done';await tkCommit(si,ti)},
+ rmopen(el){window.RM=+el.dataset.i;render(true)},
+ rmclose(el,e){if(e&&e.target&&e.target.closest&&e.target.closest('.rmbox')&&!e.target.closest('.rmx'))return;window.RM=null;render(true)},
  pqopen(el){window.PLQ=+el.dataset.s;window.AFTER=()=>{const x=$('#pq-t');if(x)x.focus()};render(true)},
  pqx(){window.PLQ=null;render(true)},
  async pqok(el){const x=$('#pq-t'),tx=x?x.value.trim():'';if(!tx){toast('Напиши задачу');return}const st=PLD.plan.stages[+el.dataset.s];st.tasks=st.tasks||[];st.tasks.push({id:uid(),text:tx,status:'todo',who:'team',due:'',at:Date.now()});window.AFTER=()=>{const y=$('#pq-t');if(y)y.focus()};await planQuick()},
