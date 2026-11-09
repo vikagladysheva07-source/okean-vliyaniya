@@ -1124,8 +1124,7 @@ function navItems(){
     return [['#/','Обзор','chart'],['#/students','Ученики','users',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
-  const c=totals(ST.p);
-  return [['#/','Обзор','home'],['#/tasks','Задачи','tasks']];
+  return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks']];
 }
 function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
@@ -1172,7 +1171,8 @@ function route(h){
     else if(r==='lib')html=shell(libV(),false);
     else html=shell(adOverview(),true);
   }else{
-    if(r==='tasks')html=shell(stTasks(),true);
+    if(r==='tasks')html=shell(stTaskPage(),true);
+    else if(r==='plan')html=shell(stPlanPage(),true);
     else if(r==='week')html=shell(weekV(+a),false);
     else if(r==='task')html=shell(taskV(a),false);
     else if(r==='lib')html=shell(libV(),false);
@@ -1288,31 +1288,22 @@ function homeV(){
    :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}${GP.length?`<div class="sxgp"><small>Три главных результата</small>${GP.map((x,i)=>`<div><span>${i+1}</span><b>${esc(x)}</b></div>`).join('')}</div>`:''}`}</div>
    <div class="sxrg2"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
    <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div></div>`;
-  /* программа: блок на каждую неделю */
-  const wb=V.map((w,i)=>{const op=isOpen(w),cc=wcount(w),f=wfull(w),cur=i===ci,T=w.tasks.filter(vis).length,num=w.n===0?'Старт':w.sup?'Недели '+w.parts[0].n+'–'+w.parts[w.parts.length-1].n:'Неделя '+w.n,tt=w.sup?'Сопровождение':w.title,tg=w.sup?(w.parts.find(q=>isOpen(q)&&!wfull(q))||w.parts.find(q=>isOpen(q))||w).n:w.n;
-    return `<a class="sxw2 ${cur?'cur':''} ${f?'ok':''} ${op?'':'lk'}" href="${op?'#/week/'+tg:'#/'}"><div class="sxw2t"><em>${esc(num)}${cur?' · сейчас':''}</em><span>${op?esc(w.dates||''):'с '+fdate(w.opens)}</span></div><h4>${esc(tt)}</h4><div class="sxw2g">${f?'<span>неделя принята</span>':''}</div><i class="sxw2a">${f?SV.check:ico('chev')}</i></a>`}).join('');
-  const prog=`<div class="sx sxa0"><div class="sxh">Программа</div><div class="sxwg">${wb}</div></div>`;
-  /* задачи: один список (задания недели + свои), листание недель */
-  const VT=V.filter(w=>w.tasks.length);let ti=VT.findIndex(w=>w.n===window.TKW);if(ti<0)ti=Math.max(0,VT.findIndex(w=>wcur(w,cw)));
-  const TW=VT[ti]||cw;window.TKCUR=TW.n;const top=isOpen(TW),parts2=TW.sup?TW.parts:[TW],isCW=TW===V.find(w=>wcur(w,cw)),nid=nt&&isCW?nt.id:null;
-  const TD=Array.isArray(ST.meta.todo)?ST.meta.todo:[];
-  const own=TD.filter(x=>x.w===undefined?isCW:x.w===TW.n);
-  let items=[].concat(...parts2.map(q=>q.tasks.filter(vis).map(t=>({k:'p',t,o:isOpen(q),s:stOf(t.id)})))).concat(own.map(x=>({k:'m',x,s:x.done?'done':'todo'})));
-  items=items.map((it,i)=>Object.assign(it,{i})).sort((a,b)=>((a.s==='done')-(b.s==='done'))||(a.i-b.i));
-  const tdn=items.filter(x=>x.s==='done').length,tnm=TW.n===0?'Подготовка':TW.sup?'Сопровождение':'Неделя '+TW.n;
-  const TX=((ST.meta.refl||{}).tx)||{},ttx=t=>TX[t.id]||t.text;
-  const trow=(id,k,text,d,go,rv)=>`<div class="sxtd td ${go?'go':''}"><button class="sxcb" ${`data-a="${k==='m'?'todotg':'chk'}" data-id="${esc(id)}"`} aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':rv?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(id)}" data-k="${k}">${esc(text)}</button></div>`;
-  const rows=items.map(it=>{
-    if(it.k==='m')return trow(it.x.id,'m',it.x.text,!!it.x.done,false,!!it.x.doing&&!it.x.done);
-    const t=it.t,st2=it.s;
-    return it.o?trow(t.id,'p',ttx(t),st2==='done',nid===t.id,stateOfP(t.id)==='doing'):`<div class="sxtd lk"><span class="sxck2"></span><span class="sxtt">${esc(ttx(t))}</span></div>`}).join('');
-  const add=top?`<div class="sxadd"><input id="td-i" type="text" maxlength="140" data-w="${TW.n}" placeholder="Новая задача" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`:'';
-  const tasks=`<div class="sx sxt"><div class="sxtn"><button class="sxar" data-a="tkw" data-d="-1" ${ti<=0?'disabled':''} aria-label="Предыдущая неделя">${ico('chev')}</button><div class="sxtc"><b>${esc(tnm)}</b><span>${top?(TW.due&&!TW.sup?'до '+fdate(TW.due):''):'откроется '+fdate(TW.opens)}</span></div><button class="sxar" data-a="tkw" data-d="1" ${ti>=VT.length-1?'disabled':''} aria-label="Следующая неделя">${ico('chev')}</button></div>
-   <div class="sxtl">${rows||'<p class="sxsub">Задач нет.</p>'}</div>${add}</div>`;
+  /* траектория + задачи текущего этапа */
+  const PLs=stPlanOf();window.PLD={slot:ME.slot,plan:PLs};
+  const stg=(PLs.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=Math.max(0,stg.findIndex(x=>!x.done));
+  const wb=stg.map((x,i)=>{const P=rmParts(x.st),cur=i===curI&&!x.done;
+    return `<a class="sxw2 ${cur?'cur':''} ${x.done?'ok':''}" href="#/plan"><div class="sxw2t"><em>${esc(P.kick||'Этап')}${cur?' · сейчас':''}</em><span>${esc(x.st.period||'')}</span></div><h4>${esc(P.name)}</h4><div class="sxw2g"><span>${x.d} из ${x.n}</span></div><i class="sxw2a">${x.done?SV.check:ico('chev')}</i></a>`}).join('');
+  const prog=`<div class="sx sxa0"><div class="sxh">Траектория<a class="sxar" href="#/plan" aria-label="Открыть траекторию">${ico('chev')}</a></div><div class="sxwg">${wb||'<p class="sxsub">Траектория скоро появится.</p>'}</div></div>`;
+  const cs2=stg[curI]||{st:{tasks:[],title:''},n:0,d:0},csI=curI;
+  const items=(cs2.st.tasks||[]).map((t,ti)=>({t,ti})).sort((a,b)=>((a.t.status==='done')-(b.t.status==='done'))||(a.ti-b.ti));
+  const trow2=x=>{const d=x.t.status==='done';return `<div class="sxtd td"><button class="sxcb" data-a="pbtoggle" data-s="${csI}" data-t="${x.ti}" aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':x.t.status==='doing'?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="pbopen" data-s="${csI}" data-t="${x.ti}">${esc(x.t.text)}</button></div>`};
+  const CP=rmParts(cs2.st);
+  const tasks=`<div class="sx sxt"><div class="sxtn"><div class="sxtc" style="flex:1"><b>${esc(CP.kick||'Задачи')}${CP.name?' · '+esc(CP.name):''}</b><span>${cs2.d} из ${cs2.n} выполнено${cs2.st.end?', до '+fdate(cs2.st.end):''}</span></div><a class="sxar" href="#/tasks" aria-label="Вся доска задач">${ico('chev')}</a></div>
+   <div class="sxtl">${items.map(trow2).join('')||'<p class="sxsub">Задач нет.</p>'}</div><div class="sxrow" style="margin-top:12px"><a class="sxbtn g" href="#/tasks">Вся доска</a></div></div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
   
-  <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal2()}`;
+  <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal()}`;
 }
 function tcardHtml(c,asb,td0,hideChip){const d=c.s==='done',late=!d&&c.w&&c.w.due&&c.w.due<td0,chip=c.k==='m'?(c.x.w!==undefined&&c.x.w!==null&&!isNaN(c.x.w)?'Моя · нед. '+c.x.w:'Моя задача'):(c.w.n>6?'Сопровождение':'Неделя '+c.w.n);
   return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':c.s==='doing'?'r':''}">${d?SV.check:''}</span></button><div class="tx">${hideChip&&!late?'':`<div class="tm" style="margin:0 0 4px">${hideChip?'':`<span class="pl2 kst">${esc(chip)}</span>`}${late?'<small class="late">срок прошёл</small>':''}</div>`}<button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button></div></div>`}
@@ -1398,7 +1389,7 @@ function weekV(n){
   return `<a class="back" href="${ME.role==='admin'?'#/my':'#/'}">← Все недели</a>
   <div class="row" style="margin-top:2px"><span class="pill">${w.n>6?'Сопровождение':'Неделя '+w.n+' из 6'}</span><span class="pill">${esc(w.dates||'')}</span>${w.tasks.length?chip:''}</div>
   <h1 class="t" style="margin-top:10px">${esc(w.title)}</h1>${(w.goal||w.outcome)?`<p class="goal">${esc(w.outcome||w.goal)}</p>`:''}
-  ${prb}${tasks}${fbk(n)}${rep}${taskModal2()}`;
+  ${prb}<div class="sx wk3"><div class="sxh">Задачи недели</div><p class="sxsub" style="margin:4px 0 12px">Задачи теперь на общей доске и в траектории.</p><div class="sxrow"><a class="sxbtn" href="#/tasks">Открыть доску задач</a><a class="sxbtn g" href="#/plan">Траектория</a></div></div>${fbk(n)}${rep}`;
 }
 function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d)}</small></div><div class="fia"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button><button class="sxbtn g" data-a="fdl" data-id="${esc(f.id)}">Скачать</button></div></div>`).join('')}</div>`}
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
@@ -1519,7 +1510,8 @@ function adUser(slot){
   <div class="tiles f4"><div class="tile good"><b>${x.c.done}<span style="display:inline;font-size:15px;color:var(--muted)"> / ${N}</span></b><span>принято</span></div><div class="tile vio"><b>${x.c.review}</b><span>на проверке</span></div><div class="tile ${x.c.revision?'hot':''}"><b>${x.c.revision}</b><span>на доработке</span></div><div class="tile"><b>${fmt(depthOf(P))}<span style="display:inline;font-size:15px;color:var(--muted)"> м</span></b><span>глубина из 5 000</span></div></div>
   ${x.risk?`<div class="att" style="margin-top:12px"><b style="font-size:14px">Зона риска:</b> ${esc(x.reasons.join('; '))}. <a href="https://t.me/${C.telegram}" style="display:none"></a></div>`:''}
   <div class="card" style="margin-top:12px"><small class="l">Активность за 14 дней · серия ${streak(days)} дн. · ${x.ls?'был(а) '+fdt(x.ls):'ещё не заходил(а)'}</small>${actStrip(days)}</div>
-  <h2 class="t">Недели и работы</h2>
+  <h2 class="t">Траектория</h2>${planEd(slot,M)}
+  <h2 class="t">Отчёты по неделям</h2>
   ${C.weeks.filter(w=>w.tasks.length).map(w=>{const cc=wcount(w,P),op=isOpen(w,M),o=open[slot]===w.n,rs=(M.refl||{})[w.n],sc=(M.scale||{})[w.n];
    return `<div class="acc"><button data-a="open" data-u="${slot}" data-w="${w.n}"><div><b>${esc(wt(w))}</b><br><span>${op?cc.done+' принято'+(cc.review?' · '+cc.review+' на проверке':'')+(cc.revision?' · '+cc.revision+' возвр.':'')+' из '+w.tasks.length:'закрыта до '+fdate(w.opens)}</span></div><span>${o?'−':'+'}</span></button>${o?`<div class="bd">
    ${w.tasks.map(t=>{const p=P[t.id];return p&&(p.answer||p.link||p.status!=='todo')?reviewCard(Object.assign({},p,{slot}),false):`<div class="meet"><b style="font-weight:600;font-size:14px">${esc(t.text)}</b> ${badge('todo')}</div>`}).join('')}
@@ -1679,14 +1671,14 @@ function roadmap(stg,curI,short){
 const RMICON=['file','book','user','tasks','link','inbox','flag','chat','method'];
 function rmParts(st){const m=String(st.title||'').match(/^Неделя (\d+)\.\s*(.*)$/);return m?{kick:'Неделя '+m[1],name:m[2]}:{kick:'',name:st.title||''}}
 function clPlan(){
-  const pl=planOf(ST.meta),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
+  const pl=ME.role==='student'?stPlanOf():planOf(ST.meta),stg=(pl.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=stg.findIndex(x=>!x.done);
   if(!stg.length)return `${hd2('Траектория','План работы по проекту',[])}<div class="g12"><div class="t2 c12"><p class="mu2">План работы скоро появится.</p></div></div>`;
   const nodes=stg.map((x,i)=>{const P=rmParts(x.st),info=x.st.info||{},cls=x.done?'d':i===curI?'c':'';
     const row=Math.floor(i/3),col=row%2===0?i%3:2-i%3;
     return `<button class="rmn ${cls}" data-a="rmopen" data-i="${i}" style="grid-row:${row+1};grid-column:${col+1}"><span class="rmic">${x.done?SV.check:ico(RMICON[i%RMICON.length])}<em>${i+1}</em></span><span class="rmk">${esc(P.kick||x.st.period||'')}</span><b>${esc(P.name)}</b><small>${esc(info.short||x.st.desc||'')}</small><span class="rmp"><i style="width:${x.n?Math.round(x.d/x.n*100):0}%"></i></span></button>`}).join('');
   const o=window.RM,mod=(o!=null&&stg[o])?rmModal(stg[o],o,stg.length):'';
   window.AFTER=drawRoad;
-  return `${hd2('Траектория','Нажмите на этап: что мы делаем и что будет готово',[])}
+  return `${hd2('Траектория',ME.role==='student'?'Нажми на этап: что делаем и что будет готово':'Нажмите на этап: что мы делаем и что будет готово',[])}
   <div class="rdw"><div class="rdm" id="rdm"><svg class="rdsvg" id="rdsvg"></svg>${nodes}</div></div>${mod}`;
 }
 function rmModal(x,i,n){
@@ -1698,8 +1690,8 @@ function rmModal(x,i,n){
    ${(info.built||[]).length?`<h4>Уже собрано</h4><ul class="rmul rgd">${li(info.built)}</ul>`:''}
    ${does.length?`<h4>Что делаем</h4><ul class="rmul">${li(does)}</ul>`:''}
    ${res.length?`<h4>Что будет готово</h4><ul class="rmul rgo">${li(res)}</ul>`:''}
-   <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>
-  </div></div>`;
+   <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?(ME.role==='student'?'ты':'вы'):'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>
+  ${x.st.wk?`<div class="row" style="margin-top:16px"><button class="btn s" data-a="go" data-h="#/week/${x.st.wk}">Отчёт и материалы недели</button></div>`:''}</div></div>`;
 }
 function drawRoad(){
   const box=document.getElementById('rdm'),svg=document.getElementById('rdsvg');if(!box||!svg)return;
@@ -1719,6 +1711,27 @@ function drawRoad(){
   // длина до узла: ищем по сегментам
   let acc=0,prev=pts[0],lens=[0];for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];acc+=Math.abs(a.y-b.y)<5?Math.abs(b.x-a.x):(Math.abs((a.x>W/2?W-10:10)-a.x)+Math.abs(b.y-a.y)+Math.abs((a.x>W/2?W-10:10)-b.x));lens.push(acc)}
   const frac=lens[upto]/(lens[lens.length-1]||1);pr.setAttribute('stroke-dasharray',`${L*frac} ${L}`);
+}
+/* ===== траектория ученика ===== */
+function stPlanOf(){
+  const pl=planOf(ST.meta),TD=Array.isArray(ST.meta.todo)?ST.meta.todo:[];
+  if(!(pl.stages||[]).length)return pl;
+  const curW=(()=>{const i=pl.stages.findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done'));return i<0?0:i})();
+  TD.slice().reverse().forEach(x=>{let i=pl.stages.findIndex(st=>st.wk!=null&&(st.wk===x.w||(st.wk===7&&x.w>=7)));if(i<0)i=curW;
+    pl.stages[i].tasks=pl.stages[i].tasks||[];pl.stages[i].tasks.push({id:x.id,text:x.text,status:x.done?'done':x.doing?'doing':'todo',who:'client',own:1})});
+  return pl;
+}
+function stCurStage(pl){const i=(pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done'));return i<0?Math.max(0,(pl.stages||[]).length-1):i}
+function stPlanPage(){
+  const pl=stPlanOf();window.PLD={slot:ME.slot,plan:pl};
+  return clPlan();
+}
+function stTaskPage(){
+  const pl=stPlanOf();window.PLD={slot:ME.slot,plan:pl};
+  if(!(pl.stages||[]).length)return `${hd2('Задачи','Доска задач',[])}<div class="t2"><p class="mu2">Задач пока нет.</p></div>`;
+  const ci=stCurStage(pl),cs=pl.stages[ci],f=Object.assign({v:'status'},PBD,window.PBF),sw=f.st!=='all'&&(pl.stages[+f.st])?pl.stages[+f.st]:cs;
+  const add=`<div class="sxadd" style="margin:14px 0"><input id="td-i" type="text" maxlength="140" data-w="${sw.wk!=null?sw.wk:0}" placeholder="Своя задача: «${esc(sw.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,26))}»" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`;
+  return `${hd2('Задачи','Все задачи программы на одной доске',[])}${add}${taskBoard()}`;
 }
 function clTasks(){
   const pl=planOf(ST.meta);window.PLD={slot:ME.slot,plan:pl};
@@ -1888,13 +1901,13 @@ function taskModal(){
   const P=window.PLD&&PLD.plan;if(!P||!window.PLE)return '';
   const m=PLE.split(':').map(Number),mt=P.stages[m[0]]&&P.stages[m[0]].tasks[m[1]];if(!mt)return '';
   const adm=ME.role==='admin',cms=(mt.cm||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0)),E=window.PEF&&PEF.key===window.PLE?PEF:{status:mt.status,pri:mt.pri||'',who:mt.who,stage:m[0],x:mt.text,d:mt.due||''};
-  return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(E.x)}</textarea>
+  return `<div class="mdl" data-a="pbclose"><div class="mbox" data-a="noop"><div class="mh"><b>Задача</b><button class="rbt" data-a="pbclose">✕</button></div><textarea id="pe-x" style="min-height:80px;margin-bottom:10px">${esc(E.x)}</textarea>${mt.hint?`<p class="mu2" style="margin:-2px 0 12px;line-height:1.5">${esc(mt.hint)}</p>`:''}
   ${adm?`<small class="l">Список (этап)</small><div style="margin:0 0 12px">${ddHtml('pe-s',P.stages.map((st,i)=>[i,esc(st.title)]),E.stage,'pbm','data-k="stage"')}</div>`:''}
   <small class="l">Статус</small><div class="chp">${[['todo','Не начато'],['doing','В процессе'],['done','Выполнено']].map(o=>`<button data-a="pbm" data-k="status" data-v="${o[0]}" class="${E.status===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
   <small class="l">Важность</small><div class="chp">${[['','Не задана'],['high','Высокая'],['mid','Средняя'],['low','Низкая']].map(o=>`<button data-a="pbm" data-k="pri" data-v="${o[0]}" class="${(E.pri||'')===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
   ${adm?`<small class="l">Кто делает</small><div class="chp">${[['team','Я'],['client','Клиент']].map(o=>`<button data-a="pbm" data-k="who" data-v="${o[0]}" class="${E.who===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>`:''}
   <small class="l" style="margin-top:10px">Срок</small><input type="date" id="pe-d" value="${esc(E.d)}">
-  <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbsave" data-s="${m[0]}" data-t="${m[1]}">Сохранить</button>${adm?`<button class="btn wr s" data-a="pbdel" data-s="${m[0]}" data-t="${m[1]}">Удалить</button>`:''}</div>
+  <div class="row" style="margin-top:14px"><button class="bt2 v" data-a="pbsave" data-s="${m[0]}" data-t="${m[1]}">Сохранить</button>${(adm||mt.own)?`<button class="btn wr s" data-a="pbdel" data-s="${m[0]}" data-t="${m[1]}">Удалить</button>`:''}</div>
   <div class="cms"><b>Комментарии</b>${cms.map(c=>`<div class="cmi ${c.by}"><small>${esc(c.name||(c.by==='client'?'Клиент':'Виктория'))} · ${fdt(new Date(c.at||0).toISOString())}</small><p>${esc(c.text)}</p></div>`).join('')||'<p class="mu2">Пока нет.</p>'}<textarea id="pe-c" placeholder="Написать комментарий" style="min-height:60px;margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button class="bt2 sm2" data-a="pbcm" data-s="${m[0]}" data-t="${m[1]}">Отправить</button></div></div></div></div>`;
 }
 function taskBoard(){
@@ -1907,14 +1920,16 @@ function taskBoard(){
 }
 async function tkCommit(si,ti){
   const t=PLD.plan.stages[si].tasks[ti];
-  if(ME.role==='client'){
+  if(t.own){const a=(CM().todo||[]).map(x=>x.id===t.id?Object.assign({},x,{text:t.text,done:t.status==='done',doing:t.status==='doing'}):x);await A.todosave(a);return}
+  if(ME.role==='client'||ME.role==='student'){
     const patch={status:t.status,text:t.text,due:t.due||'',pri:t.pri||'',cm:(t.cm||[]).filter(c=>c.by==='client')};
     const ok=await call(()=>rpc('okean_task_set',{p_slot:ME.slot,p_h:ME.h,p_id:t.id,p_patch:patch}));
     if(!ok){render(true);return}
     const ov=Object.assign({},ST.meta.ptasks);ov[t.id]=Object.assign({},ov[t.id],patch,{at:Date.now()});ST.meta.ptasks=ov;render(true);
   }else{t.at=Date.now();await planQuick()}
 }
-async function planQuick(){const ok=await setM(PLD.slot,'plan',PLD.plan);render(true)}
+const stripOwn=pl=>{const c=clone(pl);(c.stages||[]).forEach(st=>{st.tasks=(st.tasks||[]).filter(t=>!t.own)});return c};
+async function planQuick(){const ok=await setM(PLD.slot,'plan',stripOwn(PLD.plan));render(true)}
 function keyEd(slot,M){
   const L=(M.key||[]).slice().reverse();
   return `<div class="t2" style="margin-bottom:14px"><h3>Важный момент для клиента</h3><div class="seg" style="margin:12px 0">${Object.keys(KT).map((k,i)=>`<button data-a="ktype" data-k="${k}" class="${(window.KTY||'info')===k?'on':''}">${KT[k]}</button>`).join('')}</div><textarea id="k-x" style="min-height:80px" placeholder="Например: Согласовали, что склад подключаем после запуска зарплаты"></textarea><div class="row"><input type="date" id="k-d" style="max-width:200px"><button class="bt2 v" data-a="keyadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
@@ -2114,10 +2129,11 @@ const A={
  async stadd(){PLD.plan.stages.push({title:'Новый список',period:'',desc:'',tasks:[]});await planQuick()},
  async pstmv(el){const a=PLD.plan.stages,i=+el.dataset.s,j=i+(+el.dataset.d);if(j<0||j>=a.length)return;const t=a[i];a[i]=a[j];a[j]=t;await planQuick()},
  async pbsave(el){const si=+el.dataset.s,ti=+el.dataset.t,tx=($('#pe-x').value||'').trim();if(!tx){toast('Напиши задачу');return}const t=PLD.plan.stages[si].tasks[ti],E=window.PEF||{};t.text=tx;t.status=E.status||t.status;t.pri=E.pri||'';t.due=$('#pe-d').value||'';
+  if(t.own){window.PLE=null;await tkCommit(si,ti);toast('Сохранено');return}
   if(ME.role==='admin'){t.who=E.who||t.who;const ns=E.stage!=null?+E.stage:si;t.at=Date.now();if(ns!==si){PLD.plan.stages[si].tasks.splice(ti,1);PLD.plan.stages[ns].tasks=PLD.plan.stages[ns].tasks||[];PLD.plan.stages[ns].tasks.push(t)}window.PLE=null;await planQuick();toast('Сохранено');return}
   window.PLE=null;await tkCommit(si,ti);toast('Сохранено')},
- async pbcm(el){const si=+el.dataset.s,ti=+el.dataset.t,x=$('#pe-c'),tx=x?x.value.trim():'';if(!tx){toast('Напиши комментарий');return}const t=PLD.plan.stages[si].tasks[ti];t.cm=t.cm||[];t.cm.push({id:uid(),by:ME.role==='admin'?'admin':'client',name:ME.role==='admin'?'Виктория':(ME.name||'Клиент'),text:tx,at:Date.now()});await tkCommit(si,ti)},
- async pbdel(el){if(ME.role!=='admin')return;if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
+ async pbcm(el){const si=+el.dataset.s,ti=+el.dataset.t,x=$('#pe-c'),tx=x?x.value.trim():'';if(!tx){toast('Напиши комментарий');return}const t=PLD.plan.stages[si].tasks[ti];t.cm=t.cm||[];t.cm.push({id:uid(),by:ME.role==='admin'?'admin':'client',name:ME.role==='admin'?'Виктория':(ME.name||(ME.role==='student'?'Ученик':'Клиент')),text:tx,at:Date.now()});await tkCommit(si,ti)},
+ async pbdel(el){const t0=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];if(t0&&t0.own){if(!confirm('Удалить задачу?'))return;window.PLE=null;await A.todosave((CM().todo||[]).filter(x=>x.id!==t0.id));return}if(ME.role!=='admin')return;if(!confirm('Удалить задачу?'))return;PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);window.PLE=null;await planQuick()},
  pbf(el){window.DDO=null;window.PBF=Object.assign({v:'status'},PBD,window.PBF);window.PBF[el.dataset.k]=el.dataset.v;render(true)},
  pbaddx(){window.PLADD=null;render(true)},
  async pbaddok(el){const tx=($('#pa-t').value||'').trim();if(!tx){toast('Напиши задачу');return}const si=+$('#pa-s').value;PLD.plan.stages[si].tasks=PLD.plan.stages[si].tasks||[];PLD.plan.stages[si].tasks.push({id:uid(),text:tx,status:el.dataset.c,who:'team',due:'',at:Date.now()});window.PLADD=null;await planQuick();toast('Задача добавлена')},
@@ -2128,7 +2144,7 @@ const A={
  plwho(el){const t=PLD.plan.stages[+el.dataset.s].tasks[+el.dataset.t];t.who=t.who==='client'?'team':'client';render(true)},
  pldel(el){PLD.plan.stages[+el.dataset.s].tasks.splice(+el.dataset.t,1);render(true)},
  pldelst(el){if(!confirm('Удалить этап вместе с задачами?'))return;PLD.plan.stages.splice(+el.dataset.s,1);render(true)},
- async plsave(el){await setM(el.dataset.u,'plan',PLD.plan);window.PLD=null;toast('Траектория сохранена, клиент её видит');render(true)},
+ async plsave(el){await setM(el.dataset.u,'plan',stripOwn(PLD.plan));window.PLD=null;toast('Траектория сохранена, клиент её видит');render(true)},
  cadd(el){window.CF={slot:el.dataset.u,id:null,kind:el.dataset.k,title:'',body:'',link:'',due:''};render(true)},
  ctab(el){window.CTAB[el.dataset.u]=el.dataset.t;window.CF=null;render(true)},
  async csave(el){const slot=el.dataset.u;readCF(slot);const f=window.CF;
