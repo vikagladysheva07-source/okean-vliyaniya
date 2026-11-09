@@ -434,7 +434,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .rmpr{display:flex;align-items:center;gap:12px;margin-bottom:6px}.rmpr .tr2{flex:1}.rmpr span{font-size:13px;color:var(--muted);white-space:nowrap}
 .rmbox h4{margin:20px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#C9B8F5}
 .rmul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}.rmul li{position:relative;padding-left:22px;font-size:14.5px;line-height:1.5}.rmul li::before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:50%;background:#9B6FE8}
-.rmul.rgo li::before{background:#C4A4FF;box-shadow:0 0 10px rgba(196,164,255,.7)}
+.rmul.rgd li::before{background:transparent;border:2px solid #C4A4FF}.rmul.rgo li::before{background:#C4A4FF;box-shadow:0 0 10px rgba(196,164,255,.7)}
 .rmtk{display:flex;flex-direction:column;gap:2px}
 @media(max-width:720px){.rmbox{padding:22px 18px 18px;border-radius:22px}.rmh h2{font-size:19px}}
 .rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
@@ -1695,6 +1695,7 @@ function rmModal(x,i,n){
   return `<div class="rmm" data-a="rmclose"><div class="rmbox" data-a="noop"><button class="rmx" data-a="rmclose" aria-label="Закрыть">×</button>
    <div class="rmh"><span class="rmbig">${i+1}</span><div><small>${esc([P.kick,x.st.period].filter(Boolean).join(' · '))}</small><h2>${esc(P.name)}</h2></div></div>
    <div class="rmpr"><div class="tr2 big"><i style="width:${x.n?Math.round(x.d/x.n*100):0}%"></i></div><span>${x.d} из ${x.n} задач</span></div>
+   ${(info.built||[]).length?`<h4>Уже собрано</h4><ul class="rmul rgd">${li(info.built)}</ul>`:''}
    ${does.length?`<h4>Что делаем</h4><ul class="rmul">${li(does)}</ul>`:''}
    ${res.length?`<h4>Что будет готово</h4><ul class="rmul rgo">${li(res)}</ul>`:''}
    <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?'вы':'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>
