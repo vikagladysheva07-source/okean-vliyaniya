@@ -988,6 +988,16 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .mct .mci{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25);margin-bottom:8px}.mct .mci svg{width:22px;height:22px}
 .mct b{font-size:20px;font-weight:500}.mct small{font-size:13px;color:var(--muted);line-height:1.4}.mct em{font-style:normal;font-size:12.5px;color:#C4A4FF;margin-top:auto;padding-top:10px}
 @media(max-width:800px){.mcg{grid-template-columns:1fr}.mct{min-height:0;padding:16px 18px}.mct em{padding-top:4px}}
+.fgh{font-size:12.5px;color:#C4A4FF;margin:20px 0 10px;display:flex;align-items:center;gap:10px}.fgh:after{content:"";flex:1;height:1px;background:rgba(196,164,255,.18)}
+.fcg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fcd{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;border:1px solid rgba(196,164,255,.22);background:rgba(155,111,232,.06);color:inherit;text-decoration:none;cursor:pointer;min-height:130px;min-width:0;transition:border-color .15s}
+.fcd:hover{border-color:rgba(196,164,255,.5)}
+.fci{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.28);margin-bottom:4px}.fci svg{width:18px;height:18px}
+.fcd b{font-size:16px;font-weight:500;line-height:1.3}.fcd small{font-size:13px;color:var(--muted);line-height:1.45}
+.fcf{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center}.fcf em{font-style:normal;font-size:12.5px;color:#C4A4FF}
+.fcp{width:32px;height:32px;border-radius:50%;border:1px solid rgba(196,164,255,.35);background:transparent;color:#E3D4FF;display:grid;place-items:center;cursor:pointer;padding:0}.fcp svg{width:15px;height:15px}
+.fsr{width:100%;margin:6px 0 0;padding:11px 14px;border-radius:14px;font-size:14px}
+@media(max-width:700px){.fcg{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1410,20 +1420,26 @@ function weekV(n){
   <h1 class="t" style="margin-top:10px">${esc(w.title)}</h1>${(w.goal||w.outcome)?`<p class="goal">${esc(w.outcome||w.goal)}</p>`:''}
   ${prb}<div class="sx wk3"><div class="sxh">Задачи недели</div><p class="sxsub" style="margin:4px 0 12px">Задачи теперь на общей доске и в траектории.</p><div class="sxrow"><a class="sxbtn" href="#/tasks">Открыть доску задач</a><a class="sxbtn g" href="#/plan">Траектория</a></div></div>${fbk(n)}${rep}`;
 }
-const fcard=f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d||'')}</small></div><div class="fia">${f.url?`<a class="sxbtn" href="${esc(f.url)}" target="_blank" rel="noopener">Открыть</a>`:`<button class="sxbtn" data-a="go" data-h="#/doc/${esc(f.id)}">Открыть</button>${f.text?`<button class="sxbtn g" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button>`:''}`}</div></div>`;
-function stDocV(id){
-  const f=(CM().files||[]).find(x=>x.id===id),bk='<a class="back" href="#/lib">← Материалы</a>';
-  if(!f)return bk+'<p class="sub">Материал не найден.</p>';
-  return `${bk}<h1 class="t" style="margin-top:6px">${esc(f.t)}</h1>${f.html?`<iframe class="docf" sandbox="allow-scripts" allow="clipboard-write" srcdoc="${esc(f.html)}" title="${esc(f.t)}"></iframe>`:`<div class="sx" style="margin-top:12px"><pre class="docp">${esc(f.text||'')}</pre><div class="sxrow"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button></div></div>`}`;
-}
-function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(fcard).join('')}</div>`}
+const FIC={dna:'user',partner:'chat',assets:'chart',touches:'link'};
+const ftitle=t=>String(t||'').replace(/^Промт:\s*/i,'').replace(/^./,c=>c.toUpperCase());
+const fcard=f=>{const ic=ico(FIC[f.id]||(f.url?'link':'file')),cp=f.text?`<button class="fcp" data-a="fcopy" data-id="${esc(f.id)}" aria-label="Скопировать" title="Скопировать">${ico('file')}</button>`:'';
+  const inner=`<span class="fci">${ic}</span><b>${esc(ftitle(f.t))}</b><small>${esc(f.d||'')}</small><span class="fcf"><em>Открыть</em>${cp}</span>`;
+  return f.url?`<a class="fcd" href="${esc(f.url)}" target="_blank" rel="noopener" data-q="${esc((f.t+' '+(f.d||'')).toLowerCase())}">${inner}</a>`:`<div class="fcd" role="link" tabindex="0" data-a="go" data-h="#/doc/${esc(f.id)}" data-q="${esc((f.t+' '+(f.d||'')).toLowerCase())}">${inner}</div>`};
+const wkLbl=w=>w>=7?'Сопровождение':'Неделя '+w;
+function fgroups(L){const g={};L.forEach(f=>{const k=f.w?+f.w:0;(g[k]=g[k]||[]).push(f)});return Object.keys(g).map(Number).sort((x,y)=>(x||99)-(y||99)).map(k=>`<div class="fgw" data-g><div class="fgh">${k?wkLbl(k):'Для всех'}</div><div class="fcg">${g[k].map(fcard).join('')}</div></div>`).join('')}
+function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div><div class="fcg" style="margin-top:10px">${fl.map(fcard).join('')}</div></div>`}
 const MCATS=[['prompt','Промты','Готовые инструкции для AI-партнёра','method'],['lesson','Уроки','Записи и конспекты','book'],['review','Разборы','Разборы работ и кейсов','chart']];
 const fcat=f=>f.cat==='info'?'lesson':(f.cat||'prompt');
 function stMatV(cat){
   const F=CM().files||[],cur=MCATS.find(c=>c[0]===cat);
   if(cur){const L=F.filter(f=>fcat(f)===cur[0]);
-    return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1><div class="sx wk3" style="margin-top:12px">${L.map(fcard).join('')||'<p class="sxsub">Пока пусто. Материалы появятся здесь.</p>'}</div>`}
-  return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>{const n=F.filter(f=>fcat(f)===c[0]).length;return `<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b></a>`}).join('')}</div>`;
+    return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1>${L.length>6?'<input id="mq" class="fsr" type="search" placeholder="Найти материал" autocomplete="off">':''}${L.length?fgroups(L):'<div class="sx wk3" style="margin-top:12px"><p class="sxsub">Пока пусто. Материалы появятся здесь.</p></div>'}`}
+  return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>`<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b></a>`).join('')}</div>`;
+}
+function stDocV(id){
+  const f=(CM().files||[]).find(x=>x.id===id),bk='<a class="back" href="#/lib">← Материалы</a>';
+  if(!f)return bk+'<p class="sub">Материал не найден.</p>';
+  return `${bk}<h1 class="t" style="margin-top:6px">${esc(f.t)}</h1>${f.html?`<iframe class="docf" sandbox="allow-scripts" allow="clipboard-write" srcdoc="${esc(f.html)}" title="${esc(f.t)}"></iframe>`:`<div class="sx" style="margin-top:12px"><pre class="docp">${esc(f.text||'')}</pre><div class="sxrow"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button></div></div>`}`;
 }
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
 function whenTxt(m){const d=new Date(m.when);return isNaN(d)?'':d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
@@ -2140,7 +2156,7 @@ const A={
  async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
  async matadd(el){const u=el.dataset.u,g=k=>(($('#'+k)||{}).value||'').trim(),t=g('mt-t'),x=g('mt-x'),k=g('mt-k'),w=g('mt-w');if(!t||!x){toast('Нужны название и текст или ссылка');return}const it={id:'m'+Date.now().toString(36),t,d:g('mt-d'),cat:k};if(/^https?:\/\/\S+$/.test(x))it.url=x;else it.text=x;if(w)it.w=+w;const sl=$('#mt-a').checked?AD.users.filter(q=>q.role==='student').map(q=>q.slot):[u];for(const s2 of sl){await setM(s2,'files',(mmap(s2).files||[]).concat([Object.assign({},it)]))}toast(sl.length>1?'Добавлено всем ученикам':'Добавлено');render(true)},
  async matdel(el){if(!confirm('Удалить материал?'))return;await setM(el.dataset.u,'files',(mmap(el.dataset.u).files||[]).filter(f=>f.id!==el.dataset.id));render(true)},
- fcopy(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const done=()=>toast('Скопировано. Вставь в чат с AI-партнёром');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.text).then(done,()=>toast('Не получилось скопировать, нажми «Скачать»'));else toast('Не получилось скопировать, нажми «Скачать»')},
+ fcopy(el,e){if(e&&e.stopPropagation)e.stopPropagation();const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const done=()=>toast('Скопировано. Вставь в чат с AI-партнёром');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.text).then(done,()=>toast('Не получилось скопировать, нажми «Скачать»'));else toast('Не получилось скопировать, нажми «Скачать»')},
  fdl(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const b=new Blob([f.text],{type:'text/markdown;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.id+'.md';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)},
  async chk(el){const id=el.dataset.id,am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);if(am){const sl=am[1],on=!curDone(id);const ok=await call(()=>rpc('okean_admin_review',{p_slot:ME.slot,p_h:ME.h,p_target:sl,p_task:id,p_status:on?'done':'todo',p_feedback:''}));if(!ok)return;const row=(AD.progress||[]).find(x=>x.slot===sl&&x.task_id===id);if(row)row.status=on?'done':'todo';else AD.progress.push({slot:sl,task_id:id,status:on?'done':'todo'});const dg=((CM().refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},CM().refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true);return}const on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
@@ -2288,6 +2304,7 @@ root.addEventListener('dragover',e=>{const tl=e.target.closest&&e.target.closest
 const col=e.target.closest&&e.target.closest('.kcol');if(col){e.preventDefault();document.querySelectorAll('.kcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
 root.addEventListener('drop',async e=>{const tl=ME.role==='admin'&&e.target.closest&&e.target.closest('.tlist[data-si]');if(tl&&window.PLD){e.preventDefault();document.querySelectorAll('.dropline').forEach(x=>x.remove());const dd=(e.dataTransfer.getData('text/plain')||'').split(':').map(Number),S=PLD.plan.stages,s1=dd[0],t1=dd[1],s2=+tl.dataset.si;const task=S[s1]&&S[s1].tasks[t1];if(!task)return;let idx=dropIdx(tl,e.clientY).idx;S[s1].tasks.splice(t1,1);S[s2].tasks=S[s2].tasks||[];if(idx==null)idx=S[s2].tasks.length;else if(s1===s2&&t1<idx)idx--;S[s2].tasks.splice(idx,0,task);await planQuick();return}
 const col=e.target.closest&&e.target.closest('.kcol');if(!col||!window.PLD)return;e.preventDefault();const d=(e.dataTransfer.getData('text/plain')||'').split(':'),t=PLD.plan.stages[+d[0]]&&PLD.plan.stages[+d[0]].tasks[+d[1]];if(!t)return;if(t.status!==col.dataset.st){t.status=col.dataset.st;await tkCommit(+d[0],+d[1])}else render(true)});
+root.addEventListener('input',e=>{const t=e.target;if(t.id!=='mq')return;const q=t.value.trim().toLowerCase();document.querySelectorAll('.fcd').forEach(c=>{c.style.display=!q||(c.dataset.q||'').indexOf(q)>=0?'':'none'});document.querySelectorAll('[data-g]').forEach(g=>{g.style.display=[...g.querySelectorAll('.fcd')].some(c=>c.style.display!=='none')?'':'none'})});
 root.addEventListener('change',async e=>{const t=e.target;if(t.dataset.edc&&PD){setPath(PD,t.dataset.edc,!!t.checked);return}if(t.id==='ph-f'&&t.files&&t.files[0]){await savePhoto(t.files[0]);return}if(t.dataset.plsave&&window.PLD){await planQuick();return}if(t.id==='pf-a'||t.id==='pf-b'){window.PBF=Object.assign({st:'all',who:'all',mode:'range'},window.PBF,t.id==='pf-a'?{from:t.value}:{to:t.value});render(true);return}if(t.id==='pf-s'){window.PBF=Object.assign({st:'all',who:'all'},window.PBF,{st:t.value});render(true);return}if(t.dataset.sel==='prog'){await loadProgram(t.value);window.OPEN=null;render()}});
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='td-i'&&e.key==='Enter'){e.preventDefault();A.todoadd();return}if(e.key==='Escape'&&(window.PLE||window.PBFO)){window.PLE=null;window.PBFO=false;render(true)}if(e.target&&e.target.id==='pq-t'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();const b=document.querySelector('[data-a=pqok]');if(b)A.pqok(b)}});
 document.addEventListener('click',e=>{if(window.DDO&&!(e.target.closest&&e.target.closest('.dd'))){window.DDO=null;render(true)}});
