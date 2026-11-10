@@ -998,6 +998,7 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .fcp{width:32px;height:32px;border-radius:50%;border:1px solid rgba(196,164,255,.35);background:transparent;color:#E3D4FF;display:grid;place-items:center;cursor:pointer;padding:0}.fcp svg{width:15px;height:15px}
 .fsr{width:100%;margin:6px 0 0;padding:11px 14px;border-radius:14px;font-size:14px}
 @media(max-width:700px){.fcg{grid-template-columns:1fr}}
+.fce{border-style:dashed;background:transparent;cursor:default;min-height:96px;justify-content:center;opacity:.75}.fce:hover{border-color:rgba(196,164,255,.22)}.fce .fci{font-size:15px;color:#C4A4FF}
 </style>
 </head>
 <body>
@@ -1433,7 +1434,7 @@ const fcat=f=>f.cat==='info'?'lesson':(f.cat||'prompt');
 function stMatV(cat){
   const F=CM().files||[],cur=MCATS.find(c=>c[0]===cat);
   if(cur){const L=F.filter(f=>fcat(f)===cur[0]);
-    return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1>${L.length>6?'<input id="mq" class="fsr" type="search" placeholder="Найти материал" autocomplete="off">':''}${L.length?fgroups(L):'<div class="sx wk3" style="margin-top:12px"><p class="sxsub">Пока пусто. Материалы появятся здесь.</p></div>'}`}
+    return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1>${L.length>6?'<input id="mq" class="fsr" type="search" placeholder="Найти материал" autocomplete="off">':''}${cur[0]==='review'?`<div class="fcg" style="margin-top:14px">${L.map(fcard).join('')}${Array.from({length:Math.max(0,7-L.length)},(_,i)=>`<div class="fcd fce"><span class="fci">${L.length+i+1}</span><b>Разбор ${L.length+i+1}</b></div>`).join('')}</div>`:L.length?fgroups(L):'<div class="sx wk3" style="margin-top:12px"><p class="sxsub">Пока пусто. Материалы появятся здесь.</p></div>'}`}
   return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>`<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b></a>`).join('')}</div>`;
 }
 function stDocV(id){
