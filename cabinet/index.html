@@ -983,6 +983,11 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 @media(min-width:1181px){.sxr .sxfc{grid-column:1/-1!important;grid-row:3!important}.sxr{grid-template-rows:auto auto auto!important;grid-template-columns:minmax(0,1fr) 120px!important}.sxr .sxrg2{transform:none!important;margin-top:0!important}.sxr .sxrg svg{width:104px!important}.sxr .sxrg{margin:0!important}.sxr .sxrc b{font-size:22px!important}.sxr .sxgf{font-size:11px}.sxr .sxrl{padding-bottom:4px}}
 .docf{display:block;width:100%;height:calc(100vh - 150px);min-height:540px;border:1px solid rgba(196,164,255,.2);border-radius:16px;background:#07070D;margin-top:12px}
 .docp{white-space:pre-wrap;word-break:break-word;font:13.5px/1.6 ui-monospace,Menlo,monospace;color:#E6E1F7;margin:0 0 12px;max-height:70vh;overflow:auto}
+.mcg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.mct{display:flex;flex-direction:column;gap:6px;padding:22px 20px;text-decoration:none;color:inherit;min-height:170px}
+.mct .mci{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25);margin-bottom:8px}.mct .mci svg{width:22px;height:22px}
+.mct b{font-size:20px;font-weight:500}.mct small{font-size:13px;color:var(--muted);line-height:1.4}.mct em{font-style:normal;font-size:12.5px;color:#C4A4FF;margin-top:auto;padding-top:10px}
+@media(max-width:800px){.mcg{grid-template-columns:1fr}.mct{min-height:0;padding:16px 18px}.mct em{padding-top:4px}}
 </style>
 </head>
 <body>
@@ -1187,7 +1192,7 @@ function route(h){
     else if(r==='plan')html=shell(stPlanPage(),true);
     else if(r==='week')html=shell(weekV(+a),false);
     else if(r==='task')html=shell(taskV(a),false);
-    else if(r==='lib')html=shell(stMatV(),false);
+    else if(r==='lib')html=shell(stMatV(a),false);
     else if(r==='doc')html=shell(stDocV(a),false);
     else if(r==='me')html=shell(meV(),false);
     else html=shell(homeV(),true);
@@ -1412,11 +1417,13 @@ function stDocV(id){
   return `${bk}<h1 class="t" style="margin-top:6px">${esc(f.t)}</h1>${f.html?`<iframe class="docf" sandbox="allow-scripts" allow="clipboard-write" srcdoc="${esc(f.html)}" title="${esc(f.t)}"></iframe>`:`<div class="sx" style="margin-top:12px"><pre class="docp">${esc(f.text||'')}</pre><div class="sxrow"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button></div></div>`}`;
 }
 function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(fcard).join('')}</div>`}
-function stMatV(){
-  const F=CM().files||[],P=F.filter(f=>!f.url&&f.cat!=='info'),I=F.filter(f=>f.url||f.cat==='info');
-  const sec=(t,l)=>l.length?`<div class="sx wk3" style="margin-top:14px"><div class="sxh">${t}</div>${l.map(fcard).join('')}</div>`:'';
-  const rest=libV().replace(/^<h1 class="t">Материалы<\/h1>/,'');
-  return `<h1 class="t">Материалы</h1><p class="sxsub" style="margin:2px 0 6px">Промты и полезное. Новые материалы появляются здесь по ходу программы.</p>${sec('Промты',P)}${sec('Полезное',I)}${!F.length?'<div class="sx wk3" style="margin-top:14px"><p class="sxsub">Пока пусто. Первые материалы появятся скоро.</p></div>':''}${rest}`;
+const MCATS=[['prompt','Промты','Готовые инструкции для AI-партнёра','method'],['lesson','Уроки','Записи и конспекты','book'],['review','Разборы','Разборы работ и кейсов','chart']];
+const fcat=f=>f.cat==='info'?'lesson':(f.cat||'prompt');
+function stMatV(cat){
+  const F=CM().files||[],cur=MCATS.find(c=>c[0]===cat);
+  if(cur){const L=F.filter(f=>fcat(f)===cur[0]);
+    return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1><div class="sx wk3" style="margin-top:12px">${L.map(fcard).join('')||'<p class="sxsub">Пока пусто. Материалы появятся здесь.</p>'}</div>`}
+  return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>{const n=F.filter(f=>fcat(f)===c[0]).length;return `<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b><small>${c[2]}</small><em>${n?n+' '+plur(n,'материал','материала','материалов'):'Пока пусто'}</em></a>`}).join('')}</div>`;
 }
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
 function whenTxt(m){const d=new Date(m.when);return isNaN(d)?'':d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
@@ -1529,11 +1536,11 @@ function reviewCard(p,who){
 }
 function matEd(slot,M){
   const F=M.files||[];
-  return `<div class="card">${F.map(f=>`<div class="meet" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="min-width:0"><b style="font-weight:600;font-size:14px">${esc(f.t)}</b><br><small class="sub">${f.url?'ссылка':'промт'}${f.w?' · неделя '+f.w:''}</small></span><button class="rbt" data-a="matdel" data-u="${slot}" data-id="${esc(f.id)}" title="Удалить">✕</button></div>`).join('')||'<p class="sub">Материалов пока нет.</p>'}
+  return `<div class="card">${F.map(f=>`<div class="meet" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="min-width:0"><b style="font-weight:600;font-size:14px">${esc(f.t)}</b><br><small class="sub">${({prompt:'Промты',lesson:'Уроки',review:'Разборы',info:'Уроки'})[f.cat||'prompt']}${f.url?' · ссылка':''}${f.w?' · неделя '+f.w:''}</small></span><button class="rbt" data-a="matdel" data-u="${slot}" data-id="${esc(f.id)}" title="Удалить">✕</button></div>`).join('')||'<p class="sub">Материалов пока нет.</p>'}
   <small class="l" style="margin-top:14px">Добавить материал</small>
   <div class="idx"><input type="text" id="mt-t" placeholder="Название"><input type="text" id="mt-d" placeholder="Коротко: что это и когда использовать"></div>
-  <div class="idx" style="margin-top:8px"><select id="mt-k" class="sel" style="margin:0"><option value="prompt">Промт или текст</option><option value="url">Ссылка</option></select><input type="number" id="mt-w" min="1" max="7" placeholder="К неделе (необязательно)"></div>
-  <textarea id="mt-x" style="min-height:90px;margin-top:8px" placeholder="Текст промта или ссылка"></textarea>
+  <div class="idx" style="margin-top:8px"><select id="mt-k" class="sel" style="margin:0"><option value="prompt">Раздел: Промты</option><option value="lesson">Раздел: Уроки</option><option value="review">Раздел: Разборы</option></select><input type="number" id="mt-w" min="1" max="7" placeholder="К неделе (необязательно)"></div>
+  <textarea id="mt-x" style="min-height:90px;margin-top:8px" placeholder="Текст или ссылка (адрес начинается с https://)"></textarea>
   <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13.5px"><input type="checkbox" id="mt-a"> Добавить всем ученикам</label>
   <div class="row"><button class="btn s" data-a="matadd" data-u="${slot}">Добавить</button></div></div>`;
 }
@@ -2131,7 +2138,7 @@ const A={
  pricancel(){window.PEDN=null;render(true)},
  async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
  async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
- async matadd(el){const u=el.dataset.u,g=k=>(($('#'+k)||{}).value||'').trim(),t=g('mt-t'),x=g('mt-x'),k=g('mt-k'),w=g('mt-w');if(!t||!x){toast('Нужны название и текст или ссылка');return}const it={id:'m'+Date.now().toString(36),t,d:g('mt-d'),cat:k==='url'?'info':'prompt'};if(k==='url')it.url=x;else it.text=x;if(w)it.w=+w;const sl=$('#mt-a').checked?AD.users.filter(q=>q.role==='student').map(q=>q.slot):[u];for(const s2 of sl){await setM(s2,'files',(mmap(s2).files||[]).concat([Object.assign({},it)]))}toast(sl.length>1?'Добавлено всем ученикам':'Добавлено');render(true)},
+ async matadd(el){const u=el.dataset.u,g=k=>(($('#'+k)||{}).value||'').trim(),t=g('mt-t'),x=g('mt-x'),k=g('mt-k'),w=g('mt-w');if(!t||!x){toast('Нужны название и текст или ссылка');return}const it={id:'m'+Date.now().toString(36),t,d:g('mt-d'),cat:k};if(/^https?:\/\/\S+$/.test(x))it.url=x;else it.text=x;if(w)it.w=+w;const sl=$('#mt-a').checked?AD.users.filter(q=>q.role==='student').map(q=>q.slot):[u];for(const s2 of sl){await setM(s2,'files',(mmap(s2).files||[]).concat([Object.assign({},it)]))}toast(sl.length>1?'Добавлено всем ученикам':'Добавлено');render(true)},
  async matdel(el){if(!confirm('Удалить материал?'))return;await setM(el.dataset.u,'files',(mmap(el.dataset.u).files||[]).filter(f=>f.id!==el.dataset.id));render(true)},
  fcopy(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const done=()=>toast('Скопировано. Вставь в чат с AI-партнёром');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.text).then(done,()=>toast('Не получилось скопировать, нажми «Скачать»'));else toast('Не получилось скопировать, нажми «Скачать»')},
  fdl(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const b=new Blob([f.text],{type:'text/markdown;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.id+'.md';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)},
