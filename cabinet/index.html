@@ -999,6 +999,7 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .fsr{width:100%;margin:6px 0 0;padding:11px 14px;border-radius:14px;font-size:14px}
 @media(max-width:700px){.fcg{grid-template-columns:1fr}}
 .fce{border-style:dashed;background:transparent;cursor:default;min-height:96px;justify-content:center;opacity:.75}.fce:hover{border-color:rgba(196,164,255,.22)}.fce .fci{font-size:15px;color:#C4A4FF}
+@media(max-width:900px){.kb,.kbw{grid-template-columns:minmax(0,1fr)!important}.kcol{padding:12px!important}.kb .tc{padding:12px!important}}
 </style>
 </head>
 <body>
@@ -1952,7 +1953,7 @@ function planListsRO(pl){
    return `<div class="tlist"><div class="tlh"><b>${esc(st.title)}</b><span class="pl2">${d}/${n}</span></div>${st.period?`<div class="mu2" style="padding:0 4px 8px">${esc(st.period)}</div>`:''}<div class="tcards">${vis.map(x=>pbCardHtml(si,x.ti,x.t,true)).join('')||'<div class="kempty">Нет задач</div>'}</div></div>`}).join('')}</div>`;
 }
 function planBoard(slot){return pbView()==='status'?taskBoard():planLists(slot)}
-function whoTxt(t){return ME.role==='client'?(t.who==='client'?'Вы':'Виктория'):(t.who==='client'?'Клиент':'Я')}
+function whoTxt(t){if(ME.role==='student')return t.who==='client'?'Я':'Виктория';return ME.role==='client'?(t.who==='client'?'Вы':'Виктория'):(t.who==='client'?'Клиент':'Я')}
 function taskCard(P,si,ti,t){
   const ro=!t.id,n=(t.cm||[]).length,d=pbEff(P,si,t),late=t.status!=='done'&&d&&d<today();
   const sn=P.stages[si].title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ');
