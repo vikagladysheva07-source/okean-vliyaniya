@@ -981,6 +981,8 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .sxfk p{margin:0;font-size:13px;line-height:1.4;color:#E6E1F7;overflow-wrap:anywhere}
 @media(max-width:700px){.sxfc>div{grid-template-columns:1fr}.sxfk{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start}.sxfk i{margin:0}}
 @media(min-width:1181px){.sxr .sxfc{grid-column:1/-1!important;grid-row:3!important}.sxr{grid-template-rows:auto auto auto!important;grid-template-columns:minmax(0,1fr) 120px!important}.sxr .sxrg2{transform:none!important;margin-top:0!important}.sxr .sxrg svg{width:104px!important}.sxr .sxrg{margin:0!important}.sxr .sxrc b{font-size:22px!important}.sxr .sxgf{font-size:11px}.sxr .sxrl{padding-bottom:4px}}
+.docf{display:block;width:100%;height:calc(100vh - 150px);min-height:540px;border:1px solid rgba(196,164,255,.2);border-radius:16px;background:#07070D;margin-top:12px}
+.docp{white-space:pre-wrap;word-break:break-word;font:13.5px/1.6 ui-monospace,Menlo,monospace;color:#E6E1F7;margin:0 0 12px;max-height:70vh;overflow:auto}
 </style>
 </head>
 <body>
@@ -1136,7 +1138,7 @@ function navItems(){
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
   return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks'],['#/lib','Материалы','book']];
 }
-function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
+function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/lib'&&cur.startsWith('#/doc/'))||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
@@ -1186,6 +1188,7 @@ function route(h){
     else if(r==='week')html=shell(weekV(+a),false);
     else if(r==='task')html=shell(taskV(a),false);
     else if(r==='lib')html=shell(stMatV(),false);
+    else if(r==='doc')html=shell(stDocV(a),false);
     else if(r==='me')html=shell(meV(),false);
     else html=shell(homeV(),true);
   }
@@ -1402,7 +1405,12 @@ function weekV(n){
   <h1 class="t" style="margin-top:10px">${esc(w.title)}</h1>${(w.goal||w.outcome)?`<p class="goal">${esc(w.outcome||w.goal)}</p>`:''}
   ${prb}<div class="sx wk3"><div class="sxh">Задачи недели</div><p class="sxsub" style="margin:4px 0 12px">Задачи теперь на общей доске и в траектории.</p><div class="sxrow"><a class="sxbtn" href="#/tasks">Открыть доску задач</a><a class="sxbtn g" href="#/plan">Траектория</a></div></div>${fbk(n)}${rep}`;
 }
-const fcard=f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d||'')}</small></div><div class="fia">${f.url?`<a class="sxbtn" href="${esc(f.url)}" target="_blank" rel="noopener">Открыть</a>`:`<button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button><button class="sxbtn g" data-a="fdl" data-id="${esc(f.id)}">Скачать</button>`}</div></div>`;
+const fcard=f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d||'')}</small></div><div class="fia">${f.url?`<a class="sxbtn" href="${esc(f.url)}" target="_blank" rel="noopener">Открыть</a>`:`<button class="sxbtn" data-a="go" data-h="#/doc/${esc(f.id)}">Открыть</button>${f.text?`<button class="sxbtn g" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button>`:''}`}</div></div>`;
+function stDocV(id){
+  const f=(CM().files||[]).find(x=>x.id===id),bk='<a class="back" href="#/lib">← Материалы</a>';
+  if(!f)return bk+'<p class="sub">Материал не найден.</p>';
+  return `${bk}<h1 class="t" style="margin-top:6px">${esc(f.t)}</h1>${f.html?`<iframe class="docf" sandbox="allow-scripts" allow="clipboard-write" srcdoc="${esc(f.html)}" title="${esc(f.t)}"></iframe>`:`<div class="sx" style="margin-top:12px"><pre class="docp">${esc(f.text||'')}</pre><div class="sxrow"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button></div></div>`}`;
+}
 function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(fcard).join('')}</div>`}
 function stMatV(){
   const F=CM().files||[],P=F.filter(f=>!f.url&&f.cat!=='info'),I=F.filter(f=>f.url||f.cat==='info');
