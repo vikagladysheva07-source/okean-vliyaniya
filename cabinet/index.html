@@ -972,6 +972,15 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .asp2{flex:none;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);white-space:nowrap}
 .asn{flex:none;color:var(--muted);display:grid}.asn svg{width:16px;height:16px}
 @media(max-width:700px){.asr{flex-wrap:wrap}.asx{flex:1 1 140px}}
+
+/* три фокуса карточками */
+.sxfc{grid-column:1/-1;margin-top:10px}.sxfc>small{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);margin:0 0 8px}.sxfc>small svg{width:15px;height:15px;color:#C4A4FF}
+.sxfc>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sxfk{border:1px solid rgba(196,164,255,.2);border-radius:14px;padding:11px 13px;background:rgba(255,255,255,.03);min-width:0}
+.sxfk i{display:block;margin-bottom:7px;color:#C4A4FF}.sxfk i svg{width:18px;height:18px}
+.sxfk p{margin:0;font-size:13px;line-height:1.4;color:#E6E1F7;overflow-wrap:anywhere}
+@media(max-width:700px){.sxfc>div{grid-template-columns:1fr}.sxfk{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start}.sxfk i{margin:0}}
+@media(min-width:1181px){.sxr .sxfc{grid-column:1/-1!important;grid-row:3!important}.sxr{grid-template-rows:auto auto auto!important;grid-template-columns:minmax(0,1fr) 120px!important}.sxr .sxrg2{transform:none!important;margin-top:0!important}.sxr .sxrg svg{width:104px!important}.sxr .sxrg{margin:0!important}.sxr .sxrc b{font-size:22px!important}.sxr .sxgf{font-size:11px}.sxr .sxrl{padding-bottom:4px}}
 </style>
 </head>
 <body>
@@ -1286,7 +1295,8 @@ function homeV(){
      <input id="wg-w" class="sxgpi" type="text" maxlength="220" placeholder="Зачем тебе это: что изменится, когда цель достигнута" value="${esc(GX.why||'')}">
      <div class="sxgpe"><small>Три фокуса, чтобы достичь цель (с метрикой и сроком)</small>${GPe.map((x,i)=>`<input class="sxgpi" type="text" maxlength="220" placeholder="Фокус ${i+1}" value="${esc(x)}">`).join('')}</div>
      <div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
-   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}${GP.length?`<div class="sxgp"><small>Три фокуса</small>${GP.map((x,i)=>`<div><span>${i+1}</span><b>${esc(x)}</b></div>`).join('')}</div>`:''}`}</div>
+   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}`}</div>
+   ${!gedit&&GP.length?`<div class="sxfc"><small>${ico('flag')}Три фокуса</small><div>${GP.map((x,i)=>`<div class="sxfk"><i>${ico(['tasks','chat','chart'][i%3])}</i><p>${esc(x)}</p></div>`).join('')}</div></div>`:''}
    <div class="sxrg2"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
    <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div></div>`;
   /* траектория + задачи текущего этапа */
