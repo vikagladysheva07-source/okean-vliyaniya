@@ -984,7 +984,7 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .docf{display:block;width:100%;height:calc(100vh - 150px);min-height:540px;border:1px solid rgba(196,164,255,.2);border-radius:16px;background:#07070D;margin-top:12px}
 .docp{white-space:pre-wrap;word-break:break-word;font:13.5px/1.6 ui-monospace,Menlo,monospace;color:#E6E1F7;margin:0 0 12px;max-height:70vh;overflow:auto}
 .mcg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
-.mct{display:flex;flex-direction:column;gap:6px;padding:22px 20px;text-decoration:none;color:inherit;min-height:170px}
+.mct{display:flex;flex-direction:column;gap:6px;padding:22px 20px;text-decoration:none;color:inherit;min-height:130px;justify-content:space-between}
 .mct .mci{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(155,111,232,.14);border:1px solid rgba(196,164,255,.25);margin-bottom:8px}.mct .mci svg{width:22px;height:22px}
 .mct b{font-size:20px;font-weight:500}.mct small{font-size:13px;color:var(--muted);line-height:1.4}.mct em{font-style:normal;font-size:12.5px;color:#C4A4FF;margin-top:auto;padding-top:10px}
 @media(max-width:800px){.mcg{grid-template-columns:1fr}.mct{min-height:0;padding:16px 18px}.mct em{padding-top:4px}}
@@ -1423,7 +1423,7 @@ function stMatV(cat){
   const F=CM().files||[],cur=MCATS.find(c=>c[0]===cat);
   if(cur){const L=F.filter(f=>fcat(f)===cur[0]);
     return `<a class="back" href="#/lib">← Материалы</a><h1 class="t" style="margin-top:6px">${cur[1]}</h1><div class="sx wk3" style="margin-top:12px">${L.map(fcard).join('')||'<p class="sxsub">Пока пусто. Материалы появятся здесь.</p>'}</div>`}
-  return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>{const n=F.filter(f=>fcat(f)===c[0]).length;return `<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b><small>${c[2]}</small><em>${n?n+' '+plur(n,'материал','материала','материалов'):'Пока пусто'}</em></a>`}).join('')}</div>`;
+  return `<h1 class="t">Материалы</h1><div class="mcg">${MCATS.map(c=>{const n=F.filter(f=>fcat(f)===c[0]).length;return `<a class="sx mct" href="#/lib/${c[0]}"><span class="mci">${ico(c[3])}</span><b>${c[1]}</b></a>`}).join('')}</div>`;
 }
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
 function whenTxt(m){const d=new Date(m.when);return isNaN(d)?'':d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
