@@ -1658,6 +1658,17 @@ function wkStrip(all,isMine,lm,lo,pre){
    <div class="wdr">${days.map((d,i)=>{const l=byD(d),dd=new Date(d+'T12:00:00');return `<label for="${pre}${i}" class="wd ${i===0?'td':''}"><small>${wdn[dd.getDay()]}</small><b>${dd.getDate()}</b><div class="wdd">${dots(l)}</div></label>`}).join('')}</div>
    <div class="wpl">${days.map(d=>{const l=byD(d);return `<div class="wpn">${l.length?l.slice(0,5).map(x=>`<a href="${x.h||'#/tasks'}"><i class="${cls(x)}"></i><span>${x.cn?`<b>${esc(x.cn)}</b> · `:''}${esc(x.t.text)}</span></a>`).join('')+(l.length>5?`<a href="#/tasks" class="mr">Ещё ${l.length-5}</a>`:''):'<p>В этот день сроков нет</p>'}</div>`}).join('')}</div></div>`;
 }
+function clWeek(){
+  const pl=planOf(ST.meta);window.PLD={slot:ME.slot,plan:pl};
+  const td=today(),end=ymdOf(dnum(td)+6),COLS=[['todo','К выполнению'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]};
+  (pl.stages||[]).forEach((st,si)=>{(st.tasks||[]).forEach((t,ti)=>{const d=pbEff(pl,si,t),late=t.status!=='done'&&d&&d<td,dw=d&&d>=td&&d<=end;if(late||dw)cards[t.status||'todo'].push({si,ti,t,d})})});
+  Object.keys(cards).forEach(k=>cards[k].sort((x,y)=>(x.d||'9')<(y.d||'9')?-1:(x.d||'9')>(y.d||'9')?1:((PRK[x.t.pri]!=null?PRK[x.t.pri]:3)-(PRK[y.t.pri]!=null?PRK[y.t.pri]:3))));
+  const tot=cards.todo.length+cards.doing.length+cards.done.length,ac=cards[window.PBC]?window.PBC:'todo',LIM=5;
+  if(!tot)return `<div class="t2 c12"><h3>Задачи недели <span class="mu2" style="font-weight:400">${fdate(td)} – ${fdate(end)}</span></h3><p class="mu2" style="margin-top:10px">На этой неделе задач нет.</p></div>`;
+  return `<div class="t2 c12 cwk"><h3>Задачи недели <span class="mu2" style="font-weight:400">${fdate(td)} – ${fdate(end)}</span><a class="go" href="#/tasks" aria-label="Вся доска">${SV.arrow}</a></h3>
+  <div class="ktabs" style="margin-top:12px">${COLS.map(([k,n])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${({todo:'Сделать',doing:'В работе',done:'Готово'})[k]} <em>${cards[k].length}</em></button>`).join('')}</div>
+  <div class="kb">${COLS.map(([k,n])=>`<div class="kcol ${ac===k?'act':''}" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div><div class="tcards" style="max-height:none">${cards[k].slice(0,LIM).map(c=>taskCard(pl,c.si,c.ti,c.t)).join('')||'<div class="kempty">Пусто</div>'}${cards[k].length>LIM?`<a class="mr" href="#/tasks" style="display:block;text-align:center;padding:6px;font-size:13px;color:#C4A4FF">Ещё ${cards[k].length-LIM}</a>`:''}</div></div>`).join('')}</div></div>${taskModal()}`;
+}
 function clHome(){
   const pend=CI.filter(i=>i.status==='pending'&&i.kind!=='report'),kpi=ST.meta.kpi||[],pl=planOf(ST.meta),ps=planStat(pl),pc=ps.n?Math.round(ps.d/ps.n*100):0;
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]),reps=CI.filter(i=>i.kind==='report'),rep=reps[0],key=(ST.meta.key||[]).slice().reverse();
@@ -1685,7 +1696,7 @@ function clHome(){
    ${tile('#/tasks',ico('users'),ct,'у Виктории','b')}
    ${tile('#/approve',SV.check,pend.length,'на согласовании')}
    ${tile('#/reports',ico('chart'),reps.length,'отчётов')}
-   ${nxtB}
+   ${clWeek()}
    ${key.length?`<a class="t2 lk2 c12 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join('')}</a>`:''}
    ${kpi.length?`<div class="t2 c12"><h3>Показатели</h3><div class="kp2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div></div>`:''}
    ${gantt}
