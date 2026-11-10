@@ -1000,6 +1000,24 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 @media(max-width:700px){.fcg{grid-template-columns:1fr}}
 .fce{border-style:dashed;background:transparent;cursor:default;min-height:96px;justify-content:center;opacity:.75}.fce:hover{border-color:rgba(196,164,255,.22)}.fce .fci{font-size:15px;color:#C4A4FF}
 @media(max-width:900px){.kb,.kbw{grid-template-columns:minmax(0,1fr)!important}.kcol{padding:12px!important}.kb .tc{padding:12px!important}}
+
+/* путь проекта: премиальные шары */
+.stps{margin:26px 0 22px}
+.stps::before{top:calc(50% - 17px);height:1px;background:linear-gradient(90deg,rgba(196,164,255,.55),rgba(196,164,255,.14) 70%,rgba(196,164,255,.06));box-shadow:0 0 10px rgba(155,111,232,.35)}
+.stp{gap:12px}
+.stp .nd{width:54px;height:54px;border:1px solid rgba(196,164,255,.26);color:#D9CCF5;font-size:15px;font-weight:500;letter-spacing:.02em;background:radial-gradient(120% 120% at 28% 20%,rgba(255,255,255,.16),rgba(255,255,255,.03) 42%,transparent 70%),linear-gradient(160deg,#1A1535,#0E0B20);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -8px 14px rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.45);transition:transform .2s}
+.stp:hover .nd{transform:translateY(-2px)}
+.stp.ok .nd{border-color:rgba(236,224,255,.55);color:#fff;background:radial-gradient(110% 110% at 28% 18%,rgba(255,255,255,.55),rgba(255,255,255,0) 46%),linear-gradient(150deg,#C9AEFF 0%,#8A5CF0 52%,#4A22B0 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -10px 16px rgba(46,16,120,.5),0 0 26px rgba(155,111,232,.5),0 8px 20px rgba(0,0,0,.45)}
+.stp.ok .nd svg.i{width:22px;height:22px;stroke:#fff;stroke-width:2.4;filter:drop-shadow(0 1px 2px rgba(40,10,110,.6))}
+.stp.cur .nd{border:1px solid rgba(236,224,255,.6);color:#fff;font-weight:600;background:radial-gradient(110% 110% at 30% 20%,rgba(196,164,255,.38),rgba(124,79,212,.12) 55%,transparent 80%),linear-gradient(160deg,#2B2060,#150F34);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 0 6px rgba(155,111,232,.10),0 0 34px rgba(155,111,232,.7),0 8px 22px rgba(0,0,0,.5)}
+.stp .arc{inset:-5px;width:64px;height:64px}.stp .arc circle{stroke:#EADFFF!important;stroke-width:2.6;filter:drop-shadow(0 0 4px rgba(200,170,255,.95))}
+.stp small{font-size:11.5px;letter-spacing:.02em}.stp.cur small{color:#fff;font-weight:600}.stp.ok small{color:#CBB8F2}
+@media(max-width:640px){.stp .nd{width:32px;height:32px;font-size:12px}.stp.ok .nd svg.i{width:15px;height:15px}.stp .arc{inset:-4px;width:40px;height:40px}.stps::before{top:15px}}
+.cwk2{margin-top:8px}.cwh{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 14px;padding:0 4px}
+.cwh h2{font-size:clamp(26px,3.2vw,34px);font-weight:600;letter-spacing:-.025em;line-height:1.1;margin:0;background:linear-gradient(90deg,#fff,#D9C5FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cwd{font-size:13.5px;padding:7px 14px;border-radius:999px;border:1px solid rgba(196,164,255,.32);background:rgba(155,111,232,.10);color:#E3D4FF;white-space:nowrap}
+.cwa{margin-left:auto;font-size:14px;font-weight:500;color:#E3D4FF;text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px solid rgba(196,164,255,.32);background:rgba(255,255,255,.03)}.cwa svg{width:14px;height:14px}.cwa:hover{border-color:rgba(196,164,255,.6)}
+.cwk{padding:16px}.cwk .ktabs{margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -1664,9 +1682,9 @@ function clWeek(){
   (pl.stages||[]).forEach((st,si)=>{(st.tasks||[]).forEach((t,ti)=>{const d=pbEff(pl,si,t),late=t.status!=='done'&&d&&d<td,dw=d&&d>=td&&d<=end;if(late||dw)cards[t.status||'todo'].push({si,ti,t,d})})});
   Object.keys(cards).forEach(k=>cards[k].sort((x,y)=>(x.d||'9')<(y.d||'9')?-1:(x.d||'9')>(y.d||'9')?1:((PRK[x.t.pri]!=null?PRK[x.t.pri]:3)-(PRK[y.t.pri]!=null?PRK[y.t.pri]:3))));
   const tot=cards.todo.length+cards.doing.length+cards.done.length,ac=cards[window.PBC]?window.PBC:'todo',LIM=5;
-  if(!tot)return `<div class="t2 c12"><h3>Задачи недели <span class="mu2" style="font-weight:400">${fdate(td)} – ${fdate(end)}</span></h3><p class="mu2" style="margin-top:10px">На этой неделе задач нет.</p></div>`;
-  return `<div class="t2 c12 cwk"><h3>Задачи недели <span class="mu2" style="font-weight:400">${fdate(td)} – ${fdate(end)}</span><a class="go" href="#/tasks" aria-label="Вся доска">${SV.arrow}</a></h3>
-  <div class="ktabs" style="margin-top:12px">${COLS.map(([k,n])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${({todo:'Сделать',doing:'В работе',done:'Готово'})[k]} <em>${cards[k].length}</em></button>`).join('')}</div>
+  if(!tot)return `<div class="c12 cwk2"><div class="cwh"><h2>Задачи недели</h2><span class="cwd">${fdate(td)} – ${fdate(end)}</span></div><div class="t2"><p class="mu2">На этой неделе задач нет.</p></div></div>`;
+  return `<div class="c12 cwk2"><div class="cwh"><h2>Задачи недели</h2><span class="cwd">${fdate(td)} – ${fdate(end)}</span><a class="cwa" href="#/tasks">Вся доска ${SV.arrow}</a></div><div class="t2 cwk">
+  <div class="ktabs">${COLS.map(([k,n])=>`<button data-a="pbc" data-c="${k}" class="${ac===k?'on':''}">${({todo:'Сделать',doing:'В работе',done:'Готово'})[k]} <em>${cards[k].length}</em></button>`).join('')}</div>
   <div class="kb">${COLS.map(([k,n])=>`<div class="kcol ${ac===k?'act':''}" data-st="${k}"><div class="kh"><b>${n}</b><span class="pl2">${cards[k].length}</span></div><div class="tcards" style="max-height:none">${cards[k].slice(0,LIM).map(c=>taskCard(pl,c.si,c.ti,c.t)).join('')||'<div class="kempty">Пусто</div>'}${cards[k].length>LIM?`<a class="mr" href="#/tasks" style="display:block;text-align:center;padding:6px;font-size:13px;color:#C4A4FF">Ещё ${cards[k].length-LIM}</a>`:''}</div></div>`).join('')}</div></div>${taskModal()}`;
 }
 function clHome(){
