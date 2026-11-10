@@ -1134,7 +1134,7 @@ function navItems(){
     return [['#/','Обзор','chart'],['#/students','Ученики','users',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
-  return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks']];
+  return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks'],['#/lib','Материалы','book']];
 }
 function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
@@ -1185,7 +1185,7 @@ function route(h){
     else if(r==='plan')html=shell(stPlanPage(),true);
     else if(r==='week')html=shell(weekV(+a),false);
     else if(r==='task')html=shell(taskV(a),false);
-    else if(r==='lib')html=shell(libV(),false);
+    else if(r==='lib')html=shell(stMatV(),false);
     else if(r==='me')html=shell(meV(),false);
     else html=shell(homeV(),true);
   }
@@ -1402,11 +1402,18 @@ function weekV(n){
   <h1 class="t" style="margin-top:10px">${esc(w.title)}</h1>${(w.goal||w.outcome)?`<p class="goal">${esc(w.outcome||w.goal)}</p>`:''}
   ${prb}<div class="sx wk3"><div class="sxh">Задачи недели</div><p class="sxsub" style="margin:4px 0 12px">Задачи теперь на общей доске и в траектории.</p><div class="sxrow"><a class="sxbtn" href="#/tasks">Открыть доску задач</a><a class="sxbtn g" href="#/plan">Траектория</a></div></div>${fbk(n)}${rep}`;
 }
-function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d)}</small></div><div class="fia"><button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button><button class="sxbtn g" data-a="fdl" data-id="${esc(f.id)}">Скачать</button></div></div>`).join('')}</div>`}
+const fcard=f=>`<div class="fil"><div><b>${esc(f.t)}</b><small>${esc(f.d||'')}</small></div><div class="fia">${f.url?`<a class="sxbtn" href="${esc(f.url)}" target="_blank" rel="noopener">Открыть</a>`:`<button class="sxbtn" data-a="fcopy" data-id="${esc(f.id)}">Скопировать</button><button class="sxbtn g" data-a="fdl" data-id="${esc(f.id)}">Скачать</button>`}</div></div>`;
+function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div>${fl.map(fcard).join('')}</div>`}
+function stMatV(){
+  const F=CM().files||[],P=F.filter(f=>!f.url&&f.cat!=='info'),I=F.filter(f=>f.url||f.cat==='info');
+  const sec=(t,l)=>l.length?`<div class="sx wk3" style="margin-top:14px"><div class="sxh">${t}</div>${l.map(fcard).join('')}</div>`:'';
+  const rest=libV().replace(/^<h1 class="t">Материалы<\/h1>/,'');
+  return `<h1 class="t">Материалы</h1><p class="sxsub" style="margin:2px 0 6px">Промты и полезное. Новые материалы появляются здесь по ходу программы.</p>${sec('Промты',P)}${sec('Полезное',I)}${!F.length?'<div class="sx wk3" style="margin-top:14px"><p class="sxsub">Пока пусто. Первые материалы появятся скоро.</p></div>':''}${rest}`;
+}
 function matCard(m){return m.url?`<a class="mat" href="${esc(m.url)}" target="_blank" rel="noopener"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span></a>`:`<div class="mat soon"><span class="ic">${ico(m.kind)}</span><span><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span><span class="tag">скоро</span></div>`}
 function whenTxt(m){const d=new Date(m.when);return isNaN(d)?'':d.toLocaleString('ru-RU',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
 function libV(){
-  return `<h1 class="t">Материалы</h1><h2 class="t">Бонусы</h2>${C.library.map(m=>matCard(Object.assign({kind:'file'},m))).join('')}
+  return `<h1 class="t">Материалы</h1>${(C.library||[]).length?`<h2 class="t">Бонусы</h2>${C.library.map(m=>matCard(Object.assign({kind:'file'},m))).join('')}`:''}
   <h2 class="t">Правила игры</h2><div class="card lib"><ul>${C.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
   <h2 class="t">Как оценивать результат недели</h2><div class="card lib"><ul>${C.scale.map(s=>`<li><b>${s.n}. ${s.t}.</b> ${esc(s.d)}</li>`).join('')}</ul></div>
   <h2 class="t">Поддержка</h2><div class="card lib"><ul>${C.support.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
@@ -1512,6 +1519,16 @@ function reviewCard(p,who){
   <textarea placeholder="Комментарий. Для возврата на доработку обязателен.">${esc(p.feedback||'')}</textarea>
   <div class="row" style="margin-top:0"><button class="btn ok s" data-a="rev" data-s="done" data-u="${p.slot}" data-id="${p.task_id}">Принять</button><button class="btn wr s" data-a="rev" data-s="revision" data-u="${p.slot}" data-id="${p.task_id}">На доработку</button>${p.status!=='review'?`<button class="btn g s" data-a="rev" data-s="todo" data-u="${p.slot}" data-id="${p.task_id}">Сбросить</button>`:''}</div></div>`;
 }
+function matEd(slot,M){
+  const F=M.files||[];
+  return `<div class="card">${F.map(f=>`<div class="meet" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="min-width:0"><b style="font-weight:600;font-size:14px">${esc(f.t)}</b><br><small class="sub">${f.url?'ссылка':'промт'}${f.w?' · неделя '+f.w:''}</small></span><button class="rbt" data-a="matdel" data-u="${slot}" data-id="${esc(f.id)}" title="Удалить">✕</button></div>`).join('')||'<p class="sub">Материалов пока нет.</p>'}
+  <small class="l" style="margin-top:14px">Добавить материал</small>
+  <div class="idx"><input type="text" id="mt-t" placeholder="Название"><input type="text" id="mt-d" placeholder="Коротко: что это и когда использовать"></div>
+  <div class="idx" style="margin-top:8px"><select id="mt-k" class="sel" style="margin:0"><option value="prompt">Промт или текст</option><option value="url">Ссылка</option></select><input type="number" id="mt-w" min="1" max="7" placeholder="К неделе (необязательно)"></div>
+  <textarea id="mt-x" style="min-height:90px;margin-top:8px" placeholder="Текст промта или ссылка"></textarea>
+  <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13.5px"><input type="checkbox" id="mt-a"> Добавить всем ученикам</label>
+  <div class="row"><button class="btn s" data-a="matadd" data-u="${slot}">Добавить</button></div></div>`;
+}
 function adUser(slot){
   const u=(AD.users||[]).find(x=>x.slot===slot);if(!u)return '<a class="back" href="#/people">← Участники</a><p class="sub">Не найден.</p>';
   const x=stat(u),P=x.P,M=x.M,days=daysOf(slot),N=TK.length,cw=curWeek(P,M);
@@ -1522,6 +1539,7 @@ function adUser(slot){
   ${x.risk?`<div class="att" style="margin-top:12px"><b style="font-size:14px">Зона риска:</b> ${esc(x.reasons.join('; '))}. <a href="https://t.me/${C.telegram}" style="display:none"></a></div>`:''}
   <div class="card" style="margin-top:12px"><small class="l">Активность за 14 дней · серия ${streak(days)} дн. · ${x.ls?'был(а) '+fdt(x.ls):'ещё не заходил(а)'}</small>${actStrip(days)}</div>
   <h2 class="t">Траектория</h2>${planEd(slot,M)}
+  <h2 class="t">Материалы ученика</h2>${matEd(slot,M)}
   <h2 class="t">Отчёты по неделям</h2>
   ${C.weeks.filter(w=>w.tasks.length).map(w=>{const cc=wcount(w,P),op=isOpen(w,M),o=open[slot]===w.n,rs=(M.refl||{})[w.n],sc=(M.scale||{})[w.n];
    return `<div class="acc"><button data-a="open" data-u="${slot}" data-w="${w.n}"><div><b>${esc(wt(w))}</b><br><span>${op?cc.done+' принято'+(cc.review?' · '+cc.review+' на проверке':'')+(cc.revision?' · '+cc.revision+' возвр.':'')+' из '+w.tasks.length:'закрыта до '+fdate(w.opens)}</span></div><span>${o?'−':'+'}</span></button>${o?`<div class="bd">
@@ -2105,6 +2123,8 @@ const A={
  pricancel(){window.PEDN=null;render(true)},
  async prisave(el){const n=+el.dataset.n,ts=[...document.querySelectorAll('.pri-t')],hs=[...document.querySelectorAll('.pri-h')],a=ts.map((x,i)=>({t:x.value.trim(),h:hs[i].value.trim()})).filter(x=>x.t);const pr=Object.assign({},CM().prio||{});pr[n]=a;if(!await putMeta('prio',pr))return;window.PEDN=null;toast('Приоритеты сохранены');render(true)},
  async prireset(el){const n=+el.dataset.n,pr=Object.assign({},CM().prio||{});delete pr[n];if(!await putMeta('prio',pr))return;window.PEDN=null;render(true)},
+ async matadd(el){const u=el.dataset.u,g=k=>(($('#'+k)||{}).value||'').trim(),t=g('mt-t'),x=g('mt-x'),k=g('mt-k'),w=g('mt-w');if(!t||!x){toast('Нужны название и текст или ссылка');return}const it={id:'m'+Date.now().toString(36),t,d:g('mt-d'),cat:k==='url'?'info':'prompt'};if(k==='url')it.url=x;else it.text=x;if(w)it.w=+w;const sl=$('#mt-a').checked?AD.users.filter(q=>q.role==='student').map(q=>q.slot):[u];for(const s2 of sl){await setM(s2,'files',(mmap(s2).files||[]).concat([Object.assign({},it)]))}toast(sl.length>1?'Добавлено всем ученикам':'Добавлено');render(true)},
+ async matdel(el){if(!confirm('Удалить материал?'))return;await setM(el.dataset.u,'files',(mmap(el.dataset.u).files||[]).filter(f=>f.id!==el.dataset.id));render(true)},
  fcopy(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const done=()=>toast('Скопировано. Вставь в чат с AI-партнёром');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.text).then(done,()=>toast('Не получилось скопировать, нажми «Скачать»'));else toast('Не получилось скопировать, нажми «Скачать»')},
  fdl(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const b=new Blob([f.text],{type:'text/markdown;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.id+'.md';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)},
  async chk(el){const id=el.dataset.id,am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);if(am){const sl=am[1],on=!curDone(id);const ok=await call(()=>rpc('okean_admin_review',{p_slot:ME.slot,p_h:ME.h,p_target:sl,p_task:id,p_status:on?'done':'todo',p_feedback:''}));if(!ok)return;const row=(AD.progress||[]).find(x=>x.slot===sl&&x.task_id===id);if(row)row.status=on?'done':'todo';else AD.progress.push({slot:sl,task_id:id,status:on?'done':'todo'});const dg=((CM().refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},CM().refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true);return}const on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
