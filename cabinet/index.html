@@ -1426,7 +1426,7 @@ const fcard=f=>{const ic=ico(FIC[f.id]||(f.url?'link':'file')),cp=f.text?`<butto
   const inner=`<span class="fci">${ic}</span><b>${esc(ftitle(f.t))}</b><small>${esc(f.d||'')}</small><span class="fcf"><em>Открыть</em>${cp}</span>`;
   return f.url?`<a class="fcd" href="${esc(f.url)}" target="_blank" rel="noopener" data-q="${esc((f.t+' '+(f.d||'')).toLowerCase())}">${inner}</a>`:`<div class="fcd" role="link" tabindex="0" data-a="go" data-h="#/doc/${esc(f.id)}" data-q="${esc((f.t+' '+(f.d||'')).toLowerCase())}">${inner}</div>`};
 const wkLbl=w=>w>=7?'Сопровождение':'Неделя '+w;
-function fgroups(L){const g={};L.forEach(f=>{const k=f.w?+f.w:0;(g[k]=g[k]||[]).push(f)});return Object.keys(g).map(Number).sort((x,y)=>(x||99)-(y||99)).map(k=>`<div class="fgw" data-g><div class="fgh">${k?wkLbl(k):'Для всех'}</div><div class="fcg">${g[k].map(fcard).join('')}</div></div>`).join('')}
+function fgroups(L){return `<div class="fcg" style="margin-top:14px">${L.map(fcard).join('')}</div>`}
 function fbk(n){const fl=(CM().files||[]).filter(f=>+f.w===n);if(!fl.length)return '';return `<div class="sx wk3"><div class="sxh">Материалы недели</div><div class="fcg" style="margin-top:10px">${fl.map(fcard).join('')}</div></div>`}
 const MCATS=[['prompt','Промты','Готовые инструкции для AI-партнёра','method'],['lesson','Уроки','Записи и конспекты','book'],['review','Разборы','Разборы работ и кейсов','chart']];
 const fcat=f=>f.cat==='info'?'lesson':(f.cat||'prompt');
