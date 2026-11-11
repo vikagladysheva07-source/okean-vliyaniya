@@ -438,6 +438,12 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .rmtk{display:flex;flex-direction:column;gap:2px}
 @media(max-width:720px){.rmbox{padding:22px 18px 18px;border-radius:22px}.rmh h2{font-size:19px}}
 .dch{display:flex;gap:14px;align-items:flex-start}.dch h3{display:flex;align-items:center;gap:10px;justify-content:flex-start}.dch p{margin:4px 0 0;font-size:13.5px}.dci{width:44px;height:44px;flex:none;border-radius:14px;background:rgba(155,111,232,.18);display:grid;place-items:center}.dci svg{width:20px;height:20px;stroke:#C9A8FF;fill:none;stroke-width:1.8}
+.dcb{display:flex;flex-direction:column;gap:6px}.dqg{margin-top:16px}.dqgh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:0 4px 8px;border-bottom:1px solid rgba(196,164,255,.14)}.dqgh b{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#C9B8F5}.dqgh span{font-size:12px;color:var(--muted)}
+.dql{margin-top:14px}.dq{border-bottom:1px solid rgba(255,255,255,.07)}.dq:last-child{border-bottom:0}.dq summary{display:flex;align-items:center;gap:12px;padding:13px 4px;cursor:pointer;list-style:none;font-size:14.5px}.dq summary::-webkit-details-marker{display:none}
+.dqc{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid #5B4C8F;box-sizing:border-box}.dq[open] .dqc{border-color:#C4A4FF;box-shadow:0 0 10px rgba(196,164,255,.5)}.dqt{flex:1;min-width:0;line-height:1.35}.dq summary small{color:var(--muted);white-space:nowrap}
+.dqv{width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:0 6px 4px 4px;flex:none}.dq[open] .dqv{transform:rotate(-135deg);margin-bottom:-2px}
+.dqb{padding:2px 4px 18px 32px}.dqb .ans{font-size:14px;line-height:1.55;white-space:pre-wrap;color:var(--text);opacity:.92}
+@media(max-width:640px){.dqb{padding-left:4px}.dq summary small{display:none}}
 .rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
 .sgl{display:flex;flex-direction:column;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,164,255,.14)}
 .sgr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:12.5px;color:var(--muted)}.sgr em{font-style:normal;font-variant-numeric:tabular-nums}
@@ -1661,7 +1667,7 @@ const IK={content:'Согласования',request:'Запросы',report:'О
 const IMAP={content:{pending:['review','Ждёт вашего решения','Ждёт клиента'],approved:['done','Одобрено','Одобрено'],changes:['revision','Нужны правки','Клиент просит правки']},request:{pending:['review','Нужно от вас','Ждём ответ'],done:['done','Получено','Получено']},report:{info:['todo','Отчёт','Отчёт']}};
 const ibd=(it,adm)=>{const x=(IMAP[it.kind]||{})[it.status]||['todo',it.status,it.status];return `<span class="st st-${x[0]}">${x[adm?2:1]}</span>`};
 const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
-const itemRow=(it,href,adm)=>`<a class="tr ${it.status}" href="${href}"><div><b>${esc(it.title)}</b><small>${esc(IK[it.kind])}${it.due&&it.status==='pending'?' · до '+fdate(it.due):''} · ${fdate(it.created_at)}</small></div>${ibd(it,adm)}</a>`;
+const itemRow=(it,href,adm)=>`<a class="tr ${it.status}" href="${href}"><div><b>${esc(itT(it))}</b><small>${esc(IK[it.kind])}${it.due&&it.status==='pending'?' · до '+fdate(it.due):''} · ${fdate(it.created_at)}</small></div>${ibd(it,adm)}</a>`;
 const KT={decision:'Решение',agree:'Договорённость',risk:'Риск',info:'Важно'};
 function cltasks(){
   const pl=planOf(ST&&ST.meta),all=[];
@@ -1834,13 +1840,25 @@ function clKey(){
   const key=(ST.meta.key||[]).slice().reverse();
   return `${hd2('Важные моменты','Решения, договорённости и риски по проекту',[])}<div class="g12">${key.length?key.map(k=>`<div class="t2 c12"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}</div><p style="margin-top:10px;font-size:16px;line-height:1.45">${esc(k.text)}</p></div>`).join(''):'<div class="t2 c12"><p class="mu2">Пока записей нет.</p></div>'}</div>`;
 }
+const itT=it=>String(it.title||'').replace(/^\[.+?\]\s*/,'');
+function dqRow(i){
+  const c=i.kind==='content',lk=safeUrl(i.link),ph=c?'Что поправить? Обязательно, если нужны правки.':'Напишите ответ или вставьте ссылку на файл.';
+  return `<details class="dq"><summary><i class="dqc"></i><span class="dqt">${esc(itT(i))}</span>${i.due?`<small>до ${fdate(i.due)}</small>`:''}<em class="dqv"></em></summary>
+   <div class="dqb">${i.body?`<div class="ans">${esc(i.body)}</div>`:''}${lk?`<div class="row" style="margin-top:10px"><a class="btn g s" href="${esc(lk)}" target="_blank" rel="noopener">Открыть</a></div>`:''}
+   <textarea id="qa${i.id}" style="min-height:84px;margin-top:12px" placeholder="${ph}"></textarea>
+   <div class="row" style="margin-top:10px">${c?`<button class="btn ok" data-a="qresp" data-id="${i.id}" data-d="approve">Одобрить</button><button class="btn wr" data-a="qresp" data-id="${i.id}" data-d="changes">Нужны правки</button>`:`<button class="btn" data-a="qresp" data-id="${i.id}" data-d="done">Отправить ответ</button><button class="btn g" data-a="qresp" data-id="${i.id}" data-d="chat">Уже ответили в переписке</button>`}</div></div></details>`;
+}
 function clDecide(){
-  const L=CI.filter(i=>i.kind!=='report'),byDue=(a,b)=>(a.due||'9')<(b.due||'9')?-1:1,P=L.filter(i=>i.status==='pending').sort(byDue),D=L.filter(i=>i.status!=='pending').sort((a,b)=>a.created_at<b.created_at?1:-1);
-  const PC=P.filter(i=>i.kind==='content'),PR=P.filter(i=>i.kind==='request');
-  const blk=(ico_,h,hint,arr,empty)=>`<div class="t2 c12 dcb"><div class="dch"><span class="dci">${ico_}</span><div><h3>${h} <span class="pl2 ${arr.length?'w':''}">${arr.length}</span></h3><p class="mu2">${hint}</p></div></div>${arr.length?`<div class="card p0" style="margin-top:12px">${arr.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:`<p class="mu2" style="margin-top:12px">${empty}</p>`}</div>`;
+  const L=CI.filter(i=>i.kind!=='report'),byDue=(a,b)=>(a.due||'9')<(b.due||'9')?-1:a.id-b.id,P=L.filter(i=>i.status==='pending').sort(byDue),D=L.filter(i=>i.status!=='pending').sort((a,b)=>a.created_at<b.created_at?1:-1);
+  const PC=P.filter(i=>i.kind==='content'),tag=i=>{const m=String(i.title).match(/^\[(.+?)\]/);return m?m[1]:'Другое'};
+  const groups=[];L.filter(i=>i.kind==='request').forEach(i=>{const g=tag(i);let x=groups.find(y=>y.g===g);if(!x){x={g,all:[],open:[]};groups.push(x)}x.all.push(i);if(i.status==='pending')x.open.push(i)});
+  groups.sort((a,b)=>Math.min(...a.all.map(i=>+String(i.id)))-Math.min(...b.all.map(i=>+String(i.id))));
+  const openQ=groups.reduce((s,x)=>s+x.open.length,0);
+  const head=(ic,h,hint,n)=>`<div class="dch"><span class="dci">${ic}</span><div><h3>${h} <span class="pl2 ${n?'w':''}">${n}</span></h3><p class="mu2">${hint}</p></div></div>`;
+  const gq=groups.filter(x=>x.open.length).map(x=>`<div class="dqg"><div class="dqgh"><b>${esc(x.g)}</b><span>${x.all.length-x.open.length} из ${x.all.length} отвечено</span></div>${x.open.sort(byDue).map(dqRow).join('')}</div>`).join('');
   return `${hd2('Решения и вопросы','Всё, что нужно от вас, собрано здесь: подтвердить и ответить',[])}<div class="g12">
-   ${blk(SV.check,'На согласование','Откройте пункт и нажмите «Одобрить» или «Нужны правки». Если правки, напишите какие.',PC,'Всё согласовано.')}
-   ${blk(ico('chat'),'Вопросы к вам','Откройте пункт и ответьте текстом, в любом порядке. На что нет ответа, так и напишите.',PR,'Вопросов нет.')}
+   <div class="t2 c12 dcb">${head(SV.check,'На согласование','Нажмите на пункт, он раскроется. Одобрите или напишите правки.',PC.length)}${PC.length?`<div class="dql">${PC.map(dqRow).join('')}</div>`:'<p class="mu2" style="margin-top:12px">Всё согласовано.</p>'}</div>
+   <div class="t2 c12 dcb">${head(ico('chat'),'Вопросы к вам','Нажмите на вопрос, он раскроется. Ответьте текстом или отметьте, что уже ответили в переписке. Порядок любой.',openQ)}${openQ?gq:'<p class="mu2" style="margin-top:12px">Вопросов нет.</p>'}</div>
    ${D.length?`<div class="t2 c12"><h3>История</h3><div class="card p0" style="margin-top:10px">${D.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
 }
 const weekNo=t=>{const m=String(t||'').match(/^Неделя\s+(\d+)/);return m?+m[1]:0};
@@ -1859,7 +1877,7 @@ function clItem(id){
   const back={content:'#/approve',request:'#/approve',report:'#/reports'}[it.kind],pend=it.status==='pending',lk=safeUrl(it.link);
   const decided=!pend&&it.kind!=='report';
   return `<a class="back" href="${back}">← ${IK[it.kind]}</a><div class="row" style="margin-top:6px">${ibd(it)}${it.due&&pend?`<span class="chip">до ${fdate(it.due)}</span>`:''}</div>
-  <h1 class="t" style="text-transform:none;font-size:clamp(22px,4.6vw,28px);line-height:1.2">${esc(it.title)}</h1>
+  <h1 class="t" style="text-transform:none;font-size:clamp(22px,4.6vw,28px);line-height:1.2">${esc(itT(it))}</h1>
   ${it.body?`<div class="card" style="margin-top:14px"><div class="ans">${esc(it.body)}</div></div>`:''}
   ${lk?`<div class="row"><a class="btn g s" href="${esc(lk)}" target="_blank" rel="noopener">Открыть</a></div>`:''}
   ${it.kind==='content'&&pend?`<h2 class="t">Ваше решение</h2><textarea id="cmt" style="min-height:90px" placeholder="Что поправить? Обязательно, если нужны правки."></textarea><div class="row"><button class="btn ok" data-a="cdec" data-id="${it.id}" data-d="approve">Одобрить</button><button class="btn wr" data-a="cdec" data-id="${it.id}" data-d="changes">Нужны правки</button></div>`:''}
@@ -2218,6 +2236,14 @@ const A={
  pbm(el){const x=$('#pe-x');if(x&&window.PEF){PEF.x=x.value;PEF.d=($('#pe-d')||{}).value||''}const v=el.dataset.v;PEF[el.dataset.k]=el.dataset.k==='stage'?+v:v;window.DDO=null;render(true)},
  pbclose(){window.PLE=null;window.DDO=null;render(true)},
  async pbtoggle(el){const si=+el.dataset.s,ti=+el.dataset.t,t=PLD.plan.stages[si].tasks[ti];t.status=t.status==='done'?'todo':'done';await tkCommit(si,ti)},
+ async qresp(el){const id=+el.dataset.id,d=el.dataset.d,box=document.getElementById('qa'+id);let tx=((box||{}).value||'').trim();const act=d==='chat'?'done':d;
+  if(d==='chat')tx='Ответ дан в переписке';
+  if(act==='changes'&&!tx){toast('Напишите, что нужно поправить');return}
+  if(act==='done'&&!tx){toast('Напишите ответ или добавьте ссылку');return}
+  el.disabled=true;const r=await call(()=>rpc('okean_client_respond',{p_slot:ME.slot,p_h:ME.h,p_item:id,p_action:act,p_text:tx}));
+  if(!r){el.disabled=false;return}
+  const it=CI.find(i=>i.id===id);if(it){it.status=r.status;it.reply=r.status==='pending'?'':tx;it.decided_at=r.status==='pending'?null:new Date().toISOString()}
+  toast(act==='approve'?'Одобрено':act==='changes'?'Правки отправлены':'Ответ принят');render(true)},
  rmopen(el){window.RM=+el.dataset.i;render(true)},
  rmclose(el,e){if(e&&e.target&&e.target.closest&&e.target.closest('.rmbox')&&!e.target.closest('.rmx'))return;window.RM=null;render(true)},
  pqopen(el){window.PLQ=+el.dataset.s;window.AFTER=()=>{const x=$('#pq-t');if(x)x.focus()};render(true)},
