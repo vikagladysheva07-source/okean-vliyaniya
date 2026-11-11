@@ -437,6 +437,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .rmul.rgd li::before{background:transparent;border:2px solid #C4A4FF}.rmul.rgo li::before{background:#C4A4FF;box-shadow:0 0 10px rgba(196,164,255,.7)}
 .rmtk{display:flex;flex-direction:column;gap:2px}
 @media(max-width:720px){.rmbox{padding:22px 18px 18px;border-radius:22px}.rmh h2{font-size:19px}}
+.dch{display:flex;gap:14px;align-items:flex-start}.dch h3{display:flex;align-items:center;gap:10px;justify-content:flex-start}.dch p{margin:4px 0 0;font-size:13.5px}.dci{width:44px;height:44px;flex:none;border-radius:14px;background:rgba(155,111,232,.18);display:grid;place-items:center}.dci svg{width:20px;height:20px;stroke:#C9A8FF;fill:none;stroke-width:1.8}
 .rg2 b{display:grid!important}.pgc{display:flex;flex-direction:column}.pgt{display:flex;align-items:center;gap:16px;margin:14px 0 6px}.pgt>div:last-child{flex:1;min-width:0}
 .sgl{display:flex;flex-direction:column;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(196,164,255,.14)}
 .sgr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:12.5px;color:var(--muted)}.sgr em{font-style:normal;font-variant-numeric:tabular-nums}
@@ -1712,7 +1713,7 @@ function clHome(){
    ${hero}${heroPath}
    ${tile('#/tasks',ico('tasks'),T.wait.length,'ждут вас')}
    ${tile('#/tasks',ico('users'),ct,'у Виктории','b')}
-   ${tile('#/approve',SV.check,pend.length,'на согласовании')}
+   ${tile('#/approve',SV.check,pend.length,'ждут вашего ответа')}
    ${tile('#/reports',ico('chart'),reps.length,'отчётов')}
    ${clWeek()}
    ${key.length?`<a class="t2 lk2 c12 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join('')}</a>`:''}
@@ -1834,9 +1835,12 @@ function clKey(){
   return `${hd2('Важные моменты','Решения, договорённости и риски по проекту',[])}<div class="g12">${key.length?key.map(k=>`<div class="t2 c12"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}</div><p style="margin-top:10px;font-size:16px;line-height:1.45">${esc(k.text)}</p></div>`).join(''):'<div class="t2 c12"><p class="mu2">Пока записей нет.</p></div>'}</div>`;
 }
 function clDecide(){
-  const L=CI.filter(i=>i.kind!=='report'),P=L.filter(i=>i.status==='pending').sort((a,b)=>(a.due||'9')<(b.due||'9')?-1:1),D=L.filter(i=>i.status!=='pending').sort((a,b)=>a.created_at<b.created_at?1:-1);
-  return `${hd2('Согласования и запросы','Что нужно решить и что нам нужно от вас',[])}<div class="g12">
-   <div class="t2 c12"><h3>Ждут вашего решения <span class="pl2 ${P.length?'w':''}">${P.length}</span></h3>${P.length?`<div class="card p0" style="margin-top:10px">${P.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:'<p class="mu2" style="margin-top:10px">Всё согласовано.</p>'}</div>
+  const L=CI.filter(i=>i.kind!=='report'),byDue=(a,b)=>(a.due||'9')<(b.due||'9')?-1:1,P=L.filter(i=>i.status==='pending').sort(byDue),D=L.filter(i=>i.status!=='pending').sort((a,b)=>a.created_at<b.created_at?1:-1);
+  const PC=P.filter(i=>i.kind==='content'),PR=P.filter(i=>i.kind==='request');
+  const blk=(ico_,h,hint,arr,empty)=>`<div class="t2 c12 dcb"><div class="dch"><span class="dci">${ico_}</span><div><h3>${h} <span class="pl2 ${arr.length?'w':''}">${arr.length}</span></h3><p class="mu2">${hint}</p></div></div>${arr.length?`<div class="card p0" style="margin-top:12px">${arr.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div>`:`<p class="mu2" style="margin-top:12px">${empty}</p>`}</div>`;
+  return `${hd2('Решения и вопросы','Всё, что нужно от вас, собрано здесь: подтвердить и ответить',[])}<div class="g12">
+   ${blk(SV.check,'На согласование','Откройте пункт и нажмите «Одобрить» или «Нужны правки». Если правки, напишите какие.',PC,'Всё согласовано.')}
+   ${blk(ico('chat'),'Вопросы к вам','Откройте пункт и ответьте текстом, в любом порядке. На что нет ответа, так и напишите.',PR,'Вопросов нет.')}
    ${D.length?`<div class="t2 c12"><h3>История</h3><div class="card p0" style="margin-top:10px">${D.map(i=>itemRow(i,'#/item/'+i.id)).join('')}</div></div>`:''}</div>`;
 }
 const weekNo=t=>{const m=String(t||'').match(/^Неделя\s+(\d+)/);return m?+m[1]:0};
