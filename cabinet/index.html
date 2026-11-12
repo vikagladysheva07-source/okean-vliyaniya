@@ -1025,6 +1025,15 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .cwd{font-size:13.5px;padding:7px 14px;border-radius:999px;border:1px solid rgba(196,164,255,.32);background:rgba(155,111,232,.10);color:#E3D4FF;white-space:nowrap}
 .cwa{margin-left:auto;font-size:14px;font-weight:500;color:#E3D4FF;text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px solid rgba(196,164,255,.32);background:rgba(255,255,255,.03)}.cwa svg{width:14px;height:14px}.cwa:hover{border-color:rgba(196,164,255,.6)}
 .cwk{padding:16px}.cwk .ktabs{margin:0 0 12px}
+.tq{margin-top:12px;padding:22px}.tqb{height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:16px}.tqb i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#9B6FE8,#E3D4FF);box-shadow:0 0 12px rgba(155,111,232,.7);transition:width .3s}
+.tqh{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted)}.tqk{display:block;font-size:12.5px;color:#C4A4FF;letter-spacing:.04em}
+.tqq{font-size:clamp(22px,3vw,28px);font-weight:500;line-height:1.25;letter-spacing:-.02em;margin:10px 0 18px}.tqo{display:grid;gap:10px}
+.tqx{display:flex;align-items:center;gap:14px;text-align:left;padding:16px 18px;border-radius:16px;border:1px solid rgba(196,164,255,.22);background:rgba(155,111,232,.06);color:#EDE9FB;font:inherit;font-size:16px;cursor:pointer;transition:border-color .15s,background .15s}
+.tqx:hover{border-color:rgba(196,164,255,.55);background:rgba(155,111,232,.12)}.tqx.on{border-color:rgba(225,208,255,.7);background:rgba(155,111,232,.2);box-shadow:0 0 22px -8px rgba(155,111,232,.9)}
+.tqx em{font-style:normal;flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:1px solid rgba(196,164,255,.4);color:#E3D4FF}
+.tqn{font-size:clamp(30px,4vw,40px);font-weight:500;letter-spacing:-.025em;margin:6px 0 0;background:linear-gradient(90deg,#fff,#C4A4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tqr{display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:6px}.tqr .sxrg{width:150px;flex:none}.tqr .sxrg svg{width:150px}.tqs{display:flex;gap:26px}.tqs b{display:block;font-size:34px;font-weight:500;line-height:1}.tqs small{font-size:15px;color:var(--muted);font-weight:400}.tqs span{font-size:12.5px;color:var(--muted)}
+.tqw{margin-top:18px;padding:14px 16px;border-radius:14px;border:1px solid rgba(196,164,255,.22);background:rgba(155,111,232,.06)}.tqw b{display:block;font-size:12.5px;color:#C4A4FF;font-weight:500;margin-bottom:4px}.tqw span{font-size:15px;line-height:1.45}
 </style>
 </head>
 <body>
@@ -1232,6 +1241,7 @@ function route(h){
     else if(r==='lib')html=shell(stMatV(a),false);
     else if(r==='doc')html=shell(stDocV(a),false);
     else if(r==='me')html=shell(meV(),false);
+    else if(r==='test')html=shell(stTestV(),false);
     else html=shell(homeV(),true);
   }
   return html;
@@ -1316,7 +1326,7 @@ function homeV(){
   const photo=`<div class="sx sxp">${ph?`<img src="${esc(ph)}" alt="">`:`<div class="sxav">${esc((nm||'?')[0])}</div>`}${`<label class="sxup">${ph?'Сменить фото':'Загрузить фото'}<input type="file" id="ph-f" accept="image/*" hidden></label>`}
    <div class="sxpc"><b>${esc(nm)}</b></div></div>`;
   /* индекс влияния: тест из 50 + параметры из анкеты */
-  const IP=ST.meta.idxp,PN=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const ixm=ST.meta.idx||{},IP=(Array.isArray(ixm.tp)&&ixm.tp.length===5)?{p:ixm.tp,ai:ixm.ts,t:(ST.meta.idxp||{}).t,at:(ST.meta.idxp||{}).at}:ST.meta.idxp,PN=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
   const radar=(p,t)=>{const cx=250,cy=142,R=92,pt=(k,v,r)=>{const an=(-90+k*72)*Math.PI/180,rr=(r||R)*v/10;return [cx+rr*Math.cos(an),cy+rr*Math.sin(an)]},poly=(a)=>a.map((v,k)=>pt(k,v).map(n=>n.toFixed(1)).join(',')).join(' ');
     const grid=[2.5,5,7.5,10].map(g=>`<polygon points="${[0,1,2,3,4].map(k=>pt(k,g).map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="rgba(196,164,255,.14)"/>`).join('');
     const axes=[0,1,2,3,4].map(k=>{const q=pt(k,10);return `<line x1="${cx}" y1="${cy}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="rgba(196,164,255,.12)"/>`}).join('');
@@ -1331,7 +1341,7 @@ function homeV(){
      <div class="sxrd">${radar(P0,T0)}<div class="sxlg"><span><i class="a"></i>сейчас</span>${T0?'<span><i class="b"></i>цель на 19 декабря</span>':''}</div></div></div></div>`;
   }else{
     idxT=`<div class="sx sxi sxi2"><div class="sxh">Индекс влияния<a class="sxar" href="${as?'#/':'#/me'}" title="Вписать результат">${ico('chev')}</a></div>
-     ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
+     ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="#/test">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
   /* цель программы + кольцо прогресса */
   const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,RF=ST.meta.refl||{},GP=(RF.gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(RF.gp||[])[i]||''),GX=RF.gx||{};
@@ -1477,12 +1487,48 @@ function libV(){
   <h2 class="t">Поддержка</h2><div class="card lib"><ul>${C.support.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
   <div style="margin-top:16px"><a class="btn" style="width:100%" href="https://t.me/${C.telegram}" target="_blank" rel="noopener">Написать Виктории</a></div>`;
 }
+/* ===== тест «Индекс влияния» внутри платформы ===== */
+const TQ=[
+ {tag:'Глубина · Ценность',q:'Можешь одной фразой объяснить, за что тебя выбирают?',o:[[0,'Пока нет'],[1,'Примерно'],[2,'Да, чётко']]},
+ {tag:'Глубина · Позиционирование',q:'Чем ты отличаешься от других в своей нише?',o:[[0,'Сложно сказать'],[1,'Есть идеи'],[2,'Знаю и показываю']]},
+ {tag:'Глубина · Оффер',q:'Есть продукт с понятной ценой и результатом?',o:[[0,'Нет'],[1,'Есть, но цену приходится объяснять'],[2,'Да, и он продаётся']]},
+ {tag:'Глубина · Привлечение',q:'Откуда приходят клиенты?',o:[[0,'Случайно или по сарафану'],[1,'Есть канал, но нестабильно'],[2,'Есть свой стабильный поток']]},
+ {tag:'Глубина · Продажи',q:'Как проходят продажи?',o:[[0,'Сложно называть цену'],[1,'Иногда закрываю'],[2,'Есть своя система']]},
+ {tag:'Масштаб · AI',q:'Как ты сейчас работаешь с AI?',o:[[1,'Иногда спрашиваю в чате'],[2,'У AI есть контекст обо мне и проекте'],[3,'Есть агенты с ролями'],[4,'Часть процессов идёт без меня'],[5,'Собираю свои сайты и приложения']],n:1}];
+const TQP=['Ценность','Позиционирование','Оффер','Привлечение','Продажи'],TQW=['неделя 1 «Глубина и AI-партнёр»','неделя 1 «Глубина и AI-партнёр»','неделя 3 «Оффер и упаковка»','неделя 5 «Поток клиентов»','неделя 6 «Продажи»'];
+function tqRes(a){
+  const v=a.slice(0,5),sc=a[5],d=v.reduce((x,y)=>x+y,0),i=d*sc,deep=d>=6,wide=sc>=3;
+  const A=deep&&wide?['Синий кит','Глубина и масштаб уже работают вместе. Дальше дело в системе и продажах, чтобы влияние росло без твоего постоянного участия.']
+   :deep?['Скрытая жемчужина','Глубина есть, а видят тебя мало. Упаковка и AI покажут твою ценность тем, кто давно тебя ищет.']
+   :wide?['Шумная волна','AI уже в работе, но умножает то, что ещё не упаковано. Нужна глубина, тогда объём превратится во влияние.']
+   :['Штиль','Потенциал есть, но пока тихо. Сначала раскрываем глубину, потом подключаем масштаб.'];
+  const min=Math.min(...v),wi=v.indexOf(min);
+  const weak=(min===2&&sc===5)?'Глубина и масштаб уже на максимуме. На программе докрутим систему и продажи':((sc<=2&&min>=1)||min===2)?'Масштаб · AI → неделя 2 «AI-интенсив»':TQP[wi]+' → '+TQW[wi];
+  return {d,s:sc,i,name:A[0],txt:A[1],weak};
+}
+function stTestV(){
+  const T=window.TQ||(window.TQ={i:0,a:[]}),bk='<a class="back" href="#/">← Обзор</a>';
+  if(T.i>=TQ.length){
+    const r=tqRes(T.a),R=52,L=2*Math.PI*R;
+    return `${bk}<h1 class="t" style="margin-top:6px">Индекс влияния</h1>
+    <div class="sx tq"><small class="tqk">Твой тип</small><h2 class="tqn">${esc(r.name)}</h2><p class="sxsub" style="margin:6px 0 14px">${esc(r.txt)}</p>
+     <div class="tqr"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="tqg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#tqg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-r.i/50)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${r.i}</b><span>из 50</span></div></div>
+      <div class="tqs"><div><b>${r.d}<small>/10</small></b><span>глубина</span></div><div><b>${r.s}<small>/5</small></b><span>масштаб</span></div></div></div>
+     <div class="tqw"><b>Где вырастешь сильнее всего</b><span>${esc(r.weak)}</span></div>
+     <div class="sxrow" style="margin-top:16px"><a class="sxbtn" href="#/">К обзору</a><button class="sxbtn g" data-a="tqr">Пройти заново</button></div></div>`;
+  }
+  const q=TQ[T.i],pc=Math.round(T.i/TQ.length*100);
+  return `${bk}<h1 class="t" style="margin-top:6px">Индекс влияния</h1>
+   <div class="sx tq"><div class="tqb"><i style="width:${pc}%"></i></div><div class="tqh"><small class="tqk">${esc(q.tag)}</small><span>${T.i+1} из ${TQ.length}</span></div>
+    <h2 class="tqq">${esc(q.q)}</h2><div class="tqo">${q.o.map(o=>`<button class="tqx ${T.a[T.i]===o[0]?'on':''}" data-a="tqa" data-v="${o[0]}">${q.n?`<em>${o[0]}</em>`:''}<span>${esc(o[1])}</span></button>`).join('')}</div>
+    ${T.i?'<div class="sxrow" style="margin-top:14px"><button class="sxbtn g" data-a="tqb">Назад</button></div>':''}</div>`;
+}
 function meV(){
   const idx=ST.meta.idx||{start:'',final:''};
   return `<a class="back" href="#/">← Обзор</a><h1 class="t" style="margin-top:6px">Индекс влияния</h1>
   <p class="sub">Результат теста из 50. Стартовый вписываешь сейчас, итоговый в конце программы.</p>
   <div class="card"><div class="idx"><div><small class="l">Стартовый</small><input type="text" inputmode="decimal" id="i1" placeholder="из 50" value="${esc(idx.start)}"></div><div><small class="l">Итоговый</small><input type="text" inputmode="decimal" id="i2" placeholder="из 50" value="${esc(idx.final)}"></div></div>
-  <div style="margin-top:14px"><a class="btn g s" href="https://vikagladysheva07-source.github.io/okean-vliyaniya/#method" target="_blank" rel="noopener">Пройти тест</a></div></div>
+  <div style="margin-top:14px"><a class="btn s" href="#/test">Пройти тест внутри платформы</a></div></div>
   <div style="margin-top:20px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
 }
 /* ================= управление ================= */
@@ -2211,6 +2257,9 @@ const A={
  async matdel(el){if(!confirm('Удалить материал?'))return;await setM(el.dataset.u,'files',(mmap(el.dataset.u).files||[]).filter(f=>f.id!==el.dataset.id));render(true)},
  fcopy(el,e){if(e&&e.stopPropagation)e.stopPropagation();const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const done=()=>toast('Скопировано. Вставь в чат с AI-партнёром');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.text).then(done,()=>toast('Не получилось скопировать, нажми «Скачать»'));else toast('Не получилось скопировать, нажми «Скачать»')},
  fdl(el){const f=(CM().files||[]).find(x=>x.id===el.dataset.id);if(!f)return;const b=new Blob([f.text],{type:'text/markdown;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.id+'.md';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)},
+ async tqa(el){const T=window.TQ||(window.TQ={i:0,a:[]});T.a[T.i]=+el.dataset.v;T.i++;if(T.i>=TQ.length){const r=tqRes(T.a),ix=Object.assign({start:'',final:''},ST.meta.idx||{});if(!String(ix.start||'').trim())ix.start=String(r.i);else ix.final=String(r.i);ix.tp=T.a.slice(0,5).map(x=>x*5);ix.ts=T.a[5];ix.ta=today();ST.meta.idx=ix;await putMeta('idx',ix)}render()},
+ tqb(){const T=window.TQ;if(T&&T.i>0){T.i--;render()}},
+ tqr(){window.TQ={i:0,a:[]};render()},
  async chk(el){const id=el.dataset.id,am=(window.ASPFX||'').match(/#\/as\/([^/]+)/);if(am){const sl=am[1],on=!curDone(id);const ok=await call(()=>rpc('okean_admin_review',{p_slot:ME.slot,p_h:ME.h,p_target:sl,p_task:id,p_status:on?'done':'todo',p_feedback:''}));if(!ok)return;const row=(AD.progress||[]).find(x=>x.slot===sl&&x.task_id===id);if(row)row.status=on?'done':'todo';else AD.progress.push({slot:sl,task_id:id,status:on?'done':'todo'});const dg=((CM().refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},CM().refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true);return}const on=stOf(id)!=='done';const r=await call(()=>rpc('okean_check',{p_slot:ME.slot,p_h:ME.h,p_task:id,p_on:on}));if(!r)return;ST.p[id]=Object.assign({},ST.p[id],{task_id:id,status:on?'done':'todo'});const dg=((ST.meta.refl||{}).dg)||{};if(on&&dg[id]){const rf=Object.assign({},ST.meta.refl),d2=Object.assign({},dg);delete d2[id];rf.dg=d2;await putMeta('refl',rf)}render(true)},
  topen(el){window.TMOD={id:el.dataset.id,k:el.dataset.k};render(true)},
  tclose(){window.TMOD=null;render(true)},
