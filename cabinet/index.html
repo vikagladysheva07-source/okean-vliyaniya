@@ -245,6 +245,7 @@ small.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 .mu2{color:var(--muted);font-size:13px}
 .dk2 .mu2{color:#B5ADDA}
 .big2{font-size:46px;font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.fdoc{display:flex;flex-direction:column}.fdh{display:flex;align-items:center;gap:12px}.fdh h3{margin:0;font-size:17px}.fdi{width:40px;height:40px;border-radius:13px;background:rgba(155,111,232,.18);display:grid;place-items:center;flex:none}.fdi svg{width:20px;height:20px}.fdx{margin:12px 0 0;font-size:15px;line-height:1.5;white-space:pre-line;color:var(--ink,#F2EDE2)}.fdn{margin-top:12px;font-size:13.5px;font-weight:600;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
 .pl2{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(155,111,232,.18);color:var(--vb);font-weight:600}
 .pl2.w{background:rgba(255,163,163,.14);color:#FFB3B3}.pl2.g{background:rgba(125,221,176,.14);color:var(--ok)}.pl2.d{background:rgba(255,255,255,.12);color:#fff}
 .bt2{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;background:#fff;color:#16112E;font-weight:700;font-size:14px;text-decoration:none}
@@ -1066,6 +1067,7 @@ const IC={
  home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',
  tasks:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
  book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+ folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/>',
  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.2-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.7c1.9.6 3.1 2.4 3.5 5.3"/>',
  inbox:'<path d="M4 13 6.5 5h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>',
@@ -1186,7 +1188,7 @@ function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
     return [['#/','Обзор','chart'],['#/students','Ученики','users',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
-    return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc']]}
+    return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc'],...((ST.meta.docs||[]).length?[['#/files','Файлы','folder']]:[])]}
   return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks'],['#/lib','Материалы','book']];
 }
 function isOn(h,cur){if(h==='#/students')return /^#\/(students|queue|people|u\/|learn|prog|edit|funnel|nudge|my)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|people|u\/|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/lib'&&cur.startsWith('#/doc/'))||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
@@ -1211,6 +1213,7 @@ function route(h){
     else if(r==='plan')html=shell(clPlan(),true);
     else if(r==='tasks')html=shell(clTasks(),true);
     else if(r==='key')html=shell(clKey(),true);
+    else if(r==='files')html=shell(clFiles(),true);
     else if(r==='reports')html=shell(clReports(),true);
     else if(r==='item')html=shell(clItem(a));
     else html=shell(clHome(),true);
@@ -1886,6 +1889,11 @@ function clKey(){
   const key=(ST.meta.key||[]).slice().reverse();
   return `${hd2('Важные моменты','Решения, договорённости и риски по проекту',[])}<div class="g12">${key.length?key.map(k=>`<div class="t2 c12"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}</div><p style="margin-top:10px;font-size:16px;line-height:1.45">${esc(k.text)}</p></div>`).join(''):'<div class="t2 c12"><p class="mu2">Пока записей нет.</p></div>'}</div>`;
 }
+/* Файлы и инструкции: ссылки, доступы, как работать (meta 'docs': [{id,g,t,x,u,n}]) */
+function clFiles(){
+  const L=ST.meta.docs||[],G=[];L.forEach(d=>{const g=d.g||'Разное';let x=G.find(y=>y.g===g);if(!x){x={g,a:[]};G.push(x)}x.a.push(d)});
+  return `${hd2('Файлы и инструкции','Важные ссылки, доступы и как работать с платформой',[])}${G.length?G.map(x=>`<h2 class="t" style="margin:22px 2px 12px">${esc(x.g)}</h2><div class="g12">${x.a.map(d=>{const u=safeUrl(d.u);return `<div class="t2 c6 fdoc"><div class="fdh"><span class="fdi">${ico(u?'folder':'book')}</span><h3>${esc(d.t)}</h3></div>${d.x?`<p class="fdx">${esc(d.x)}</p>`:''}${d.n?`<div class="fdn">${esc(d.n)}</div>`:''}${u?`<div style="margin-top:14px"><a class="bt2 sm2" href="${esc(u)}" target="_blank" rel="noopener">Открыть</a></div>`:''}</div>`}).join('')}</div>`).join(''):'<div class="t2"><p class="mu2">Пока файлов нет.</p></div>'}`;
+}
 const itT=it=>String(it.title||'').replace(/^\[.+?\]\s*/,'');
 function dqRow(i){
   const c=i.kind==='content',lk=safeUrl(i.link),ph=c?'Что поправить? Обязательно, если нужны правки.':'Напишите ответ или вставьте ссылку на файл.';
@@ -2094,6 +2102,15 @@ function keyEd(slot,M){
   return `<div class="t2" style="margin-bottom:14px"><h3>Важный момент для клиента</h3><div class="seg" style="margin:12px 0">${Object.keys(KT).map((k,i)=>`<button data-a="ktype" data-k="${k}" class="${(window.KTY||'info')===k?'on':''}">${KT[k]}</button>`).join('')}</div><textarea id="k-x" style="min-height:80px" placeholder="Например: Согласовали, что склад подключаем после запуска зарплаты"></textarea><div class="row"><input type="date" id="k-d" style="max-width:200px"><button class="bt2 v" data-a="keyadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
   <div style="display:flex;flex-direction:column;gap:10px">${L.map(k=>`<div class="t2"><div style="display:flex;gap:10px;align-items:center"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span>${k.date?`<span class="mu2">${fdate(k.date)}</span>`:''}<button class="rbt" style="margin-left:auto" data-a="keydel" data-u="${slot}" data-id="${k.id}" title="Удалить">✕</button></div><p style="margin-top:8px">${esc(k.text)}</p></div>`).join('')||'<div class="t2"><p class="mu2">Записей пока нет.</p></div>'}</div>`;
 }
+function docsEd(slot,M){
+  const L=M.docs||[],gs=[...new Set(L.map(d=>d.g).filter(Boolean))];
+  return `<div class="t2" style="margin-bottom:14px"><h3>Файл, ссылка или инструкция для клиента</h3><p class="mu2" style="margin:4px 0 12px">Клиент увидит это в разделе «Файлы». Раздел появляется у клиента, когда добавлена первая запись.</p>
+  <div class="idx"><div><small class="l">Раздел</small><input type="text" id="d-g" list="d-gl" placeholder="Например: Доступы"><datalist id="d-gl">${gs.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div><div><small class="l">Название</small><input type="text" id="d-t" placeholder="Например: Логины и PIN сотрудников"></div></div>
+  <small class="l" style="margin-top:12px">Текст (необязательно)</small><textarea id="d-x" style="min-height:90px" placeholder="Что это и как пользоваться"></textarea>
+  <div class="idx" style="margin-top:12px"><div><small class="l">Ссылка (необязательно)</small><input type="text" id="d-u" placeholder="https://"></div><div><small class="l">Пометка (пароль, срок)</small><input type="text" id="d-n" placeholder="Например: пароль пришлём отдельно"></div></div>
+  <div class="row"><button class="bt2 v" data-a="docadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px">${L.map((d,i)=>`<div class="t2"><div style="display:flex;gap:10px;align-items:center"><span class="pl2">${esc(d.g||'Разное')}</span><b>${esc(d.t)}</b><span style="margin-left:auto;display:flex;gap:6px">${i?`<button class="rbt" data-a="docmv" data-u="${slot}" data-i="${i}" title="Выше">↑</button>`:''}<button class="rbt" data-a="docdel" data-u="${slot}" data-id="${d.id}" title="Удалить">✕</button></span></div>${d.x?`<p class="mu2" style="margin-top:8px;white-space:pre-line">${esc(d.x)}</p>`:''}${d.u?`<div style="margin-top:6px"><a class="lk" href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener">${esc(d.u)}</a></div>`:''}${d.n?`<div class="mu2" style="margin-top:6px">${esc(d.n)}</div>`:''}</div>`).join('')||'<div class="t2"><p class="mu2">Пока пусто.</p></div>'}</div>`;
+}
 function adClients(){
   const L=(AD.users||[]).filter(u=>u.role==='client').map(clientStat);
   const wait=L.reduce((a,x)=>a+x.pc+x.pr,0),chg=L.reduce((a,x)=>a+x.ch,0);
@@ -2112,14 +2129,15 @@ function adClient(slot){
   const u=(AD.users||[]).find(x=>x.slot===slot&&x.role==='client');if(!u)return '<a class="back" href="#/clients">← Клиенты</a><p class="sub">Клиент не найден.</p>';
   const items=AI.filter(i=>i.slot===slot),M=mmap(slot),st=clientStat(u),kpi=(M.kpi||[]).map(k=>[k.l,k.v,k.d||''].join(' | ')).join('\n');
   const tab=window.CTAB[slot]||'plan',open=window.CF&&window.CF.slot===slot;
-  const TABS=[['plan','Траектория'],['content','Согласования'],['request','Запросы'],['report','Отчёты'],['key','Важное'],['set','Настройки']];
-  const cnt=k=>k==='key'?((M.key||[]).length):items.filter(i=>i.kind===k).length;
+  const TABS=[['plan','Траектория'],['content','Согласования'],['request','Запросы'],['report','Отчёты'],['key','Важное'],['docs','Файлы'],['set','Настройки']];
+  const cnt=k=>k==='key'?((M.key||[]).length):k==='docs'?((M.docs||[]).length):items.filter(i=>i.kind===k).length;
   const ORD={pending:0,changes:1,info:2,approved:3,done:3};
   const card=i=>`<div class="t2"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><h3 style="display:block;font-size:16px">${esc(i.title)}</h3>${ibd(i,true)}</div><div class="mu2" style="margin-top:4px">${fdate(i.created_at)}${i.due&&i.status==='pending'?' · срок '+fdate(i.due):''}</div>${i.body?`<div class="ans" style="margin-top:12px">${esc(i.body)}</div>`:''}${safeUrl(i.link)?`<div style="margin-top:10px"><a class="lk" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.link)}</a></div>`:''}${i.reply?`<div class="fbk ${i.status==='changes'?'bad':''}" style="margin:12px 0 0"><small>Ответ клиента${i.decided_at?' · '+fdt(i.decided_at):''}</small><p>${esc(i.reply)}</p></div>`:''}<div class="row"><button class="btn g s" data-a="cedit" data-u="${slot}" data-id="${i.id}">Изменить</button><button class="btn wr s" data-a="cdel" data-id="${i.id}">Удалить</button></div></div>`;
   const NM={content:['Новое согласование','Согласований пока нет.'],request:['Новый запрос','Запросов пока нет.'],report:['Новый отчёт','Отчётов пока нет.']};
   let body;
   if(tab==='plan'){body=planEd(slot,M)}
   else if(tab==='key'){body=keyEd(slot,M)}
+  else if(tab==='docs'){body=docsEd(slot,M)}
   else if(tab==='set'){
     body=`<div class="two"><div><h2 class="t">Цифры на главной клиента</h2><div class="card"><small class="l">По строке на показатель: название | значение | динамика (необязательно)</small><textarea id="kpiT" style="min-height:96px" placeholder="Охват | 124 000 | +18%&#10;Заявки | 37 | +6">${esc(kpi)}</textarea><div class="row"><button class="btn g s" data-a="kpisave" data-u="${slot}">Сохранить</button></div></div></div>
   <div><h2 class="t">Сообщение на главную</h2><div class="card"><textarea id="newsT" style="min-height:80px" placeholder="Клиент увидит это на обзоре до нажатия «Прочитано»"></textarea><div class="row"><button class="btn s" data-a="news" data-u="${slot}">Отправить</button></div>${((M.news||[]).length)?`<div style="margin-top:12px">${M.news.map(n=>`<p class="sub" style="font-size:13px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;margin-top:8px">${esc(n.text)} <span style="color:${(M.seen||{})[n.id]?'var(--ok)':'var(--muted)'}">${(M.seen||{})[n.id]?'· прочитано':'· не прочитано'}</span> <button class="lk" data-a="newsdel" data-u="${slot}" data-id="${n.id}">убрать</button></p>`).join('')}</div>`:''}</div></div></div>
@@ -2230,6 +2248,9 @@ const A={
  ccancel(el){window.CF=null;render(true)},
  ktype(el){window.KTY=el.dataset.k;const x=$('#k-x');window.KTX=x?x.value:'';render(true);if($('#k-x'))$('#k-x').value=window.KTX},
  async keyadd(el){const tx=$('#k-x').value.trim();if(!tx){toast('Напиши текст');return}const M=mmap(el.dataset.u),arr=(M.key||[]).concat([{id:Date.now(),type:window.KTY||'info',text:tx,date:$('#k-d').value||''}]);await setM(el.dataset.u,'key',arr);toast('Показано клиенту');render(true)},
+ async docadd(el){const v=id=>($('#'+id).value||'').trim(),t=v('d-t');if(!t){toast('Напиши название');return}const u=v('d-u');if(u&&!safeUrl(u)){toast('Ссылка должна начинаться с https://');return}const M=mmap(el.dataset.u),arr=(M.docs||[]).concat([{id:Date.now(),g:v('d-g'),t,x:v('d-x'),u,n:v('d-n')}]);await setM(el.dataset.u,'docs',arr);toast('Показано клиенту');render(true)},
+ async docdel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'docs',(M.docs||[]).filter(d=>String(d.id)!==el.dataset.id));render(true)},
+ async docmv(el){const M=mmap(el.dataset.u),a=(M.docs||[]).slice(),i=+el.dataset.i;if(i<1)return;[a[i-1],a[i]]=[a[i],a[i-1]];await setM(el.dataset.u,'docs',a);render(true)},
  async keydel(el){if(!confirm('Удалить запись?'))return;const M=mmap(el.dataset.u);await setM(el.dataset.u,'key',(M.key||[]).filter(k=>String(k.id)!==el.dataset.id));render(true)},
  crep(el){window.CF={slot:el.dataset.u,id:null,kind:'report',title:'Неделя '+el.dataset.n+': итоги работы',body:'',link:'',due:''};render(true)},
  plview(el){window.PLV=el.dataset.v;render(true)},
