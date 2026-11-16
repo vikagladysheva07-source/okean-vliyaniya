@@ -1204,6 +1204,17 @@ body.adm .tabbar a.on{background:rgba(255,255,255,.07)!important;color:#F4F1EC!i
 .o8c{animation:o6in .6s cubic-bezier(.2,.8,.2,1) both}.o8c:nth-child(2){animation-delay:.06s}.o8c:nth-child(3){animation-delay:.12s}
 @media(max-width:1100px){.o8g{grid-template-columns:1fr 1fr}.o8c:nth-child(3){grid-column:1/-1}}
 @media(max-width:820px){.o8g{grid-template-columns:1fr;gap:20px}}
+
+/* кабинеты учеников и клиентов: тот же стиль VOLYO */
+body.adm .sx,body.adm .sx.sxp,body.adm .sx.sxr,body.adm .sx.sxa0,body.adm .sxw2,body.adm .sxw2.cur,body.adm .sxtk,body.adm .sxtk.go{background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.02)),rgba(10,8,18,.25)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 20px 40px rgba(0,0,0,.35)!important}
+body.adm .sx.sxr,body.adm .sxw2.cur,body.adm .sxtk.go{border-color:rgba(196,164,255,.38)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 20px 40px rgba(0,0,0,.35),0 0 22px -8px rgba(155,111,232,.4)!important}
+body.adm .sxhd h1,body.adm .sxhd h1 b{color:#F4F1EC!important;-webkit-text-fill-color:#F4F1EC;background:none!important;font-weight:600}
+body.adm .sxgh,body.adm .sxgh span{color:#A49DB5!important}
+body.adm .sxw2t em,body.adm .sxw2.cur .sxw2t em,body.adm .sxpl{background:none!important;border:0!important;padding:0!important;color:#A49DB5!important}
+body.adm .sxic,body.adm .sxh3 .ic,body.adm .sxfc .ic,body.adm .sxbt i,body.adm .sxtk .sxti,body.adm .sxtk.go .sxti,body.adm .sxtk.dd .sxti{background:none!important;border:0!important;box-shadow:none!important}
+body.adm .sxup,body.adm .sxbtn{background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03)),rgba(10,8,18,.3)!important;border:1px solid rgba(255,255,255,.16)!important;color:#F4F1EC!important;border-radius:12px!important}
+body.adm .sxfc>div,body.adm .sxfc a{background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.1)!important}
+body.adm .bgt .ib,body.adm .bgt.b .ib,body.adm .mat .ic,body.adm .tile .ic{background:none!important;border:0!important;box-shadow:none!important;color:#C4A4FF}
 </style>
 </head>
 <body>
@@ -1363,7 +1374,7 @@ function navItems(){
 }
 function isOn(h,cur){if(h==='#/students')return /^#\/(students|people|u\/|as|learn|queue|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/clients')return /^#\/(clients|c\/)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/lib'&&cur.startsWith('#/doc/'))||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
-  const it=navItems(),cur=hash;document.body.classList.toggle('adm',ME&&ME.role==='admin');
+  const it=navItems(),cur=hash;document.body.classList.add('adm');
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
   const link=x=>`<a href="${x[0]}" class="${isOn(x[0],cur)?'on':''}">${ico(x[2])}<span>${x[1]}</span>${x[3]?`<span class="bd">${x[3]}</span>`:''}</a>`;
   return `${LIVE?'':'<div class="demo">ДЕМО-РЕЖИМ · данные только на этом устройстве</div>'}<div class="shell"><header class="tnav"><div class="tin"><div class="logo2"><i class="lg"><img src="shark-mark.png" alt=""></i><div>WIKKI.OCEAN<small>Личный кабинет</small></div></div><nav class="tnl">${it.map(link).join('')}</nav><div class="tr">${/^#\/(learn|prog|edit|people|funnel|nudge)/.test(cur)?progSel():''}${ME.role==='client'?'':`<span class="tn">${esc(ME.name||'')}</span>`}<button data-a="out">Выйти</button></div></div></header>
