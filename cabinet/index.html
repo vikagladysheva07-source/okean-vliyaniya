@@ -1180,16 +1180,13 @@ body.adm .tabbar a.on{background:rgba(255,255,255,.07)!important;color:#F4F1EC!i
 .o6out{float:right;font:inherit;font-size:13px;color:#A49DB5;background:none;border:0;cursor:pointer;padding:4px 0}
 .o6out:hover{color:#F4F1EA}
 
-/* админка: всё приложение в одном стеклянном окне поверх фото (по референсу) */
+/* админка: без окна-плашки, карточки прямо на фоне, меню слева плавает */
 @media(min-width:900px){
- body.adm .shell{position:relative;max-width:1260px;margin:28px auto;min-height:calc(100vh - 56px);border-radius:32px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 45%,rgba(255,255,255,.04)),rgba(14,12,22,.16);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 40px 100px rgba(0,0,0,.6);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
- body.adm .shell:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(140deg,rgba(196,164,255,.45),rgba(255,255,255,.05) 35%,rgba(255,255,255,0) 70%,rgba(155,111,232,.3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
- body.adm .main,body.adm .main.wide{max-width:none!important;margin:0;padding:8px 40px 40px 124px!important}
- body.adm .tabbar{position:absolute!important;left:22px;top:28px;bottom:auto;right:auto;padding:0!important;background:none!important;z-index:5}
+ body.adm .main,body.adm .main.wide{max-width:1240px!important;margin:0 auto;padding:8px 40px 40px 132px!important}
+ body.adm .tabbar{position:fixed!important;left:max(20px,calc(50% - 620px - 10px));top:50%;transform:translateY(-50%);bottom:auto;right:auto;padding:0!important;background:none!important;z-index:30}
  body.adm .tabbar div{flex-direction:column;width:76px;max-width:none;gap:6px;padding:8px!important;border-radius:24px!important}
  body.adm .tabbar a{padding:12px 4px 10px!important;border-radius:16px!important}
- body.adm .o6hd{padding-top:34px}
- body.adm .t2,body.adm .card,body.adm details.dt2,body.adm .tblw,body.adm .o6l,body.adm .o7t,body.adm .o6hero,body.adm .o6msg{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),rgba(8,7,14,.32)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ body.adm .o6hd{padding-top:44px}
 }
 
 /* обзор v8: функциональный */
