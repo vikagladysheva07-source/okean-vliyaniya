@@ -1050,8 +1050,8 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 /* обзор v6: по дизайну VOLYO */
 html:has(.o6){background:#05040A}
 body:has(.o6){background:transparent}
-body:has(.o6):before{content:"";position:fixed;inset:0;z-index:-2;background:url(bg-shark.jpg) center 50%/cover;transform:scale(1.04);filter:brightness(.8)}
-body:has(.o6):after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,4,10,.18) 0%,rgba(5,4,10,.35) 30%,rgba(5,4,10,.7) 65%,#05040A 100%)}
+body:has(.o6):before{content:"";position:fixed;inset:0;z-index:-2;background:url(bg-shark.jpg) center 50%/cover;transform:scale(1.04);filter:brightness(.65)}
+body:has(.o6):after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,4,10,.45) 0%,rgba(5,4,10,.6) 30%,rgba(5,4,10,.82) 65%,#05040A 100%)}
 body:has(.o6) .tnav,body:has(.o6) .shell{background:transparent}
 .o6{font-family:'Manrope',var(--f);color:#F4F1EC;padding-bottom:20px}
 .o6hd{padding:26px 2px 18px}
@@ -1106,6 +1106,23 @@ body:has(.o6) .tnav,body:has(.o6) .shell{background:transparent}
 @keyframes o6in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:820px){.o6g{grid-template-columns:1fr;gap:0}.o6c2>.o6sec:first-child{margin-top:22px}.o6svg{width:104px;height:104px}.o6hero{gap:18px;padding:18px}.o6pv{width:96px}}
 @media(prefers-reduced-motion:reduce){.o6hero,.o6msg,.o6l,.o6sec{animation:none}.o6arc{animation:none;stroke-dashoffset:var(--o)}}
+
+/* обзор v7: две плашки */
+.o7g{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.o7t{position:relative;display:block;padding:22px;border-radius:24px;text-decoration:none;color:#F4F1EC;background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.02)),rgba(10,8,18,.25);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 20px 40px rgba(0,0,0,.35);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);transition:transform .3s,box-shadow .3s;animation:o6in .6s cubic-bezier(.2,.8,.2,1) both}
+.o7t+.o7t{animation-delay:.08s}
+.o7t:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(140deg,rgba(196,164,255,.5),rgba(196,164,255,0) 35%,rgba(196,164,255,0) 70%,rgba(155,111,232,.35));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.o7t:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 36px 70px -20px rgba(0,0,0,.75),0 0 0 1px rgba(196,164,255,.18)}
+.o7t:hover .o6ch{transform:translateX(3px);stroke:#F4F1EA}
+.o7h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.o7h b{display:block;font-size:20px;font-weight:600;line-height:1.2}
+.o7h em{display:block;font-style:normal;font-size:13px;color:#A49DB5;margin-top:4px}
+.o7b{display:flex;align-items:center;gap:22px}
+.o7s{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#A49DB5;min-height:24px}
+.o7s i{width:8px;height:8px;border-radius:50%;flex:none}
+.o7s b{margin-left:auto;color:#F4F1EA;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.o7t .o6ft{margin-top:16px}
+@media(max-width:820px){.o7g{grid-template-columns:1fr;gap:14px}.o7b{gap:16px}}
 </style>
 </head>
 <body>
@@ -1258,12 +1275,12 @@ const wlabel=w=>w.n===0?'Подготовка':w.n>6?'Сопровождение
 let hash='#/';
 function navItems(){
   if(ME.role==='admin'){const q=(AD&&AD.progress||[]).filter(p=>p.status==='review').length;
-    return [['#/','Обзор','chart'],['#/students','Люди','users',q+AI.filter(i=>i.status==='changes').length],['#/learn','Программа','book']]}
+    return [['#/','Обзор','chart'],['#/students','Ученики','users',q],['#/clients','Клиенты','brief',AI.filter(i=>i.status==='changes').length]]}
   if(ME.role==='client'){const pc=CI.filter(i=>i.kind==='content'&&i.status==='pending').length,pr=CI.filter(i=>i.kind==='request'&&i.status==='pending').length;
     return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks',cltasks().wait.length],['#/approve','Решения','inbox',pc+pr],['#/reports','Отчёты','doc'],...((ST.meta.docs||[]).length?[['#/files','Файлы','folder']]:[])]}
   return [['#/','Обзор','home'],['#/plan','Траектория','chart'],['#/tasks','Задачи','tasks'],['#/lib','Материалы','book']];
 }
-function isOn(h,cur){if(h==='#/students')return /^#\/(students|people|u\/|clients|c\/|as)/.test(cur);if(h==='#/learn')return /^#\/(learn|queue|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/lib'&&cur.startsWith('#/doc/'))||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
+function isOn(h,cur){if(h==='#/students')return /^#\/(students|people|u\/|as|learn|queue|prog|edit|funnel|nudge|my|week|task|lib)/.test(cur);if(h==='#/clients')return /^#\/(clients|c\/)/.test(cur);if(h==='#/')return cur==='#/'||cur===''||cur==='#'||(ME.role==='admin'&&/^#\/settings/.test(cur));return cur.startsWith(h)||(h==='#/lib'&&cur.startsWith('#/doc/'))||(h==='#/tasks'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/my'&&(cur.startsWith('#/task/')||cur.startsWith('#/week/')))||(h==='#/people'&&cur.startsWith('#/u/'))||(h==='#/prog'&&(cur.startsWith('#/my')||cur.startsWith('#/edit/')||cur.startsWith('#/lib')||cur.startsWith('#/week/')||cur.startsWith('#/task/')))||(h==='#/clients'&&(cur.startsWith('#/c/')||cur.startsWith('#/item/')))||(h==='#/approve'&&(cur.startsWith('#/item/')||cur.startsWith('#/requests')))}
 function shell(inner,wide){
   const it=navItems(),cur=hash;
   const adm=ME.role==='admin',tasksH=adm?'#/my':'#/tasks';
@@ -1632,10 +1649,8 @@ function adStudents(){
   const sts=(AD.users||[]).filter(u=>u.role==='student'&&u.name),pend=sl=>(AD.progress||[]).filter(p=>p.slot===sl&&p.status==='review').length;
   const cards=sts.map(u=>{const ph=mmap(u.slot).photo,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99,pn=pend(u.slot),g=isGroup(u);
     return `<div class="asr" data-a="go" data-h="#/as/${u.slot}"><div class="asa">${ph?`<img src="${esc(ph)}" alt="">`:`<span>${esc((u.name||'?')[0])}</span>`}</div><div class="asx"><b>${esc(u.name)}</b><small>${ls?(idle===0?'заходил сегодня':'заходил '+idle+' дн. назад'):'ещё не заходил'}</small></div>${pn?`<span class="asp2">${pn} на проверке</span>`:''}<button class="asf ${g?'g':''}" data-a="fmt" data-u="${u.slot}" title="Нажми, чтобы сменить формат">${g?'Групповое':'Личное обучение'}</button><i class="asn">${ico('chev')}</i></div>`}).join('');
-  const cls=(AD.users||[]).filter(u=>u.role==='client'&&u.name).map(u=>{const x=clientStat(u),pl=planOf(mmap(u.slot)),sg=(pl.stages||[]),ci=sg.findIndex(q=>(q.tasks||[]).some(t=>t.status!=='done'));
-    return `<div class="asr" data-a="go" data-h="#/c/${u.slot}"><div class="asa"><span>${esc((u.name||'?')[0])}</span></div><div class="asx"><b>${esc(u.name)}</b><small>${ci>=0?esc(sg[ci].title.replace(/:.*$/,'')):'все этапы готовы'} · ${x.td} из ${x.tp}</small></div>${x.ch?`<span class="asp2">${x.ch} на правках</span>`:''}<button class="asf" style="pointer-events:none">Проект</button><i class="asn">${ico('chev')}</i></div>`}).join('');
-  return `<div class="asth"><h1 class="t">Люди</h1><a class="bt2 sm2" href="#/people">Добавить человека</a></div><p class="sub">${sts.length} ${plur(sts.length,'ученик','ученика','учеников')}${cls?' и проекты клиентов':''}. Нажми на карточку, чтобы открыть кабинет.</p>
-  <div class="asl">${cards||'<div class="card">Учеников пока нет.</div>'}${cls}</div>
+  return `<div class="asth"><h1 class="t">Ученики</h1><a class="bt2 sm2" href="#/people">Добавить ученика</a></div><p class="sub">${sts.length} ${plur(sts.length,'ученик','ученика','учеников')}. Нажми на карточку, чтобы открыть кабинет.</p>
+  <div class="asl">${cards||'<div class="card">Учеников пока нет.</div>'}</div>
   <p class="mu2" style="margin-top:18px"><a class="lk" href="#/learn">Программы и редактор недель</a></p>`}
 function ovPeople(){
   const td0=today(),wk=ymdOf(dnum(td0)+7),out=[];
@@ -1650,46 +1665,27 @@ function ovPeople(){
   });
   return out;
 }
-function o5count(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.o6st b').forEach(el=>{const n=+el.textContent;if(!n)return;const t0=performance.now(),D=700;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=Math.round(n*e);if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
+function o5count(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.o7s b').forEach(el=>{const n=+el.textContent;if(!n)return;const t0=performance.now(),D=700;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=Math.round(n*e);if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
 function adOverview(){
-  const P=ovPeople(),td0=today(),pl1=plur,att=[];
-  P.forEach(x=>{
-    if(x.rev)att.push({k:0,w:1,t:`${esc(x.u.name)}: ${x.rev} ${pl1(x.rev,'работа','работы','работ')} на проверке`,s:'Ждёт твоей оценки',h:'#/queue'});
-    if(x.ch)att.push({k:1,w:1,t:`${esc(x.u.name)}: ${x.ch} ${pl1(x.ch,'материал','материала','материалов')} на правках`,s:'Клиент вернул на доработку',h:x.h});
-    if(x.mine.length){const m=x.mine.slice().sort((a,b)=>a.d<b.d?-1:1)[0];att.push({k:2,w:0,t:`${esc(x.u.name)}: ${x.mine.length} ${pl1(x.mine.length,'задача','задачи','задач')} на тебе до ${fdate(m.d)}`,s:esc(m.t.text),h:x.h})}
-    if(x.idle>=5)att.push({k:3,w:1,i:x.idle,t:`${esc(x.u.name)}: ${x.idle>=99?'ещё не заходил(а)':x.idle+' '+pl1(x.idle,'день','дня','дней')+' без входа'}`,s:(x.n?x.d+' из '+x.n+' задач · ':'')+(x.ls?'последний вход '+fdate(ymd(new Date(x.ls))):'входа не было'),h:'#/nudge'});
-  });
-  att.sort((a,b)=>a.k-b.k||(b.i||0)-(a.i||0));
-  const nRev=(AD.progress||[]).filter(p=>p.status==='review').length,nIdle=P.filter(x=>x.idle>=5).length,nWait=P.reduce((a,x)=>a+x.wait,0);
-  const st=P.filter(x=>!x.cl&&x.n),cl=P.filter(x=>x.cl&&x.n);
-  const r1=st.length?st.reduce((a,x)=>a+x.d/x.n,0)/st.length:0,r2=P.length?P.filter(x=>x.idle<=3).length/P.length:0,r3=cl.length?cl.reduce((a,x)=>a+x.d/x.n,0)/cl.length:0;
+  const P=ovPeople(),td0=today(),S=P.filter(x=>!x.cl),K=P.filter(x=>x.cl);
+  const avg=a=>{const b=a.filter(x=>x.n);return b.length?b.reduce((s,x)=>s+x.d/x.n,0)/b.length:0};
+  const share=(a,f)=>a.length?a.filter(f).length/a.length:0;
   const arc=(r,v,g)=>{const L=2*Math.PI*r;return `<circle cx="60" cy="60" r="${r}" stroke="rgba(255,255,255,.07)" stroke-width="10" fill="none"/><circle class="o6arc" cx="60" cy="60" r="${r}" stroke="url(#${g})" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" style="--o:${(L*(1-Math.max(.015,Math.min(1,v)))).toFixed(1)}" transform="rotate(-90 60 60)"/>`};
-  const ring=`<svg class="o6svg" viewBox="0 0 120 120"><defs><linearGradient id="og1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EDE3FF"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient><linearGradient id="og2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B796F5"/><stop offset="1" stop-color="#7E55DA"/></linearGradient><linearGradient id="og3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B5CE0"/><stop offset="1" stop-color="#4A2BA8"/></linearGradient></defs>${arc(52,r1,'og1')}${arc(38,r2,'og2')}${arc(24,r3,'og3')}</svg>`;
-  const sr=(c,l,v,h)=>`<a href="${h}"><i style="background:${c}"></i>${l}<b>${v}</b></a>`;
-  const t0=ymdOf(dnum(td0)),t7=ymdOf(dnum(td0)+7),ev=[];
-  C.weeks.forEach(w=>(w.meetings||[]).forEach(m=>{if(m.when){const d=ymd(new Date(m.when));if(d>=t0&&d<=t7)ev.push({d,t:esc(m.t),s:esc(whenTxt(m))})}}));
-  P.forEach(x=>{const g={};x.mine.forEach(m=>{if(m.d>=t0&&m.d<=t7)(g[m.d]=g[m.d]||[]).push(m)});Object.keys(g).forEach(d=>ev.push({d,t:g[d].length>1?esc(x.u.name)+': '+g[d].length+' '+pl1(g[d].length,'задача','задачи','задач')+' на тебе':esc(g[d][0].t.text),s:g[d].length>1?esc(g[d][0].t.text):esc(x.u.name)}))});
-  C.weeks.forEach(w=>{if(w.due&&w.due>=t0&&w.due<=t7&&w.tasks.length)ev.push({d:w.due,t:'Срок недели '+w.n+' у группы',s:esc(w.title||'')})});
-  ev.sort((a,b)=>a.d<b.d?-1:1);
-  const dn=['вс','пн','вт','ср','чт','пт','сб'],chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
-  const row=(h,t,s,lead,side)=>`<a class="o6r" href="${h}">${lead||''}<span class="o6x"><b>${t}</b>${s?`<em>${s}</em>`:''}</span>${side||''}${chev}</a>`;
-  const top=att[0],rest=att.slice(1,6);
-  const ppl=P.slice().sort((a,b)=>(b.rev>0)-(a.rev>0)||b.idle-a.idle).map(x=>{const pc=x.n?Math.round(x.d/x.n*100):0,seen=x.idle>=99?'не заходил(а)':x.idle===0?'сегодня':x.idle===1?'вчера':x.idle+' дн. назад';
-    return row(x.h,esc(x.u.name),x.type+(x.stTxt?' · '+esc(x.stTxt):''),'',`<span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><em class="${x.idle>=5?'w':''}">${seen}</em><i><s style="width:${pc}%"></s></i></span>`)}).join('');
+  const defs=`<defs><linearGradient id="og1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EDE3FF"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient><linearGradient id="og2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B796F5"/><stop offset="1" stop-color="#7E55DA"/></linearGradient></defs>`;
+  const ring=(a,b)=>`<svg class="o6svg" viewBox="0 0 120 120">${defs}${arc(52,a,'og1')}${arc(38,b,'og2')}</svg>`;
+  const sr=(c,l,v)=>`<span class="o7s"><i style="background:${c}"></i>${l}<b>${v}</b></span>`;
+  const rev=S.reduce((a,x)=>a+x.rev,0),idle=S.filter(x=>x.idle>=5).length,mine=K.reduce((a,x)=>a+x.mine.length,0),wait=K.reduce((a,x)=>a+x.wait,0),ch=K.reduce((a,x)=>a+x.ch,0);
+  const pS=avg(S),pK=avg(K),chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+  const tile=(h,t,sub,rg,rows,leg)=>`<a class="o7t" href="${h}"><div class="o7h"><span><b>${t}</b><em>${sub}</em></span>${chev}</div><div class="o7b">${rg}<div class="o6st">${rows}</div></div><div class="o6ft">${leg}</div></a>`;
   const dt=new Date(dnum(td0)*864e5),DW=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
   setTimeout(o5count,40);
   return `<div class="o6">
-  <div class="o6hd"><span class="o6dt">${DW[dt.getUTCDay()]}, ${fdate(t0)}</span><h1>Обзор</h1><p>${att.length?att.length+' '+pl1(att.length,'вопрос ждёт','вопроса ждут','вопросов ждут')+' тебя':'Сегодня всё спокойно'}</p></div>
-  <div class="o6g">
-   <div class="o6c1">
-    <div class="o6hero">${ring}<div class="o6st">${sr('#C4A4FF','Требуют тебя',att.length,'#/')}${sr('#9B6FE8','На проверке',nRev,'#/queue')}${sr('#6A3FD0','Не заходили 5+ дней',nIdle,'#/nudge')}${sr('#4A2BA8','Ждут клиентов',nWait,'#/students')}<div class="o6ft">Людей в работе <b>${P.length}</b><span>кольца: прогресс · активность · проект</span></div></div></div>
-    ${top?`<a class="o6msg" href="${top.h}"><span><small>Главное сейчас</small><b>${top.t}</b><em>${top.s}</em></span>${chev}</a>`:''}
-    <div class="o6sec">Неделя</div><div class="o6l">${ev.slice(0,6).map(e=>row('#/',e.t,e.s,`<span class="o6d"><b>${+e.d.slice(8)}</b>${dn[new Date(dnum(e.d)*864e5).getUTCDay()]}</span>`)).join('')||'<p class="o6e">На неделю ничего не назначено</p>'}</div>
-   </div>
-   <div class="o6c2">
-    ${rest.length?`<div class="o6sec">Требует тебя</div><div class="o6l">${rest.map(a=>row(a.h,a.t,a.s,`<i class="o6o ${a.w?'w':''}"></i>`)).join('')}</div>`:''}
-    <div class="o6sec">Люди<a href="#/students">Все</a></div><div class="o6l">${ppl||'<p class="o6e">Людей пока нет</p>'}</div>
-   </div>
+  <div class="o6hd"><span class="o6dt">${DW[dt.getUTCDay()]}, ${fdate(ymdOf(dnum(td0)))}</span><h1>Обзор</h1><p>Выбери, с чем работаешь</p></div>
+  <div class="o7g">
+   ${tile('#/students','Ученики',S.length+' '+plur(S.length,'ученик','ученика','учеников')+' · обучение и проверка',ring(pS,share(S,x=>x.idle<=3)),
+     sr('#C4A4FF','Средний прогресс',Math.round(pS*100)+'%')+sr('#9B6FE8','На проверке',rev)+sr('#6A3FD0','Не заходили 5+ дней',idle),'кольца: прогресс · заходили за 3 дня')}
+   ${tile('#/clients','Клиенты',K.length+' '+plur(K.length,'проект','проекта','проектов')+' · работа по траектории',ring(pK,share(K,x=>x.idle<=3)),
+     sr('#C4A4FF','Выполнено по проектам',Math.round(pK*100)+'%')+sr('#9B6FE8','Задачи на тебе за неделю',mine)+sr('#6A3FD0','Ждут ответа клиента',wait)+(ch?sr('#E8A0AE','На правках',ch):''),'кольца: выполнение · заходили за 3 дня')}
   </div></div>`;
 }
 function adLearn(){
