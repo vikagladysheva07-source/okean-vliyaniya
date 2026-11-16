@@ -1054,7 +1054,7 @@ body:has(.o6):before,body.adm:before{content:"";position:fixed;inset:0;z-index:-
 body:has(.o6):after,body.adm:after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,4,10,.45) 0%,rgba(5,4,10,.6) 30%,rgba(5,4,10,.82) 65%,#05040A 100%)}
 body:has(.o6) .tnav,body:has(.o6) .shell,body.adm .shell{background:transparent}
 .o6{font-family:'Manrope',var(--f);color:#F4F1EC;padding-bottom:20px}
-.o6hd{padding:26px 2px 18px}
+.o6hd{padding:44px 2px 22px}
 .o6dt{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#A8A1B8}
 .o6hd h1{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:6px}
 .o6hd p{font-size:13px;color:#B9B3C8;margin-top:5px}
@@ -1170,6 +1170,15 @@ body.adm .tile.vio,body.adm .tile.hot,body.adm .att{border-color:rgba(196,164,25
 body.adm .seg button.on,body.adm .ktabs button.on,body.adm .chp button.on,body.adm .pgc.on,body.adm .tseg button.on,body.adm .ftb.on,body.adm .tqx.on,body.adm .ddi.on,body.adm .ddi:hover,body.adm .tqx:hover,body.adm .dd.open .ddb,body.adm .fbar.open .ftg,body.adm .sxbtn{background:rgba(255,255,255,.06)!important;color:#F4F1EC!important;border:1px solid rgba(196,164,255,.4)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important}
 body.adm .pill,body.adm .chip,body.adm .chip.warn,body.adm .gchip,body.adm .sxpl,body.adm .st-review,body.adm .st-revision,body.adm .fpl{background:none!important;border:0!important;padding:0!important;border-radius:0!important;color:#A49DB5!important;font-weight:500}
 body.adm .chip.warn,body.adm .st-revision{color:#E8A0AE!important}
+
+/* админка: без верхней панели, меню снизу как в VOLYO */
+body.adm .tnav,body.adm .main>.top{display:none!important}
+body.adm .tabbar{display:block!important}
+body.adm .main{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
+body.adm .tabbar div{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03)),rgba(10,8,18,.55)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 18px 40px rgba(0,0,0,.5)!important;backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
+body.adm .tabbar a.on{background:rgba(255,255,255,.07)!important;color:#F4F1EC!important;box-shadow:inset 0 0 0 1px rgba(196,164,255,.35)!important}
+.o6out{float:right;font:inherit;font-size:13px;color:#A49DB5;background:none;border:0;cursor:pointer;padding:4px 0}
+.o6out:hover{color:#F4F1EA}
 </style>
 </head>
 <body>
@@ -1716,11 +1725,11 @@ function adOverview(){
   const sr=(c,l,v)=>`<span class="o7s"><i style="background:${c}"></i>${l}<b>${v}</b></span>`;
   const rev=S.reduce((a,x)=>a+x.rev,0),idle=S.filter(x=>x.idle>=5).length,mine=K.reduce((a,x)=>a+x.mine.length,0),wait=K.reduce((a,x)=>a+x.wait,0),ch=K.reduce((a,x)=>a+x.ch,0);
   const pS=avg(S),pK=avg(K),chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
-  const tile=(h,t,sub,rg,rows,leg)=>`<a class="o7t" href="${h}"><div class="o7h"><span><b>${t}</b><em>${sub}</em></span>${chev}</div><div class="o7b">${rg}<div class="o6st">${rows}</div></div><div class="o6ft">${leg}</div></a>`;
+  const tile=(h,t,sub,rg,rows,leg)=>`<a class="o7t" href="${h}"><div class="o7h"><span><b>${t}</b><em>${sub}</em></span>${chev}</div><div class="o7b">${rg}<div class="o6st">${rows}</div></div></a>`;
   const dt=new Date(dnum(td0)*864e5),DW=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
   setTimeout(o5count,40);
   return `<div class="o6">
-  <div class="o6hd"><span class="o6dt">${DW[dt.getUTCDay()]}, ${fdate(ymdOf(dnum(td0)))}</span><h1>Обзор</h1><p>Выбери, с чем работаешь</p></div>
+  <div class="o6hd"><button class="o6out" data-a="out">Выйти</button><h1>Обзор</h1></div>
   <div class="o7g">
    ${tile('#/students','Ученики',S.length+' '+plur(S.length,'ученик','ученика','учеников')+' · обучение и проверка',ring(pS,share(S,x=>x.idle<=3)),
      sr('#C4A4FF','Средний прогресс',Math.round(pS*100)+'%')+sr('#9B6FE8','На проверке',rev)+sr('#6A3FD0','Не заходили 5+ дней',idle),'кольца: прогресс · заходили за 3 дня')}
@@ -2260,7 +2269,7 @@ function adStudents(){
   const rows=P.map(x=>{const g=isGroup(x.u),pc=x.n?Math.round(x.d/x.n*100):0;
     return `<div class="o6r" data-a="go" data-h="#/as/${x.u.slot}" style="cursor:pointer"><span class="o6x"><b>${esc(x.u.name)}</b><em><span class="${x.idle>=5?'o6w':''}">${seen(x)}</span>${x.stTxt?' · '+esc(x.stTxt):''}${x.rev?' · '+x.rev+' на проверке':''}</em></span><button class="o6f" data-a="fmt" data-u="${x.u.slot}" title="Нажми, чтобы сменить формат">${g?'Групповое':'Личное'}</button><span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><i><s style="width:${pc}%"></s></i></span>${o6chev}</div>`}).join('');
   const tool=(h,t,s)=>`<a class="o6r" href="${h}"><span class="o6x"><b>${t}</b><em>${s}</em></span>${o6chev}</a>`;
-  return `<div class="o6"><div class="o6hd"><span class="o6dt">Обучение</span><h1>Ученики</h1><p>${P.length} ${plur(P.length,'ученик','ученика','учеников')}${rev?' · '+rev+' на проверке':''}${idle?' · '+idle+' давно не заходили':''}</p></div>
+  return `<div class="o6"><div class="o6hd"><h1>Ученики</h1><p>${P.length} ${plur(P.length,'ученик','ученика','учеников')}${rev?' · '+rev+' на проверке':''}${idle?' · '+idle+' давно не заходили':''}</p></div>
   <div class="o6g">
    <div><div class="o6sec">Все ученики<a href="#/people">Добавить</a></div><div class="o6l">${rows||'<p class="o6e">Учеников пока нет</p>'}</div></div>
    <div><div class="o6sec">Работа с обучением</div><div class="o6l">
@@ -2279,7 +2288,7 @@ function adClients(){
     const st=[x.stTxt,x.wait?x.wait+' ждут ответа':'',x.ch?x.ch+' на правках':'',x.mine.length?x.mine.length+' на тебе за неделю':''].filter(Boolean).join(' · ');
     return `<a class="o6r" href="#/c/${x.u.slot}"><span class="o6x"><b>${esc(x.u.name)}</b><em>${esc(st||seen)}</em></span><span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><em class="${x.idle>=5?'w':''}">${seen}</em><i><s style="width:${pc}%"></s></i></span>${o6chev}</a>`}).join('');
   const sr=(c,l,v)=>`<span class="o7s"><i style="background:${c}"></i>${l}<b>${v}</b></span>`;
-  return `<div class="o6"><div class="o6hd"><span class="o6dt">Проекты</span><h1>Клиенты</h1><p>${P.length} ${plur(P.length,'проект','проекта','проектов')} · согласование, запросы и отчёты</p></div>
+  return `<div class="o6"><div class="o6hd"><h1>Клиенты</h1><p>${P.length} ${plur(P.length,'проект','проекта','проектов')} · согласование, запросы и отчёты</p></div>
   <div class="o6g">
    <div><div class="o6sec">Все клиенты</div><div class="o6l">${rows||'<p class="o6e">Клиентов пока нет</p>'}</div></div>
    <div><div class="o6sec">Сводка</div><div class="o6l o6pad">${sr('#C4A4FF','Задачи на тебе за неделю',mine)}${sr('#9B6FE8','Ждут ответа клиента',wait)}${sr('#6A3FD0','Вернули на правки',ch)}</div>
