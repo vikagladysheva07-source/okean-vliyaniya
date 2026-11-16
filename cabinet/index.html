@@ -1179,6 +1179,34 @@ body.adm .tabbar div{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba
 body.adm .tabbar a.on{background:rgba(255,255,255,.07)!important;color:#F4F1EC!important;box-shadow:inset 0 0 0 1px rgba(196,164,255,.35)!important}
 .o6out{float:right;font:inherit;font-size:13px;color:#A49DB5;background:none;border:0;cursor:pointer;padding:4px 0}
 .o6out:hover{color:#F4F1EA}
+
+/* админка: всё приложение в одном стеклянном окне поверх фото (по референсу) */
+@media(min-width:900px){
+ body.adm .shell{position:relative;max-width:1260px;margin:28px auto;min-height:calc(100vh - 56px);border-radius:32px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 45%,rgba(255,255,255,.04)),rgba(14,12,22,.16);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 40px 100px rgba(0,0,0,.6);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
+ body.adm .shell:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(140deg,rgba(196,164,255,.45),rgba(255,255,255,.05) 35%,rgba(255,255,255,0) 70%,rgba(155,111,232,.3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+ body.adm .main,body.adm .main.wide{max-width:none!important;margin:0;padding:8px 40px 40px 124px!important}
+ body.adm .tabbar{position:absolute!important;left:22px;top:28px;bottom:auto;right:auto;padding:0!important;background:none!important;z-index:5}
+ body.adm .tabbar div{flex-direction:column;width:76px;max-width:none;gap:6px;padding:8px!important;border-radius:24px!important}
+ body.adm .tabbar a{padding:12px 4px 10px!important;border-radius:16px!important}
+ body.adm .o6hd{padding-top:34px}
+ body.adm .t2,body.adm .card,body.adm details.dt2,body.adm .tblw,body.adm .o6l,body.adm .o7t,body.adm .o6hero,body.adm .o6msg{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),rgba(8,7,14,.32)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+}
+
+/* обзор v8: функциональный */
+.o8g{display:grid;grid-template-columns:1.15fr 1.2fr .95fr;gap:20px;margin-top:22px;align-items:start}
+.o8c .o6sec{margin-top:0}
+.o6sec span{font-size:12px;color:#A49DB5;font-weight:400}
+.o8a{padding:16px 16px 8px}
+.o8n{display:flex;gap:22px;margin-bottom:8px}
+.o8n span b{display:block;font-size:22px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.o8n span em{display:block;font-style:normal;font-size:12px;color:#A49DB5;margin-top:2px}
+.o8ch{width:100%;height:150px;display:block}
+.o8lb text{font-size:10px;fill:#6F6884;font-family:Manrope,sans-serif}
+.o8ln{stroke-dasharray:1200;stroke-dashoffset:1200;animation:o8d 1.4s cubic-bezier(.2,.8,.2,1) .3s forwards;filter:drop-shadow(0 0 6px rgba(196,164,255,.6))}
+@keyframes o8d{to{stroke-dashoffset:0}}
+.o8c{animation:o6in .6s cubic-bezier(.2,.8,.2,1) both}.o8c:nth-child(2){animation-delay:.06s}.o8c:nth-child(3){animation-delay:.12s}
+@media(max-width:1100px){.o8g{grid-template-columns:1fr 1fr}.o8c:nth-child(3){grid-column:1/-1}}
+@media(max-width:820px){.o8g{grid-template-columns:1fr;gap:20px}}
 </style>
 </head>
 <body>
@@ -1715,8 +1743,30 @@ function ovPeople(){
   return out;
 }
 function o5count(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.o7s b').forEach(el=>{const n=+el.textContent;if(!n)return;const t0=performance.now(),D=700;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=Math.round(n*e);if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
+function ovAtt(P){const att=[],pl1=plur;
+  P.forEach(x=>{
+    if(x.rev)att.push({k:0,w:1,t:`${esc(x.u.name)}: ${x.rev} ${pl1(x.rev,'работа','работы','работ')} на проверке`,s:'Ждёт твоей оценки',h:'#/queue'});
+    if(x.ch)att.push({k:1,w:1,t:`${esc(x.u.name)}: ${x.ch} ${pl1(x.ch,'материал','материала','материалов')} на правках`,s:'Клиент вернул на доработку',h:x.h});
+    if(x.mine.length){const m=x.mine.slice().sort((a,b)=>a.d<b.d?-1:1)[0];att.push({k:2,w:0,t:`${esc(x.u.name)}: ${x.mine.length} ${pl1(x.mine.length,'задача','задачи','задач')} на тебе до ${fdate(m.d)}`,s:esc(m.t.text),h:x.h})}
+    if(x.idle>=5)att.push({k:3,w:1,i:x.idle,t:`${esc(x.u.name)}: ${x.idle>=99?'ещё не заходил(а)':x.idle+' '+pl1(x.idle,'день','дня','дней')+' без входа'}`,s:(x.n?x.d+' из '+x.n+' задач · ':'')+(x.ls?'последний вход '+fdate(ymd(new Date(x.ls))):'входа не было'),h:'#/nudge'});
+  });
+  return att.sort((a,b)=>a.k-b.k||(b.i||0)-(a.i||0));}
+function ovWeek(P){const td0=today(),t0=ymdOf(dnum(td0)),t7=ymdOf(dnum(td0)+7),ev=[];
+  C.weeks.forEach(w=>(w.meetings||[]).forEach(m=>{if(m.when){const d=ymd(new Date(m.when));if(d>=t0&&d<=t7)ev.push({d,t:esc(m.t),s:esc(whenTxt(m))})}}));
+  P.forEach(x=>{const g={};x.mine.forEach(m=>{if(m.d>=t0&&m.d<=t7)(g[m.d]=g[m.d]||[]).push(m)});Object.keys(g).forEach(d=>ev.push({d,t:g[d].length>1?esc(x.u.name)+': '+g[d].length+' '+plur(g[d].length,'задача','задачи','задач')+' на тебе':esc(g[d][0].t.text),s:g[d].length>1?esc(g[d][0].t.text):esc(x.u.name)}))});
+  C.weeks.forEach(w=>{if(w.due&&w.due>=t0&&w.due<=t7&&w.tasks.length)ev.push({d:w.due,t:'Срок недели '+w.n+' у группы',s:esc(w.title||'')})});
+  return ev.sort((a,b)=>a.d<b.d?-1:1);}
+function ovAct(P){const N=14,t=dnum(today()),days=[];
+  for(let i=N-1;i>=0;i--){const d=ymdOf(t-i);const who=new Set((AD.events||[]).filter(e=>ymd(new Date(e.at))===d).map(e=>e.slot));(AD.progress||[]).forEach(p=>{if(p.updated_at&&ymd(new Date(p.updated_at))===d)who.add(p.slot)});
+    const sub=(AD.progress||[]).filter(p=>p.submitted_at&&ymd(new Date(p.submitted_at))===d).length;days.push({d,a:P.filter(x=>who.has(x.u.slot)).length,s:sub})}
+  const W=560,H=150,mx=Math.max(2,P.length),X=i=>20+i*(W-40)/(N-1),Y=v=>H-24-(v/mx)*(H-48);
+  const pts=days.map((d,i)=>[X(i),Y(d.a)]),line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=line+` L ${X(N-1)} ${H-24} L ${X(0)} ${H-24} Z`,dn=['вс','пн','вт','ср','чт','пт','сб'];
+  const lab=days.map((d,i)=>i%2===N%2?'':`<text x="${X(i)}" y="${H-6}" text-anchor="middle">${+d.d.slice(8)}</text>`).join('');
+  const today_=days[N-1].a,avg=(days.reduce((a,d)=>a+d.a,0)/N).toFixed(1).replace('.',',');
+  return {html:`<svg class="o8ch" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="o8g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(155,111,232,.45)"/><stop offset="1" stop-color="rgba(155,111,232,0)"/></linearGradient></defs>${[0,.5,1].map(f=>`<line x1="20" x2="${W-20}" y1="${Y(mx*f)}" y2="${Y(mx*f)}" stroke="rgba(255,255,255,.06)"/>`).join('')}<path d="${area}" fill="url(#o8g)"/><path class="o8ln" d="${line}" fill="none" stroke="#C4A4FF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${pts.map((p,i)=>i===N-1?`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#F4F1EC" stroke="#9B6FE8" stroke-width="2"/>`:'').join('')}<g class="o8lb">${lab}</g></svg>`,today_,avg,subs:days.reduce((a,d)=>a+d.s,0)};}
 function adOverview(){
-  const P=ovPeople(),td0=today(),S=P.filter(x=>!x.cl),K=P.filter(x=>x.cl);
+  const P=ovPeople(),S=P.filter(x=>!x.cl),K=P.filter(x=>x.cl);
   const avg=a=>{const b=a.filter(x=>x.n);return b.length?b.reduce((s,x)=>s+x.d/x.n,0)/b.length:0};
   const share=(a,f)=>a.length?a.filter(f).length/a.length:0;
   const arc=(r,v,g)=>{const L=2*Math.PI*r;return `<circle cx="60" cy="60" r="${r}" stroke="rgba(255,255,255,.07)" stroke-width="10" fill="none"/><circle class="o6arc" cx="60" cy="60" r="${r}" stroke="url(#${g})" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" style="--o:${(L*(1-Math.max(.015,Math.min(1,v)))).toFixed(1)}" transform="rotate(-90 60 60)"/>`};
@@ -1725,16 +1775,20 @@ function adOverview(){
   const sr=(c,l,v)=>`<span class="o7s"><i style="background:${c}"></i>${l}<b>${v}</b></span>`;
   const rev=S.reduce((a,x)=>a+x.rev,0),idle=S.filter(x=>x.idle>=5).length,mine=K.reduce((a,x)=>a+x.mine.length,0),wait=K.reduce((a,x)=>a+x.wait,0),ch=K.reduce((a,x)=>a+x.ch,0);
   const pS=avg(S),pK=avg(K),chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
-  const tile=(h,t,sub,rg,rows,leg)=>`<a class="o7t" href="${h}"><div class="o7h"><span><b>${t}</b><em>${sub}</em></span>${chev}</div><div class="o7b">${rg}<div class="o6st">${rows}</div></div></a>`;
-  const dt=new Date(dnum(td0)*864e5),DW=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const tile=(h,t,sub,rg,rows)=>`<a class="o7t" href="${h}"><div class="o7h"><span><b>${t}</b><em>${sub}</em></span>${chev}</div><div class="o7b">${rg}<div class="o6st">${rows}</div></div></a>`;
+  const row=(h,t,s,lead)=>`<a class="o6r" href="${h}">${lead||''}<span class="o6x"><b>${t}</b>${s?`<em>${s}</em>`:''}</span>${chev}</a>`;
+  const att=ovAtt(P),ev=ovWeek(P),A=ovAct(P),dn=['вс','пн','вт','ср','чт','пт','сб'];
   setTimeout(o5count,40);
   return `<div class="o6">
   <div class="o6hd"><button class="o6out" data-a="out">Выйти</button><h1>Обзор</h1></div>
   <div class="o7g">
-   ${tile('#/students','Ученики',S.length+' '+plur(S.length,'ученик','ученика','учеников')+' · обучение и проверка',ring(pS,share(S,x=>x.idle<=3)),
-     sr('#C4A4FF','Средний прогресс',Math.round(pS*100)+'%')+sr('#9B6FE8','На проверке',rev)+sr('#6A3FD0','Не заходили 5+ дней',idle),'кольца: прогресс · заходили за 3 дня')}
-   ${tile('#/clients','Клиенты',K.length+' '+plur(K.length,'проект','проекта','проектов')+' · работа по траектории',ring(pK,share(K,x=>x.idle<=3)),
-     sr('#C4A4FF','Выполнено по проектам',Math.round(pK*100)+'%')+sr('#9B6FE8','Задачи на тебе за неделю',mine)+sr('#6A3FD0','Ждут ответа клиента',wait)+(ch?sr('#E8A0AE','На правках',ch):''),'кольца: выполнение · заходили за 3 дня')}
+   ${tile('#/students','Ученики',S.length+' '+plur(S.length,'ученик','ученика','учеников')+' · обучение и проверка',ring(pS,share(S,x=>x.idle<=3)),sr('#C4A4FF','Средний прогресс',Math.round(pS*100)+'%')+sr('#9B6FE8','На проверке',rev)+sr('#6A3FD0','Не заходили 5+ дней',idle))}
+   ${tile('#/clients','Клиенты',K.length+' '+plur(K.length,'проект','проекта','проектов')+' · работа по траектории',ring(pK,share(K,x=>x.idle<=3)),sr('#C4A4FF','Выполнено по проектам',Math.round(pK*100)+'%')+sr('#9B6FE8','Задачи на тебе за неделю',mine)+sr('#6A3FD0','Ждут ответа клиента',wait)+(ch?sr('#E8A0AE','На правках',ch):''))}
+  </div>
+  <div class="o8g">
+   <div class="o8c"><div class="o6sec">Требует тебя<span>${att.length}</span></div><div class="o6l">${att.slice(0,5).map(a=>row(a.h,a.t,a.s,`<i class="o6o ${a.w?'w':''}"></i>`)).join('')||'<p class="o6e">Сейчас ничего не ждёт тебя</p>'}</div></div>
+   <div class="o8c"><div class="o6sec">Активность<span>14 дней</span></div><div class="o6l o8a"><div class="o8n"><span><b>${A.today_}</b><em>заходили сегодня</em></span><span><b>${A.avg}</b><em>в среднем за день</em></span><span><b>${A.subs}</b><em>сдано работ</em></span></div>${A.html}</div></div>
+   <div class="o8c"><div class="o6sec">Неделя<span>7 дней</span></div><div class="o6l">${ev.slice(0,5).map(e=>row('#/',e.t,e.s,`<span class="o6d"><b>${+e.d.slice(8)}</b>${dn[new Date(dnum(e.d)*864e5).getUTCDay()]}</span>`)).join('')||'<p class="o6e">На неделю ничего не назначено</p>'}</div></div>
   </div></div>`;
 }
 function adLearn(){
