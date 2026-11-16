@@ -1123,6 +1123,15 @@ body:has(.o6) .tnav,body:has(.o6) .shell{background:transparent}
 .o7s b{margin-left:auto;color:#F4F1EA;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
 .o7t .o6ft{margin-top:16px}
 @media(max-width:820px){.o7g{grid-template-columns:1fr;gap:14px}.o7b{gap:16px}}
+
+/* страницы учеников и клиентов */
+.o6f{flex:none;font:inherit;font-size:12px;color:#A49DB5;background:none;border:0;padding:6px 4px;cursor:pointer;border-bottom:1px dashed rgba(164,157,181,.4)}
+.o6f:hover{color:#F4F1EA}
+.o6w{color:#E8A0AE}
+.o6pad{padding:14px 18px;display:grid;gap:10px}
+.o6old .card,.o6old .t2{background:transparent;border:0;box-shadow:none;padding:0}
+.o6old details summary{cursor:pointer;font-size:14px;font-weight:500;color:#F4F1EA;padding:6px 0}
+.o6g>div>.o6sec:first-child{margin-top:0}
 </style>
 </head>
 <body>
@@ -1645,13 +1654,6 @@ function learnData(){
   return {S,N,rv,q:rv.length,avg,risk,days,tot:days.reduce((a,x)=>a+x[1],0)};
 }
 const isGroup=u=>/групп/i.test(u.plan||'');
-function adStudents(){
-  const sts=(AD.users||[]).filter(u=>u.role==='student'&&u.name),pend=sl=>(AD.progress||[]).filter(p=>p.slot===sl&&p.status==='review').length;
-  const cards=sts.map(u=>{const ph=mmap(u.slot).photo,ls=lastSeen(u.slot),idle=ls?Math.floor((Date.now()-ls)/864e5):99,pn=pend(u.slot),g=isGroup(u);
-    return `<div class="asr" data-a="go" data-h="#/as/${u.slot}"><div class="asa">${ph?`<img src="${esc(ph)}" alt="">`:`<span>${esc((u.name||'?')[0])}</span>`}</div><div class="asx"><b>${esc(u.name)}</b><small>${ls?(idle===0?'заходил сегодня':'заходил '+idle+' дн. назад'):'ещё не заходил'}</small></div>${pn?`<span class="asp2">${pn} на проверке</span>`:''}<button class="asf ${g?'g':''}" data-a="fmt" data-u="${u.slot}" title="Нажми, чтобы сменить формат">${g?'Групповое':'Личное обучение'}</button><i class="asn">${ico('chev')}</i></div>`}).join('');
-  return `<div class="asth"><h1 class="t">Ученики</h1><a class="bt2 sm2" href="#/people">Добавить ученика</a></div><p class="sub">${sts.length} ${plur(sts.length,'ученик','ученика','учеников')}. Нажми на карточку, чтобы открыть кабинет.</p>
-  <div class="asl">${cards||'<div class="card">Учеников пока нет.</div>'}</div>
-  <p class="mu2" style="margin-top:18px"><a class="lk" href="#/learn">Программы и редактор недель</a></p>`}
 function ovPeople(){
   const td0=today(),wk=ymdOf(dnum(td0)+7),out=[];
   (AD.users||[]).filter(u=>(u.role==='student'||u.role==='client')&&u.name).forEach(u=>{
@@ -2212,18 +2214,39 @@ function docsEd(slot,M){
   <div class="row"><button class="bt2 v" data-a="docadd" data-u="${slot}">Добавить и показать клиенту</button></div></div>
   <div style="display:flex;flex-direction:column;gap:10px">${L.map((d,i)=>`<div class="t2"><div style="display:flex;gap:10px;align-items:center"><span class="pl2">${esc(d.g||'Разное')}</span><b>${esc(d.t)}</b><span style="margin-left:auto;display:flex;gap:6px">${i?`<button class="rbt" data-a="docmv" data-u="${slot}" data-i="${i}" title="Выше">↑</button>`:''}<button class="rbt" data-a="docdel" data-u="${slot}" data-id="${d.id}" title="Удалить">✕</button></span></div>${d.x?`<p class="mu2" style="margin-top:8px;white-space:pre-line">${esc(d.x)}</p>`:''}${d.u?`<div style="margin-top:6px"><a class="lk" href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener">${esc(d.u)}</a></div>`:''}${d.n?`<div class="mu2" style="margin-top:6px">${esc(d.n)}</div>`:''}</div>`).join('')||'<div class="t2"><p class="mu2">Пока пусто.</p></div>'}</div>`;
 }
+const o6chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+function adStudents(){
+  const P=ovPeople().filter(x=>!x.cl).sort((a,b)=>(b.rev>0)-(a.rev>0)||b.idle-a.idle);
+  const rev=P.reduce((a,x)=>a+x.rev,0),idle=P.filter(x=>x.idle>=5).length;
+  const seen=x=>x.idle>=99?'ещё не заходил(а)':x.idle===0?'заходил(а) сегодня':x.idle===1?'заходил(а) вчера':'заходил(а) '+x.idle+' дн. назад';
+  const rows=P.map(x=>{const g=isGroup(x.u),pc=x.n?Math.round(x.d/x.n*100):0;
+    return `<div class="o6r" data-a="go" data-h="#/as/${x.u.slot}" style="cursor:pointer"><span class="o6x"><b>${esc(x.u.name)}</b><em><span class="${x.idle>=5?'o6w':''}">${seen(x)}</span>${x.stTxt?' · '+esc(x.stTxt):''}${x.rev?' · '+x.rev+' на проверке':''}</em></span><button class="o6f" data-a="fmt" data-u="${x.u.slot}" title="Нажми, чтобы сменить формат">${g?'Групповое':'Личное'}</button><span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><i><s style="width:${pc}%"></s></i></span>${o6chev}</div>`}).join('');
+  const tool=(h,t,s)=>`<a class="o6r" href="${h}"><span class="o6x"><b>${t}</b><em>${s}</em></span>${o6chev}</a>`;
+  return `<div class="o6"><div class="o6hd"><span class="o6dt">Обучение</span><h1>Ученики</h1><p>${P.length} ${plur(P.length,'ученик','ученика','учеников')}${rev?' · '+rev+' на проверке':''}${idle?' · '+idle+' давно не заходили':''}</p></div>
+  <div class="o6g">
+   <div><div class="o6sec">Все ученики<a href="#/people">Добавить</a></div><div class="o6l">${rows||'<p class="o6e">Учеников пока нет</p>'}</div></div>
+   <div><div class="o6sec">Работа с обучением</div><div class="o6l">
+    ${tool('#/queue','Проверка работ',rev?rev+' '+plur(rev,'работа ждёт','работы ждут','работ ждут')+' оценки':'очередь пуста')}
+    ${tool('#/nudge','Кого поддержать','готовые тексты для напоминаний')}
+    ${tool('#/learn','Программа и недели','темы, задания, материалы')}
+    ${tool('#/funnel','Где застревают','воронка заданий по неделям')}
+    ${tool('#/people','Доступы и коды','участники, траектории, приглашения')}
+   </div></div>
+  </div></div>`;
+}
 function adClients(){
-  const L=(AD.users||[]).filter(u=>u.role==='client').map(clientStat);
-  const wait=L.reduce((a,x)=>a+x.pc+x.pr,0),chg=L.reduce((a,x)=>a+x.ch,0);
-  return `${hd2('Клиенты','Согласование, запросы и отчёты',[])}${invCard()}
-  <div class="g12">
-   <div class="t2 c4"><h3>Ждут ответа клиента</h3><div class="big2" style="margin-top:12px">${wait}</div><div class="mu2" style="margin-top:4px">материалов и запросов</div></div>
-   <div class="t2 c4"><h3>Вернули на правки</h3><div class="big2" style="margin-top:12px">${chg}</div><div class="mu2" style="margin-top:4px">${chg?'нужно доработать':'всё в порядке'}</div></div>
-   <div class="t2 c4"><h3>Клиентов</h3><div class="big2" style="margin-top:12px">${L.length}</div><div class="mu2" style="margin-top:4px">с отдельным кабинетом</div></div>
-   ${L.map(x=>`<div class="t2 cc2 c6" data-a="go" data-h="#/c/${x.u.slot}" style="cursor:pointer"><div class="top"><div class="av2">${esc((x.u.name||'?')[0])}</div><div class="x"><b>${esc(x.u.name)}</b><small>${esc(x.u.plan||'Клиент компании')}</small></div>${SV.arrow.replace('class="i"','class="i" style="width:18px;height:18px;color:var(--muted)"')}</div>
-    <div class="chips" style="margin-top:14px">${x.pc?`<span class="pl2 w">${x.pc} на согласовании</span>`:''}${x.pr?`<span class="pl2 w">${x.pr} ${plur(x.pr,'запрос','запроса','запросов')}</span>`:''}${x.ch?`<span class="pl2 w">правки: ${x.ch}</span>`:''}${x.pc+x.pr+x.ch?'':'<span class="pl2 g">всё согласовано</span>'}<span class="pl2">${x.ls?(x.idle===0?'вход сегодня':'вход '+x.idle+' дн. назад'):'ещё не заходил(а)'}</span>${x.tp?`<span class="pl2">траектория ${x.td}/${x.tp}</span>`:''}</div><div style="margin-top:14px"><button class="bt2 sm2" data-a="go" data-h="#/as/${x.u.slot}">Открыть кабинет клиента</button></div></div>`).join('')}
-   <details class="t2 c12 dt2" ${L.length?'':'open'}><summary>Добавить клиента</summary>${addForm('client')}</details>
-  </div>`;
+  const P=ovPeople().filter(x=>x.cl);
+  const wait=P.reduce((a,x)=>a+x.wait,0),ch=P.reduce((a,x)=>a+x.ch,0),mine=P.reduce((a,x)=>a+x.mine.length,0);
+  const rows=P.map(x=>{const pc=x.n?Math.round(x.d/x.n*100):0,seen=x.idle>=99?'ещё не заходили':x.idle===0?'заходили сегодня':x.idle===1?'заходили вчера':'заходили '+x.idle+' дн. назад';
+    const st=[x.stTxt,x.wait?x.wait+' ждут ответа':'',x.ch?x.ch+' на правках':'',x.mine.length?x.mine.length+' на тебе за неделю':''].filter(Boolean).join(' · ');
+    return `<a class="o6r" href="#/c/${x.u.slot}"><span class="o6x"><b>${esc(x.u.name)}</b><em>${esc(st||seen)}</em></span><span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><em class="${x.idle>=5?'w':''}">${seen}</em><i><s style="width:${pc}%"></s></i></span>${o6chev}</a>`}).join('');
+  const sr=(c,l,v)=>`<span class="o7s"><i style="background:${c}"></i>${l}<b>${v}</b></span>`;
+  return `<div class="o6"><div class="o6hd"><span class="o6dt">Проекты</span><h1>Клиенты</h1><p>${P.length} ${plur(P.length,'проект','проекта','проектов')} · согласование, запросы и отчёты</p></div>
+  <div class="o6g">
+   <div><div class="o6sec">Все клиенты</div><div class="o6l">${rows||'<p class="o6e">Клиентов пока нет</p>'}</div></div>
+   <div><div class="o6sec">Сводка</div><div class="o6l o6pad">${sr('#C4A4FF','Задачи на тебе за неделю',mine)}${sr('#9B6FE8','Ждут ответа клиента',wait)}${sr('#6A3FD0','Вернули на правки',ch)}</div>
+    <div class="o6sec">Доступ и новые клиенты</div><div class="o6l o6pad o6old">${invCard()}<details class="dt2" ${P.length?'':'open'}><summary>Добавить клиента</summary>${addForm('client')}</details></div></div>
+  </div></div>`;
 }
 window.CTAB=window.CTAB||{};
 function adClient(slot){
