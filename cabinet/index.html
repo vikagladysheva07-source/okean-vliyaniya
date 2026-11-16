@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#07070D">
 <title>WIKKI.OCEAN · кабинет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -1046,32 +1047,65 @@ button.sxtd{width:100%;text-align:left;font:inherit;cursor:pointer;background:no
 .tmb .cms{margin-top:16px;padding-top:12px}.cms>b em{font-style:normal;font-weight:400;font-size:12px;color:var(--muted);margin-left:4px}
 .tcm{display:flex;gap:8px;margin-top:10px}.tcm input{flex:1;min-width:0}.tsd{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(225,208,255,.4);background:linear-gradient(180deg,rgba(155,111,232,.4),rgba(91,47,190,.3));color:#fff;display:grid;place-items:center;cursor:pointer}.tsd svg{width:18px;height:18px}
 
-/* обзор v5 */
-.o5ks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
-.o5k{background:#110F1E;border:1px solid #1E1A33;border-radius:20px;padding:16px 18px}
-.o5k b{display:block;font-size:34px;font-weight:500;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-.o5k span{display:block;margin-top:8px;color:var(--muted);font-size:13px}
-.o5k.hot{box-shadow:0 0 0 1px rgba(255,163,163,.35),0 0 24px rgba(255,163,163,.08)}
-.o5g{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px;margin:12px 0}
-.o5s{background:#110F1E;border:1px solid #1E1A33;border-radius:22px;padding:20px;min-width:0}
-.o5s h3{font-size:17px;font-weight:500;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.o5s h3 small{color:var(--muted);font-weight:400;font-size:13px}
-.o5r{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #1E1A33}
-.o5s h3+.o5r{border-top:0}
-.o5o{width:8px;height:8px;border-radius:50%;flex:none;background:rgba(242,237,226,.35)}
-.o5o.w{background:var(--warn);box-shadow:0 0 10px rgba(255,163,163,.5)}
-.o5x{flex:1;min-width:0}.o5x p{font-size:15px}.o5x small,.o5t{color:var(--muted);font-size:13px}
-.o5n{padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid #1E1A33;font-size:13px;white-space:nowrap;text-decoration:none;color:var(--text)}
-.o5n.p{border-color:rgba(196,164,255,.45);box-shadow:0 0 18px rgba(155,111,232,.18)}
-.o5d{width:44px;flex:none;color:var(--muted);font-size:13px}.o5d b{display:block;color:var(--text);font-size:18px;font-weight:500}
-.o5p,.o5hd{display:grid;grid-template-columns:34px minmax(0,1.3fr) 92px 110px 90px;gap:12px;align-items:center}
-.o5p{padding:12px 0;border-top:1px solid #1E1A33;text-decoration:none;color:var(--text)}
-.o5hd{padding:10px 0 4px;color:var(--muted);font-size:12px;letter-spacing:.04em}
-.o5a{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.07);display:grid;place-items:center;font-size:14px}
-.o5b{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:4px}.o5b i{display:block;height:100%;background:rgba(196,164,255,.7)}
-.o5c{font-size:12px;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.06);color:var(--muted);white-space:nowrap}
-.o5c.w{color:var(--warn);background:rgba(255,163,163,.1)}.o5c.o{color:var(--ok);background:rgba(125,221,176,.1)}
-@media(max-width:820px){.o5ks{grid-template-columns:1fr 1fr}.o5g{grid-template-columns:1fr}.o5p,.o5hd{grid-template-columns:34px minmax(0,1fr) 70px}.o5p .o5c4,.o5p .o5c5,.o5hd .o5c4,.o5hd .o5c5{display:none}}
+/* обзор v6: по дизайну VOLYO */
+html:has(.o6){background:#05040A}
+body:has(.o6){background:transparent}
+body:has(.o6):before{content:"";position:fixed;inset:0;z-index:-2;background:url(bg-shark.jpg) center 55%/cover;transform:scale(1.04)}
+body:has(.o6):after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,4,10,.18) 0%,rgba(5,4,10,.35) 30%,rgba(5,4,10,.7) 65%,#05040A 100%)}
+body:has(.o6) .tnav,body:has(.o6) .shell{background:transparent}
+.o6{font-family:'Manrope',var(--f);color:#F4F1EC;padding-bottom:20px}
+.o6hd{padding:26px 2px 18px}
+.o6dt{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#A8A1B8}
+.o6hd h1{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:6px}
+.o6hd p{font-size:13px;color:#B9B3C8;margin-top:5px}
+.o6g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.o6hero,.o6l,.o6msg{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.02)),rgba(10,8,18,.25);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 20px 40px rgba(0,0,0,.35);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
+.o6hero{display:flex;align-items:center;gap:22px;padding:20px;border-radius:24px}
+.o6hero:before,.o6msg:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.o6hero:before{background:linear-gradient(140deg,rgba(196,164,255,.5),rgba(196,164,255,0) 35%,rgba(196,164,255,0) 70%,rgba(155,111,232,.35))}
+.o6svg{width:118px;height:118px;flex:none}
+.o6arc{animation:o6arc 1.2s cubic-bezier(.2,.8,.2,1) .2s forwards}
+@keyframes o6arc{to{stroke-dashoffset:var(--o)}}
+.o6st{flex:1;display:grid;gap:9px;min-width:0}
+.o6st a{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#A49DB5;text-decoration:none;min-height:24px}
+.o6st a i{width:8px;height:8px;border-radius:50%;flex:none}
+.o6st a b{margin-left:auto;color:#F4F1EA;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.o6st a:hover{color:#F4F1EA}
+.o6ft{font-size:12px;color:#A49DB5;padding-top:9px;border-top:1px solid rgba(255,255,255,.08)}
+.o6ft b{color:#F4F1EA;font-weight:600;margin-left:4px}
+.o6ft span{display:block;margin-top:3px;color:#6F6884;font-size:11.5px}
+.o6msg{display:flex;align-items:center;gap:14px;margin-top:12px;padding:22px;border-radius:24px;text-decoration:none;color:#F4F1EC;min-height:110px;transition:transform .3s,box-shadow .3s}
+.o6msg:before{background:linear-gradient(135deg,rgba(196,164,255,.9),rgba(196,164,255,0) 40%,rgba(155,111,232,.7))}
+.o6msg span{flex:1;min-width:0}
+.o6msg small{display:block;font-size:12px;color:#D8CDEE;letter-spacing:.02em}
+.o6msg b{display:block;font-size:19px;font-weight:600;line-height:1.25;margin-top:6px}
+.o6msg em{display:block;font-style:normal;font-size:13px;color:#D8CDEE;margin-top:5px}
+.o6msg:hover,.o6hero:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 36px 70px -20px rgba(0,0,0,.75),0 0 0 1px rgba(196,164,255,.18)}
+.o6hero{transition:transform .3s,box-shadow .3s}
+.o6sec{display:flex;align-items:baseline;justify-content:space-between;font-size:15px;font-weight:500;margin:22px 4px 10px}
+.o6c2>.o6sec:first-child{margin-top:0}
+.o6sec a{font-size:13px;color:#A49DB5;text-decoration:none}.o6sec a:hover{color:#F4F1EA}
+.o6l{border-radius:22px;padding:2px 16px}
+.o6r{display:flex;align-items:center;gap:14px;padding:14px 0;text-decoration:none;color:#F4F1EA;border-top:1px solid rgba(255,255,255,.07)}
+.o6l>.o6r:first-child{border-top:0}
+.o6x{flex:1;min-width:0}
+.o6x b{display:block;font-size:14px;font-weight:500;line-height:1.3}
+.o6x em{display:block;font-style:normal;font-size:12px;color:#A49DB5;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o6ch{width:16px;height:16px;flex:none;fill:none;stroke:#6F6884;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s,stroke .25s}
+.o6r:hover .o6ch,.o6msg:hover .o6ch{transform:translateX(3px);stroke:#F4F1EA}
+.o6o{width:8px;height:8px;border-radius:50%;flex:none;background:#9B6FE8}
+.o6o.w{background:#E8A0AE}
+.o6d{width:34px;flex:none;text-align:center;font-size:11px;color:#A49DB5}.o6d b{display:block;font-size:18px;font-weight:600;color:#F4F1EA;line-height:1.1}
+.o6pv{width:118px;flex:none;text-align:right}
+.o6pv b{display:block;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.o6pv em{display:block;font-style:normal;font-size:12px;color:#A49DB5;margin-top:2px}.o6pv em.w{color:#E8A0AE}
+.o6pv i{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.o6pv s{display:block;height:100%;min-width:3px;border-radius:2px;background:linear-gradient(90deg,#6A3FD0,#C4A4FF);text-decoration:none}
+.o6e{padding:16px 0;font-size:13px;color:#A49DB5}
+.o6hero,.o6msg,.o6l,.o6sec{animation:o6in .6s cubic-bezier(.2,.8,.2,1) both}
+.o6c1 .o6msg{animation-delay:.08s}.o6c1 .o6l{animation-delay:.16s}.o6c2 .o6l{animation-delay:.12s}
+@keyframes o6in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:820px){.o6g{grid-template-columns:1fr;gap:0}.o6c2>.o6sec:first-child{margin-top:22px}.o6svg{width:104px;height:104px}.o6hero{gap:18px;padding:18px}.o6pv{width:96px}}
+@media(prefers-reduced-motion:reduce){.o6hero,.o6msg,.o6l,.o6sec{animation:none}.o6arc{animation:none;stroke-dashoffset:var(--o)}}
 </style>
 </head>
 <body>
@@ -1616,38 +1650,47 @@ function ovPeople(){
   });
   return out;
 }
+function o5count(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.querySelectorAll('.o6st b').forEach(el=>{const n=+el.textContent;if(!n)return;const t0=performance.now(),D=700;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=Math.round(n*e);if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
 function adOverview(){
-  const P=ovPeople(),td0=today(),pl1=(k,a,b,c)=>plur(k,a,b,c);
-  const att=[];
+  const P=ovPeople(),td0=today(),pl1=plur,att=[];
   P.forEach(x=>{
-    if(x.rev)att.push({k:0,w:1,t:`${esc(x.u.name)}: ${x.rev} ${pl1(x.rev,'работа','работы','работ')} на проверке`,s:'Ждёт твоей оценки',b:'Проверить',h:'#/queue'});
-    if(x.ch)att.push({k:1,w:1,t:`${esc(x.u.name)}: ${x.ch} ${pl1(x.ch,'материал','материала','материалов')} на правках`,s:'Клиент вернул на доработку',b:'Открыть',h:x.h});
-    if(x.mine.length){const m=x.mine.slice().sort((a,b)=>a.d<b.d?-1:1)[0];att.push({k:2,w:0,t:`${esc(x.u.name)}: ${x.mine.length} ${pl1(x.mine.length,'задача','задачи','задач')} на тебе до ${fdate(m.d)}`,s:esc(m.t.text),b:'Открыть',h:x.h})}
-    if(x.idle>=5)att.push({k:3,w:1,i:x.idle,t:`${esc(x.u.name)}: ${x.idle>=99?'ни разу не заходил(а)':x.idle+' '+pl1(x.idle,'день','дня','дней')+' без входа'}${x.n?', '+x.d+' из '+x.n+' задач':''}`,s:x.ls?'Последний вход '+fdate(ymd(new Date(x.ls))):'Входа ещё не было',b:'Написать',h:'#/nudge'});
+    if(x.rev)att.push({k:0,w:1,t:`${esc(x.u.name)}: ${x.rev} ${pl1(x.rev,'работа','работы','работ')} на проверке`,s:'Ждёт твоей оценки',h:'#/queue'});
+    if(x.ch)att.push({k:1,w:1,t:`${esc(x.u.name)}: ${x.ch} ${pl1(x.ch,'материал','материала','материалов')} на правках`,s:'Клиент вернул на доработку',h:x.h});
+    if(x.mine.length){const m=x.mine.slice().sort((a,b)=>a.d<b.d?-1:1)[0];att.push({k:2,w:0,t:`${esc(x.u.name)}: ${x.mine.length} ${pl1(x.mine.length,'задача','задачи','задач')} на тебе до ${fdate(m.d)}`,s:esc(m.t.text),h:x.h})}
+    if(x.idle>=5)att.push({k:3,w:1,i:x.idle,t:`${esc(x.u.name)}: ${x.idle>=99?'ещё не заходил(а)':x.idle+' '+pl1(x.idle,'день','дня','дней')+' без входа'}`,s:(x.n?x.d+' из '+x.n+' задач · ':'')+(x.ls?'последний вход '+fdate(ymd(new Date(x.ls))):'входа не было'),h:'#/nudge'});
   });
   att.sort((a,b)=>a.k-b.k||(b.i||0)-(a.i||0));
   const nRev=(AD.progress||[]).filter(p=>p.status==='review').length,nIdle=P.filter(x=>x.idle>=5).length,nWait=P.reduce((a,x)=>a+x.wait,0);
-  const kp=(n,l,hot)=>`<div class="o5k ${hot?'hot':''}"><b>${n}</b><span>${l}</span></div>`;
-  /* неделя: встречи группы и задачи на тебе на ближайшие 7 дней */
+  const st=P.filter(x=>!x.cl&&x.n),cl=P.filter(x=>x.cl&&x.n);
+  const r1=st.length?st.reduce((a,x)=>a+x.d/x.n,0)/st.length:0,r2=P.length?P.filter(x=>x.idle<=3).length/P.length:0,r3=cl.length?cl.reduce((a,x)=>a+x.d/x.n,0)/cl.length:0;
+  const arc=(r,v,g)=>{const L=2*Math.PI*r;return `<circle cx="60" cy="60" r="${r}" stroke="rgba(255,255,255,.07)" stroke-width="10" fill="none"/><circle class="o6arc" cx="60" cy="60" r="${r}" stroke="url(#${g})" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" style="--o:${(L*(1-Math.max(.015,Math.min(1,v)))).toFixed(1)}" transform="rotate(-90 60 60)"/>`};
+  const ring=`<svg class="o6svg" viewBox="0 0 120 120"><defs><linearGradient id="og1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EDE3FF"/><stop offset="1" stop-color="#C4A4FF"/></linearGradient><linearGradient id="og2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B796F5"/><stop offset="1" stop-color="#7E55DA"/></linearGradient><linearGradient id="og3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B5CE0"/><stop offset="1" stop-color="#4A2BA8"/></linearGradient></defs>${arc(52,r1,'og1')}${arc(38,r2,'og2')}${arc(24,r3,'og3')}</svg>`;
+  const sr=(c,l,v,h)=>`<a href="${h}"><i style="background:${c}"></i>${l}<b>${v}</b></a>`;
   const t0=ymdOf(dnum(td0)),t7=ymdOf(dnum(td0)+7),ev=[];
-  C.weeks.forEach(w=>(w.meetings||[]).forEach(m=>{if(m.when){const d=ymd(new Date(m.when));if(d>=t0&&d<=t7)ev.push({d,t:m.t,s:whenTxt(m)})}}));
-  P.forEach(x=>{const g={};x.mine.forEach(m=>{if(m.d>=t0&&m.d<=t7)(g[m.d]=g[m.d]||[]).push(m)});
-    Object.keys(g).forEach(d=>ev.push({d,t:g[d].length>1?esc(x.u.name)+': '+g[d].length+' '+pl1(g[d].length,'задача','задачи','задач')+' на тебе':esc(g[d][0].t.text),s:g[d].length>1?esc(g[d][0].t.text):esc(x.u.name)}))});
-  C.weeks.forEach(w=>{if(w.due&&w.due>=t0&&w.due<=t7&&w.tasks.length)ev.push({d:w.due,t:'Срок: неделя '+w.n+' у группы',s:esc(w.title||'')})});
+  C.weeks.forEach(w=>(w.meetings||[]).forEach(m=>{if(m.when){const d=ymd(new Date(m.when));if(d>=t0&&d<=t7)ev.push({d,t:esc(m.t),s:esc(whenTxt(m))})}}));
+  P.forEach(x=>{const g={};x.mine.forEach(m=>{if(m.d>=t0&&m.d<=t7)(g[m.d]=g[m.d]||[]).push(m)});Object.keys(g).forEach(d=>ev.push({d,t:g[d].length>1?esc(x.u.name)+': '+g[d].length+' '+pl1(g[d].length,'задача','задачи','задач')+' на тебе':esc(g[d][0].t.text),s:g[d].length>1?esc(g[d][0].t.text):esc(x.u.name)}))});
+  C.weeks.forEach(w=>{if(w.due&&w.due>=t0&&w.due<=t7&&w.tasks.length)ev.push({d:w.due,t:'Срок недели '+w.n+' у группы',s:esc(w.title||'')})});
   ev.sort((a,b)=>a.d<b.d?-1:1);
-  const dn=['вс','пн','вт','ср','чт','пт','сб'];
-  const evH=ev.slice(0,6).map(e=>`<div class="o5r"><div class="o5d"><b>${+e.d.slice(8)}</b>${dn[new Date(dnum(e.d)*864e5).getUTCDay()]}</div><div class="o5x"><p>${e.t}</p><small>${e.s}</small></div></div>`).join('');
-  const rows=P.slice().sort((a,b)=>(b.rev>0)-(a.rev>0)||b.idle-a.idle).map(x=>{
-    const pc=x.n?Math.round(x.d/x.n*100):0,chip=x.idle>=99?'<span class="o5c w">не заходил(а)</span>':x.idle>=5?`<span class="o5c w">${x.idle} дн. назад</span>`:x.idle===0?'<span class="o5c o">сегодня</span>':x.idle===1?'<span class="o5c o">вчера</span>':`<span class="o5c">${x.idle} дн. назад</span>`;
-    return `<a class="o5p" href="${x.h}"><div class="o5a">${esc((x.u.name||'?')[0])}</div><div><div>${esc(x.u.name)}</div><small class="o5t">${x.type}${x.stTxt?' · '+esc(x.stTxt):''}</small></div><div><div class="o5b"><i style="width:${pc}%"></i></div><small class="o5t">${x.n?x.d+' из '+x.n:'нет плана'}</small></div><div class="o5c4">${chip}</div><div class="o5c5"><span class="o5n">Профиль</span></div></a>`}).join('');
-  return `<div class="o5">
-  <div class="o5ks">${kp(att.length,'требуют тебя сегодня',att.length)}${kp(nRev,'работ на проверке',nRev)}${kp(nIdle,'не заходили 5+ дней',nIdle)}${kp(nWait,'ждут ответа клиентов',0)}</div>
-  <div class="o5g">
-   <section class="o5s"><h3>Требует тебя <small>по срочности</small></h3>${att.slice(0,6).map(a=>`<div class="o5r"><i class="o5o ${a.w?'w':''}"></i><div class="o5x"><p>${a.t}</p><small>${a.s}</small></div><a class="o5n ${a.k<2||a.k===3?'p':''}" href="${a.h}">${a.b}</a></div>`).join('')||'<p class="o5t" style="padding:14px 0">Сейчас ничего не ждёт тебя.</p>'}</section>
-   <section class="o5s"><h3>Неделя <small>ближайшие 7 дней</small></h3>${evH||'<p class="o5t" style="padding:14px 0">На неделю ничего не назначено.</p>'}</section>
-  </div>
-  <section class="o5s"><h3>Люди <small>сначала те, кому нужна ты</small></h3><div class="o5hd"><span></span><span>ИМЯ И ФОРМАТ</span><span>ВЫПОЛНЕНО</span><span class="o5c4">ПОСЛЕДНИЙ ВХОД</span><span class="o5c5"></span></div>${rows||'<p class="o5t" style="padding:14px 0">Людей пока нет.</p>'}</section>
-  <p class="o5t" style="margin-top:14px"><a class="lk" href="#/settings">Уведомления</a></p></div>`;
+  const dn=['вс','пн','вт','ср','чт','пт','сб'],chev='<svg class="o6ch" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+  const row=(h,t,s,lead,side)=>`<a class="o6r" href="${h}">${lead||''}<span class="o6x"><b>${t}</b>${s?`<em>${s}</em>`:''}</span>${side||''}${chev}</a>`;
+  const top=att[0],rest=att.slice(1,6);
+  const ppl=P.slice().sort((a,b)=>(b.rev>0)-(a.rev>0)||b.idle-a.idle).map(x=>{const pc=x.n?Math.round(x.d/x.n*100):0,seen=x.idle>=99?'не заходил(а)':x.idle===0?'сегодня':x.idle===1?'вчера':x.idle+' дн. назад';
+    return row(x.h,esc(x.u.name),x.type+(x.stTxt?' · '+esc(x.stTxt):''),'',`<span class="o6pv"><b>${x.n?x.d+' из '+x.n:'—'}</b><em class="${x.idle>=5?'w':''}">${seen}</em><i><s style="width:${pc}%"></s></i></span>`)}).join('');
+  const dt=new Date(dnum(td0)*864e5),DW=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  setTimeout(o5count,40);
+  return `<div class="o6">
+  <div class="o6hd"><span class="o6dt">${DW[dt.getUTCDay()]}, ${fdate(t0)}</span><h1>Обзор</h1><p>${att.length?att.length+' '+pl1(att.length,'вопрос ждёт','вопроса ждут','вопросов ждут')+' тебя':'Сегодня всё спокойно'}</p></div>
+  <div class="o6g">
+   <div class="o6c1">
+    <div class="o6hero">${ring}<div class="o6st">${sr('#C4A4FF','Требуют тебя',att.length,'#/')}${sr('#9B6FE8','На проверке',nRev,'#/queue')}${sr('#6A3FD0','Не заходили 5+ дней',nIdle,'#/nudge')}${sr('#4A2BA8','Ждут клиентов',nWait,'#/students')}<div class="o6ft">Людей в работе <b>${P.length}</b><span>кольца: прогресс · активность · проект</span></div></div></div>
+    ${top?`<a class="o6msg" href="${top.h}"><span><small>Главное сейчас</small><b>${top.t}</b><em>${top.s}</em></span>${chev}</a>`:''}
+    <div class="o6sec">Неделя</div><div class="o6l">${ev.slice(0,6).map(e=>row('#/',e.t,e.s,`<span class="o6d"><b>${+e.d.slice(8)}</b>${dn[new Date(dnum(e.d)*864e5).getUTCDay()]}</span>`)).join('')||'<p class="o6e">На неделю ничего не назначено</p>'}</div>
+   </div>
+   <div class="o6c2">
+    ${rest.length?`<div class="o6sec">Требует тебя</div><div class="o6l">${rest.map(a=>row(a.h,a.t,a.s,`<i class="o6o ${a.w?'w':''}"></i>`)).join('')}</div>`:''}
+    <div class="o6sec">Люди<a href="#/students">Все</a></div><div class="o6l">${ppl||'<p class="o6e">Людей пока нет</p>'}</div>
+   </div>
+  </div></div>`;
 }
 function adLearn(){
   const L=learnData(),{S,rv,q,avg,risk,days,tot}=L;
@@ -2324,8 +2367,8 @@ const A={
  pbfreset(){const v=(window.PBF&&PBF.v)||'status';window.PBF=Object.assign({v},PBD);render(true)},
  stopen(el){location.hash=(window.ASPFX||'#/')+'task/'+el.dataset.sid},
  async rsub(el){const n=+el.dataset.n,f=rfields();if(!f.a.trim()&&!f.b.trim()){toast('Напиши, что сделал, и главный результат');return}el.disabled=true;if(await rsave(n,'submit',f)){toast('Отчёт отправлен');render(true)}else el.disabled=false},
- async rdraft(el){const n=+el.dataset.n;if(await rsave(n,'draft',rfields())){toast('Черновик сохранён');render(true)}},
- async rwd(el){const n=+el.dataset.n;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
+ async rdraft(el){const n=+el.textContent;if(await rsave(n,'draft',rfields())){toast('Черновик сохранён');render(true)}},
+ async rwd(el){const n=+el.textContent;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
  gedit(){window.GEDIT=true;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
  gcancel(){window.GEDIT=false;render(true)},
  async gsave(){const t=($('#wg-t').value||'').trim(),gp=[...document.querySelectorAll('.sxgpi')].filter(x=>!x.id).map(x=>x.value.trim()).filter(Boolean).slice(0,3);
