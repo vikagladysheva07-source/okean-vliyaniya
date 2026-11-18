@@ -1215,6 +1215,38 @@ body.adm .sxic,body.adm .sxh3 .ic,body.adm .sxfc .ic,body.adm .sxbt i,body.adm .
 body.adm .sxup,body.adm .sxbtn{background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03)),rgba(10,8,18,.3)!important;border:1px solid rgba(255,255,255,.16)!important;color:#F4F1EC!important;border-radius:12px!important}
 body.adm .sxfc>div,body.adm .sxfc a{background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.1)!important}
 body.adm .bgt .ib,body.adm .bgt.b .ib,body.adm .mat .ic,body.adm .tile .ic{background:none!important;border:0!important;box-shadow:none!important;color:#C4A4FF}
+
+/* === v2: задачи и фокусы (кружок как в VOLYO, срок, кольцо прогресса фокуса) === */
+.sxt .sxtn{align-items:center;gap:12px}
+.sxt .sxtc{text-align:left!important}
+.sxt .sxtc em{display:block;font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#C4A4FF;font-weight:600;margin-bottom:6px}
+.sxt .sxtc b{font-size:19px!important;font-weight:500;letter-spacing:-.01em;line-height:1.25}
+.sxt .sxtc span{display:block;margin-top:4px;font-size:13px!important;color:var(--muted)}
+.sxt .sxtl{margin-top:12px}
+.sxt .sxtd.td{align-items:center;gap:12px;min-height:58px;padding:11px 14px 11px 12px!important;margin-top:8px!important;border-radius:16px!important;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.01)),rgba(0,0,0,.22)!important;border:1px solid rgba(255,255,255,.07)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.sxt .sxtd.td:hover{border-color:rgba(196,164,255,.28)!important}
+.sxt .sxtd.td .sxck2{width:26px;height:26px;border:1.6px solid rgba(255,255,255,.35);background:none}
+.sxt .sxtd.td .sxck2 svg{width:14px;height:14px;color:#fff}
+.sxt .sxtd.td .sxck2.r{border-color:#9B6FE8;background:linear-gradient(90deg,rgba(155,111,232,.75) 50%,transparent 50%)}
+.sxt .sxtd.td .sxck2.d{background:linear-gradient(180deg,#9B6DFA,#6A3BD9);border-color:transparent;box-shadow:0 0 12px rgba(139,92,246,.5)}
+.sxt .sxtd.td .sxtt2{display:block;overflow:visible;font-size:14.5px;line-height:1.38;padding:2px 0;-webkit-line-clamp:unset}
+.tkdue{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;line-height:1;color:var(--muted);white-space:nowrap;padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035)}
+.tkdue svg{width:13px;height:13px;opacity:.75}
+.tkdue.soon{color:#E4D8FF;border-color:rgba(196,164,255,.38)}
+.tkdue.late{color:#fff;font-weight:600;border-color:rgba(255,255,255,.42)}
+.tkdue.dn{opacity:.45}
+@media(max-width:560px){.sxt .sxtd.td{flex-wrap:wrap;row-gap:8px}.sxt .sxtd.td .sxtt2{flex:1 1 calc(100% - 40px)}.sxt .sxtd.td .tkdue{margin-left:38px}}
+/* фокусы: кольцо сбоку, по одному в строке */
+.sxfc>div{grid-template-columns:1fr!important;gap:8px!important}
+.sxfk{display:grid!important;grid-template-columns:46px minmax(0,1fr)!important;gap:14px!important;align-items:center!important;padding:11px 14px 11px 12px!important}
+.sxfk .fkr{position:relative;width:46px;height:46px}
+.sxfk .fkr svg{width:46px;height:46px;transform:rotate(-90deg);display:block}
+.sxfk .fkr b{position:absolute;inset:0;display:grid;place-items:center;font-size:11.5px;font-weight:600;letter-spacing:-.01em;color:#F2EDE2}
+.sxfk p{font-size:13.5px!important;line-height:1.42!important}
+.tc .tcb{width:24px;height:24px;border:1.6px solid rgba(255,255,255,.35)}.tc .tcb.doing{border-color:#9B6FE8;background:linear-gradient(90deg,rgba(155,111,232,.75) 50%,transparent 50%)}.tc .tcb.done{background:linear-gradient(180deg,#9B6DFA,#6A3BD9);border-color:transparent;box-shadow:0 0 12px rgba(139,92,246,.5)}
+.tc .tx .tkdue,.tkv .tkdue{padding:5px 10px;font-size:12px}.tc .tx .tkdue{margin-top:8px}.tc .tm .tkdue{margin:0}
+.tkv .tkdue{margin-left:auto}
+.sxfe{display:flex;gap:8px;margin-bottom:8px}.sxfe .sxgpi{flex:1;min-width:0;margin:0}.sxfe .sxfw{width:96px;flex:none;padding:11px 12px;border-radius:14px;font-size:14px}.sxfc>small.fwh{display:block;margin:2px 0 8px}
 </style>
 </head>
 <body>
@@ -1528,14 +1560,14 @@ function homeV(){
      ${iv!=null?`<div class="sxn">${fx(iv)}<small>из 50</small></div>`:`<div class="sxn">—<small>из 50</small></div><p class="sxsub" style="margin-top:8px">Пройди тест и впиши результат, чтобы видеть свой рост.</p><div class="sxrow"><a class="sxbtn" href="#/test">Пройти тест</a><a class="sxbtn g" href="#/me">Вписать</a></div>`}</div>`;
   }
   /* цель программы + кольцо прогресса */
-  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,RF=ST.meta.refl||{},GP=(RF.gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(RF.gp||[])[i]||''),GX=RF.gx||{};
+  const wk1=C.weeks.find(w=>w.n===1)||C.weeks[0],wkL=C.weeks[C.weeks.length-1],t0=dnum(wk1.opens),t1=dnum(wkL.due),tp=Math.max(0,Math.min(100,Math.round((dnum(today())-t0+1)/(t1-t0+1)*100))),R=52,L=2*Math.PI*R,gv=String(ST.meta.goal||'').trim(),gedit=!!window.GEDIT,RF=ST.meta.refl||{},GP=(RF.gp||[]).filter(x=>x&&String(x).trim()),GPe=[0,1,2].map(i=>(RF.gp||[])[i]||''),GX=RF.gx||{},FPL=stPlanOf();
   const ring=`<div class="sx sxr"><div class="sxgh"><span>Цель программы</span>${!gedit?`<button class="sxar" data-a="gedit" aria-label="Записать цель" title="${gv?'Изменить цель':'Записать цель'}">✎</button>`:''}</div>
    <div class="sxrl">${gedit?`<textarea id="wg-t" class="sxgt" maxlength="400" placeholder="Например: К 19 декабря у меня 5 оплаченных клиентов">${esc(gv)}</textarea>
      <input id="wg-w" class="sxgpi" type="text" maxlength="220" placeholder="Зачем тебе это: что изменится, когда цель достигнута" value="${esc(GX.why||'')}">
-     <div class="sxgpe"><small>Три фокуса, чтобы достичь цель (с метрикой и сроком)</small>${GPe.map((x,i)=>`<input class="sxgpi" type="text" maxlength="220" placeholder="Фокус ${i+1}" value="${esc(x)}">`).join('')}</div>
+     <div class="sxgpe"><small>Три фокуса, чтобы достичь цель (с метрикой и сроком). Справа недели, в которых он делается: по ним считается прогресс.</small>${GPe.map((x,i)=>`<div class="sxfe"><input class="sxgpi" type="text" maxlength="220" placeholder="Фокус ${i+1}" value="${esc(x)}"><input class="sxfw" type="text" maxlength="9" inputmode="numeric" placeholder="Нед. 1–3" title="В каких неделях делается фокус" value="${esc((GX.fw||[])[i]||'')}"></div>`).join('')}</div>
      <div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
    :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}`}</div>
-   ${!gedit&&GP.length?`<div class="sxfc"><small>${ico('flag')}Три фокуса</small><div>${GP.map((x,i)=>`<div class="sxfk"><i>${ico(['tasks','chat','chart'][i%3])}</i><p>${esc(x)}</p></div>`).join('')}</div></div>`:''}
+   ${!gedit&&GP.length?`<div class="sxfc"><small>${ico('flag')}Три фокуса</small><div>${GP.map((x,i)=>`<div class="sxfk" title="${GX.fw&&GX.fw[i]?'Недели '+esc(GX.fw[i]):'Недели не привязаны'}">${focusRing(focusPct(FPL,(GX.fw||[])[i]))}<p>${esc(x)}</p></div>`).join('')}</div></div>`:''}
    <div class="sxrg2"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
    <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div></div>`;
   /* траектория + задачи текущего этапа */
@@ -1545,18 +1577,23 @@ function homeV(){
     return `<a class="sxw2 ${cur?'cur':''} ${x.done?'ok':''}" href="#/plan"><div class="sxw2t"><em>${esc(P.kick||'Этап')}${cur?' · сейчас':''}</em><span>${esc(x.st.period||'')}</span></div><h4>${esc(P.name)}</h4><div class="sxw2g"><span>${x.d} из ${x.n}</span></div><i class="sxw2a">${x.done?SV.check:ico('chev')}</i></a>`}).join('');
   const prog=`<div class="sx sxa0"><div class="sxh">Траектория<a class="sxar" href="#/plan" aria-label="Открыть траекторию">${ico('chev')}</a></div><div class="sxwg">${wb||'<p class="sxsub">Траектория скоро появится.</p>'}</div></div>`;
   const cs2=stg[curI]||{st:{tasks:[],title:''},n:0,d:0},csI=curI;
-  const items=(cs2.st.tasks||[]).map((t,ti)=>({t,ti})).sort((a,b)=>((a.t.status==='done')-(b.t.status==='done'))||(a.ti-b.ti));
-  const trow2=x=>{const d=x.t.status==='done';return `<div class="sxtd td"><button class="sxcb" data-a="pbtoggle" data-s="${csI}" data-t="${x.ti}" aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':x.t.status==='doing'?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="pbopen" data-s="${csI}" data-t="${x.ti}">${esc(x.t.text)}</button></div>`};
+  const stDue=cs2.st.end||'',td1=today(),CALI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>';
+  const items=(cs2.st.tasks||[]).map((t,ti)=>({t,ti,d:t.due||stDue})).sort((a,b)=>((a.t.status==='done')-(b.t.status==='done'))||((a.d||'9')<(b.d||'9')?-1:(a.d||'9')>(b.d||'9')?1:0)||(a.ti-b.ti));
+  const trow2=x=>{const d=x.t.status==='done';return `<div class="sxtd td"><button class="sxcb" data-a="pbtoggle" data-s="${csI}" data-t="${x.ti}" aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':x.t.status==='doing'?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="pbopen" data-s="${csI}" data-t="${x.ti}">${esc(x.t.text)}</button>${dueChip(x.d,d,td1)}</div>`};
   const CP=rmParts(cs2.st);
-  const tasks=`<div class="sx sxt"><div class="sxtn"><div class="sxtc" style="flex:1"><b>${esc(CP.kick||'Задачи')}${CP.name?' · '+esc(CP.name):''}</b><span>${cs2.d} из ${cs2.n} выполнено${cs2.st.end?', до '+fdate(cs2.st.end):''}</span></div><a class="sxar" href="#/tasks" aria-label="Вся доска задач">${ico('chev')}</a></div>
+  const tasks=`<div class="sx sxt"><div class="sxtn"><div class="sxtc" style="flex:1"><em>Задачи</em><b>${esc(CP.kick||'Этап')}${CP.name?' · '+esc(CP.name):''}</b><span>${cs2.d} из ${cs2.n} выполнено${cs2.st.end?' · до '+fdate(cs2.st.end):''}</span></div><a class="sxar" href="#/tasks" aria-label="Вся доска задач">${ico('chev')}</a></div>
    <div class="sxtl">${items.map(trow2).join('')||'<p class="sxsub">Задач нет.</p>'}</div><div class="sxrow" style="margin-top:12px"><a class="sxbtn g" href="#/tasks">Вся доска</a></div></div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
   <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
   
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal()}`;
 }
+const CALI2='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>';
+function dueChip(d,done,td){if(!d)return '';const n=dnum(d)-dnum(td),cls=done?'dn':n<0?'late':n<=1?'soon':'',lb=n===0?'сегодня':n===1?'завтра':fdate(d);return `<span class="tkdue ${cls}" title="${n<0&&!done?'срок прошёл':''}">${CALI2}${lb}</span>`}
+function focusPct(pl,fw){const m=String(fw||'').match(/(\d+)\D*(\d+)?/);if(!m)return null;const a=+m[1],b=+(m[2]||m[1]);let n=0,d=0;(pl.stages||[]).forEach(st=>{const k=String(st.title||'').match(/^Неделя (\d+)/);if(!k)return;const w=+k[1];if(w<a||w>b)return;(st.tasks||[]).forEach(t=>{n++;if(t.status==='done')d++})});return n?Math.round(d/n*100):0}
+function focusRing(p){const R=19,L=2*Math.PI*R,v=p===null?0:p;return `<div class="fkr"><svg viewBox="0 0 46 46"><defs><linearGradient id="fkg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient></defs><circle cx="23" cy="23" r="${R}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="4"/><circle cx="23" cy="23" r="${R}" fill="none" stroke="url(#fkg)" stroke-width="4" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-v/100)).toFixed(1)}"/></svg><b>${p===null?'—':p+'%'}</b></div>`}
 function tcardHtml(c,asb,td0,hideChip){const d=c.s==='done',late=!d&&c.w&&c.w.due&&c.w.due<td0,chip=c.k==='m'?(c.x.w!==undefined&&c.x.w!==null&&!isNaN(c.x.w)?'Моя · нед. '+c.x.w:'Моя задача'):(c.w.n>6?'Сопровождение':'Неделя '+c.w.n);
-  return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':c.s==='doing'?'r':''}">${d?SV.check:''}</span></button><div class="tx">${hideChip&&!late?'':`<div class="tm" style="margin:0 0 4px">${hideChip?'':`<span class="pl2 kst">${esc(chip)}</span>`}${late?'<small class="late">срок прошёл</small>':''}</div>`}<button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button></div></div>`}
+  return `<div class="tc ${d?'done':''}" draggable="true" data-sid="${esc(c.id)}" data-k="${c.k}"><button class="sxcb" ${asb?'disabled':`data-a="${c.k==='m'?'todotg':'chk'}" data-id="${esc(c.id)}"`} aria-label="Отметить выполненной"><span class="sxck2 ${d?'d':c.s==='doing'?'r':''}">${d?SV.check:''}</span></button><div class="tx">${hideChip&&!late?'':`<div class="tm" style="margin:0 0 4px">${hideChip?'':`<span class="pl2 kst">${esc(chip)}</span>`}${late?'<small class="late">срок прошёл</small>':''}</div>`}<button class="sxtt2 ${d?'dn':''}" data-a="topen" data-id="${esc(c.id)}" data-k="${c.k}">${esc(c.text)}</button>${c.k==='p'&&c.w?dueChip(c.w.due,d,td0):''}</div></div>`}
 function stTasks(adm){
   const COLS=[['todo','Не выполнено'],['doing','В работе'],['done','Готово']],cards={todo:[],doing:[],done:[]},locked=[];
   const f=Object.assign({},PBD,window.PBF),td=today(),WK=C.weeks.filter(w=>w.tasks.length);
@@ -2048,7 +2085,7 @@ function rmModal(x,i,n){
    ${(info.built||[]).length?`<h4>Уже собрано</h4><ul class="rmul rgd">${li(info.built)}</ul>`:''}
    ${does.length?`<h4>Что делаем</h4><ul class="rmul">${li(does)}</ul>`:''}
    ${res.length?`<h4>Что будет готово</h4><ul class="rmul rgo">${li(res)}</ul>`:''}
-   <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?(ME.role==='student'?'ты':'вы'):'Виктория'}</em>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}</div>`).join('')}</div>
+   <h4>Задачи этапа</h4><div class="rmtk">${(x.st.tasks||[]).map(t=>`<div class="tkv"><i class="tkst ${t.status}"></i><span class="${t.status==='done'?'dn':''}">${esc(t.text)}</span><em class="who2 ${t.who}">${t.who==='client'?(ME.role==='student'?'ты':'вы'):'Виктория'}</em>${t.due&&t.status!=='done'?dueChip(t.due,false,today()):''}</div>`).join('')}</div>
   ${x.st.wk?`<div class="row" style="margin-top:16px"><button class="btn s" data-a="go" data-h="#/week/${x.st.wk}">Отчёт и материалы недели</button></div>`:''}</div></div>`;
 }
 function drawRoad(){
@@ -2249,7 +2286,7 @@ function boardBar(pl,adm){
 const pbView=()=>(window.PBF&&PBF.v)||'status';
 function pbCardHtml(si,ti,t,ro){
   const tx=esc(t.text||'Без названия');
-  return `<div class="tc ${t.status}" ${ro?'':`draggable="true" data-a="pbopen"`} data-s="${si}" data-t="${ti}"><button class="tcb ${t.status}" ${ro?'tabindex="-1" style="pointer-events:none"':`data-a="pbtoggle" data-s="${si}" data-t="${ti}" title="Отметить выполненной"`}></button><div class="tx"><p>${tx}</p><div class="tm"><span class="who2 ${t.who}">${t.who==='client'?(ro?'Вы':'Клиент'):(ro?'Виктория':'Я')}</span>${t.due&&t.status!=='done'?`<small>до ${fdate(t.due)}</small>`:''}${t.status==='doing'?'<small class="dg">в работе</small>':''}</div></div></div>`;
+  return `<div class="tc ${t.status}" ${ro?'':`draggable="true" data-a="pbopen"`} data-s="${si}" data-t="${ti}"><button class="tcb ${t.status}" ${ro?'tabindex="-1" style="pointer-events:none"':`data-a="pbtoggle" data-s="${si}" data-t="${ti}" title="Отметить выполненной"`}></button><div class="tx"><p>${tx}</p><div class="tm"><span class="who2 ${t.who}">${t.who==='client'?(ro?'Вы':'Клиент'):(ro?'Виктория':'Я')}</span>${t.due&&t.status!=='done'?dueChip(t.due,false,today()):''}${t.status==='doing'?'<small class="dg">в работе</small>':''}</div></div></div>`;
 }
 function planLists(slot){
   const P=PLD.plan,f=window.PBF||{st:'all',who:'all'},curI=pbCur(P);
@@ -2499,8 +2536,8 @@ const A={
  async rwd(el){const n=+el.textContent;if(await rsave(n,'withdraw',repOf('rep'+n))){toast('Отчёт вернулся к тебе');render(true)}},
  gedit(){window.GEDIT=true;window.AFTER=()=>{const x=$('#wg-t');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};render(true)},
  gcancel(){window.GEDIT=false;render(true)},
- async gsave(){const t=($('#wg-t').value||'').trim(),gp=[...document.querySelectorAll('.sxgpi')].filter(x=>!x.id).map(x=>x.value.trim()).filter(Boolean).slice(0,3);
-  const gx={why:($('#wg-w')||{}).value?$('#wg-w').value.trim():''};
+ async gsave(){const t=($('#wg-t').value||'').trim(),rows=[...document.querySelectorAll('.sxfe')].map(r=>({t:r.querySelector('.sxgpi').value.trim(),w:(r.querySelector('.sxfw').value||'').trim()})).filter(r=>r.t).slice(0,3),gp=rows.map(r=>r.t);
+  const gx={why:($('#wg-w')||{}).value?$('#wg-w').value.trim():'',fw:rows.map(r=>r.w)};
   if(!await putMeta('goal',t))return;const r=Object.assign({},CM().refl||{});r.gp=gp;r.gx=gx;if(!await putMeta('refl',r))return;
   window.GEDIT=false;toast('Цель сохранена');render(true)},
  priedit(el){window.PEDN=+el.dataset.n;render(true)},
