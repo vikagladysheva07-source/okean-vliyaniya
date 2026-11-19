@@ -1182,9 +1182,9 @@ body.adm .tabbar a.on{background:rgba(255,255,255,.07)!important;color:#F4F1EC!i
 
 /* админка: без окна-плашки, карточки прямо на фоне, меню слева плавает */
 @media(min-width:900px){
- body.adm .main,body.adm .main.wide{max-width:1240px!important;margin:0 auto;padding:8px 40px 40px 132px!important}
- body.adm .tabbar{position:fixed!important;left:max(20px,calc(50% - 620px - 10px));top:50%;transform:translateY(-50%);bottom:auto;right:auto;padding:0!important;background:none!important;z-index:30}
- body.adm .tabbar div{flex-direction:column;width:76px;max-width:none;gap:6px;padding:8px!important;border-radius:24px!important}
+ body.adm .main,body.adm .main.wide{max-width:1240px!important;margin:0 auto;padding:8px 40px 40px 152px!important}
+ body.adm .tabbar{position:fixed!important;left:max(16px,calc(50% - 620px - 10px));top:50%;transform:translateY(-50%);bottom:auto;right:auto;padding:0!important;background:none!important;z-index:30}
+ body.adm .tabbar div{flex-direction:column;width:96px;max-width:none;gap:6px;padding:8px!important;border-radius:24px!important}
  body.adm .tabbar a{padding:12px 4px 10px!important;border-radius:16px!important}
  body.adm .o6hd{padding-top:44px}
 }
@@ -1256,6 +1256,9 @@ body.adm .bgt .ib,body.adm .bgt.b .ib,body.adm .mat .ic,body.adm .tile .ic{backg
  .sxgl.open{display:block;-webkit-line-clamp:unset}
  .sxgl:not(.open):after{content:""}
 }
+
+body.adm .tabbar a{font-size:10.5px!important;letter-spacing:-.01em;overflow:visible}
+@media(max-width:899px){body.adm .tabbar a{padding:9px 1px 8px!important;font-size:9.5px!important;font-weight:600;letter-spacing:-.02em}body.adm .tabbar div{gap:0}}
 </style>
 </head>
 <body>
