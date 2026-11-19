@@ -1247,6 +1247,15 @@ body.adm .bgt .ib,body.adm .bgt.b .ib,body.adm .mat .ic,body.adm .tile .ic{backg
 .tc .tx .tkdue,.tkv .tkdue{padding:5px 10px;font-size:12px}.tc .tx .tkdue{margin-top:8px}.tc .tm .tkdue{margin:0}
 .tkv .tkdue{margin-left:auto}
 .sxfe{display:flex;gap:8px;margin-bottom:8px}.sxfe .sxgpi{flex:1;min-width:0;margin:0}.sxfe .sxfw{width:96px;flex:none;padding:11px 12px;border-radius:14px;font-size:14px}.sxfc>small.fwh{display:block;margin:2px 0 8px}
+
+/* кабинет ученика на телефоне: задачи первыми, цель свёрнута */
+.sxold{display:block;font-size:11.5px;color:#E8A0AE;margin-top:3px;font-weight:400}
+@media(max-width:700px){
+ .sxg>.sxt{order:-2}.sxg>.sxr{order:-1}.sxg>.sxa0{order:1}.sxg>.sxi,.sxg>.sxi2{order:2}.sxg>.sxp{order:3}
+ .sxgl{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+ .sxgl.open{display:block;-webkit-line-clamp:unset}
+ .sxgl:not(.open):after{content:""}
+}
 </style>
 </head>
 <body>
@@ -1535,7 +1544,7 @@ function homeV(){
   const news=(ST.meta.news||[]).filter(n=>!(ST.meta.seen||{})[n.id]);
   const nm=firstName(ME.name)||'друг',wc=wcount(cw),WT=cw.tasks.filter(vis).length,wp=WT?Math.round(wc.done/WT*100):0,pp=pct(c.done,N);
   const pn=v=>parseFloat(String(v).replace(',','.'))||0,fx=n=>String(Math.round(n*10)/10).replace('.',','),ix=ST.meta.idx||{},i0=pn(ix.start),i1=pn(ix.final),has0=String(ix.start||'')!=='',has1=String(ix.final||'')!=='',iv=has1?i1:has0?i0:null;
-  const ci=Math.max(0,V.findIndex(w=>wcur(w,cw))),wnum=cw.n>6?'Сопровождение':cw.n===0?'Подготовка':'Неделя '+cw.n;
+  const WKN=wkNumNow(stPlanOf()),ci=Math.max(0,V.findIndex(w=>wcur(w,cw))),wnum=cw.n>6?'Сопровождение':cw.n===0?'Подготовка':'Неделя '+cw.n;
   const as=!!window.ASPFX,ph=ST.meta.photo;
   const cap=(l,v,w,cls)=>`<div class="sxc"><span>${l}</span><div class="sxct ${cls||''}"><i style="width:${Math.max(18,w)}%">${v}</i></div></div>`;
   /* фото */
@@ -1566,25 +1575,25 @@ function homeV(){
      <input id="wg-w" class="sxgpi" type="text" maxlength="220" placeholder="Зачем тебе это: что изменится, когда цель достигнута" value="${esc(GX.why||'')}">
      <div class="sxgpe"><small>Три фокуса, чтобы достичь цель (с метрикой и сроком). Справа недели, в которых он делается: по ним считается прогресс.</small>${GPe.map((x,i)=>`<div class="sxfe"><input class="sxgpi" type="text" maxlength="220" placeholder="Фокус ${i+1}" value="${esc(x)}"><input class="sxfw" type="text" maxlength="9" inputmode="numeric" placeholder="Нед. 1–3" title="В каких неделях делается фокус" value="${esc((GX.fw||[])[i]||'')}"></div>`).join('')}</div>
      <div class="sxrow"><button class="sxbtn" data-a="gsave">Сохранить</button><button class="sxbtn g" data-a="gcancel">Отмена</button></div>`
-   :`<p class="sxgl ${gv?'':'e'}">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}`}</div>
+   :`<p class="sxgl ${gv?'':'e'}" onclick="this.classList.toggle('open')">${gv?esc(gv):'Запиши, чего хочешь достичь за программу.'}</p>${GX.why?`<p class="sxgw">${esc(GX.why)}</p>`:''}`}</div>
    ${!gedit&&GP.length?`<div class="sxfc"><small>${ico('flag')}Три фокуса</small><div>${GP.map((x,i)=>`<div class="sxfk" title="${GX.fw&&GX.fw[i]?'Недели '+esc(GX.fw[i]):'Недели не привязаны'}">${focusRing(focusPct(FPL,(GX.fw||[])[i]))}<p>${esc(x)}</p></div>`).join('')}</div></div>`:''}
    <div class="sxrg2"><div class="sxrg"><svg viewBox="0 0 130 130"><defs><linearGradient id="sxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3D4FF"/><stop offset="1" stop-color="#8A5FE0"/></linearGradient><filter id="sxgf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><circle cx="65" cy="65" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="#9B6FE8" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)" filter="url(#sxgf)" opacity=".7"/><circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#sxg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${L.toFixed(1)}" stroke-dashoffset="${(L*(1-tp/100)).toFixed(1)}" transform="rotate(-90 65 65)"/></svg><div class="sxrc"><b>${tp}%</b></div></div>
-   <div class="sxgf">${cw.n>6?'Сопровождение':'Неделя '+Math.max(cw.n,1)+' из '+wkL.n}</div></div></div>`;
+   <div class="sxgf">${WKN>6?'Сопровождение':'Неделя '+WKN+' из '+wkL.n}</div></div></div>`;
   /* траектория + задачи текущего этапа */
   const PLs=stPlanOf();window.PLD={slot:ME.slot,plan:PLs};
-  const stg=(PLs.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=Math.max(0,stg.findIndex(x=>!x.done));
+  const stg=(PLs.stages||[]).map(st=>{const n=(st.tasks||[]).length,d=(st.tasks||[]).filter(t=>t.status==='done').length;return {st,n,d,done:n>0&&d===n}}),curI=Math.max(0,stDateStage(PLs));
   const wb=stg.map((x,i)=>{const P=rmParts(x.st),cur=i===curI&&!x.done;
     return `<a class="sxw2 ${cur?'cur':''} ${x.done?'ok':''}" href="#/plan"><div class="sxw2t"><em>${esc(P.kick||'Этап')}${cur?' · сейчас':''}</em><span>${esc(x.st.period||'')}</span></div><h4>${esc(P.name)}</h4><div class="sxw2g"><span>${x.d} из ${x.n}</span></div><i class="sxw2a">${x.done?SV.check:ico('chev')}</i></a>`}).join('');
   const prog=`<div class="sx sxa0"><div class="sxh">Траектория<a class="sxar" href="#/plan" aria-label="Открыть траекторию">${ico('chev')}</a></div><div class="sxwg">${wb||'<p class="sxsub">Траектория скоро появится.</p>'}</div></div>`;
   const cs2=stg[curI]||{st:{tasks:[],title:''},n:0,d:0},csI=curI;
   const stDue=cs2.st.end||'',td1=today(),CALI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>';
-  const items=(cs2.st.tasks||[]).map((t,ti)=>({t,ti,d:t.due||stDue})).sort((a,b)=>((a.t.status==='done')-(b.t.status==='done'))||((a.d||'9')<(b.d||'9')?-1:(a.d||'9')>(b.d||'9')?1:0)||(a.ti-b.ti));
-  const trow2=x=>{const d=x.t.status==='done';return `<div class="sxtd td"><button class="sxcb" data-a="pbtoggle" data-s="${csI}" data-t="${x.ti}" aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':x.t.status==='doing'?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="pbopen" data-s="${csI}" data-t="${x.ti}">${esc(x.t.text)}</button>${dueChip(x.d,d,td1)}</div>`};
+  const items=(cs2.st.tasks||[]).map((t,ti)=>({t,ti,si:csI,d:t.due||stDue})).concat(stg.slice(0,csI).flatMap((x,si)=>(x.st.tasks||[]).map((t,ti)=>({t,ti,si,d:t.due||x.st.end||'',old:1})).filter(y=>y.t.status!=='done'))).sort((a,b)=>((a.old||0)-(b.old||0))||((a.t.status==='done')-(b.t.status==='done'))||((a.d||'9')<(b.d||'9')?-1:(a.d||'9')>(b.d||'9')?1:0)||(a.ti-b.ti));
+  const trow2=x=>{const d=x.t.status==='done';return `<div class="sxtd td"><button class="sxcb" data-a="pbtoggle" data-s="${x.si}" data-t="${x.ti}" aria-label="Отметить выполненной" aria-pressed="${d}"><span class="sxck2 ${d?'d':x.t.status==='doing'?'r':''}">${d?SV.check:''}</span></button><button class="sxtt2 ${d?'dn':''}" data-a="pbopen" data-s="${x.si}" data-t="${x.ti}">${esc(x.t.text)}${x.old?'<small class="sxold">с прошлой недели</small>':''}</button>${dueChip(x.d,d,td1)}</div>`};
   const CP=rmParts(cs2.st);
   const tasks=`<div class="sx sxt"><div class="sxtn"><div class="sxtc" style="flex:1"><em>Задачи</em><b>${esc(CP.kick||'Этап')}${CP.name?' · '+esc(CP.name):''}</b><span>${cs2.d} из ${cs2.n} выполнено${cs2.st.end?' · до '+fdate(cs2.st.end):''}</span></div><a class="sxar" href="#/tasks" aria-label="Вся доска задач">${ico('chev')}</a></div>
    <div class="sxtl">${items.map(trow2).join('')||'<p class="sxsub">Задач нет.</p>'}</div><div class="sxrow" style="margin-top:12px"><a class="sxbtn g" href="#/tasks">Вся доска</a></div></div>`;
   return `${news.map(n=>`<div class="news"><small>Сообщение от Виктории</small><p>${esc(n.text)}</p><button data-a="seen" data-id="${esc(n.id)}">Прочитано</button></div>`).join('')}
-  <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('book')}</span><div><b>${cw.n>6?'+':Math.max(cw.n,0)}</b><small>${cw.n>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
+  <div class="sxhd"><h1>Привет, <b>${esc(nm)}</b></h1><div class="sxh3"><div><span class="sxic">${ico('book')}</span><div><b>${WKN>6?'+':WKN}</b><small>${WKN>6?'сопровождение':'неделя из 6'}</small></div></div><div><span class="sxic">${SV.flag}</span><div><b>${st}</b><small>${plur(st,'день','дня','дней')} подряд</small></div></div></div></div>
   
   <div class="sxg">${photo}${idxT}${ring}${prog}${tasks}</div>${taskModal()}`;
 }
@@ -2116,6 +2125,8 @@ function stPlanOf(){
     pl.stages[i].tasks=pl.stages[i].tasks||[];pl.stages[i].tasks.push({id:x.id,text:x.text,status:x.done?'done':x.doing?'doing':'todo',who:'client',own:1})});
   return pl;
 }
+function stDateStage(pl){const td=today(),S=pl.stages||[];let i=S.findIndex(st=>st.start&&st.end&&st.start<=td&&td<=st.end&&!st.later);if(i<0){const past=S.map((st,k)=>[st,k]).filter(([st])=>st.end&&st.end<td&&!st.later);i=past.length?past[past.length-1][1]:-1}return i<0?stCurStage(pl):i}
+function wkNumNow(pl){const S=pl.stages||[],i=stDateStage(pl),st=S[i]||{};const m=String(st.title||'').match(/^Неделя\s+(\d+)/);if(m)return +m[1];if(st.end&&st.end<today())return 7;const w=C.weeks.find(x=>x.opens&&x.due&&x.opens<=today()&&today()<=x.due);return w?w.n:1}
 function stCurStage(pl){const i=(pl.stages||[]).findIndex(st=>(st.tasks||[]).some(t=>t.status!=='done'));return i<0?Math.max(0,(pl.stages||[]).length-1):i}
 function stPlanPage(){
   const pl=stPlanOf();window.PLD={slot:ME.slot,plan:pl};
@@ -2124,6 +2135,7 @@ function stPlanPage(){
 function stTaskPage(){
   const pl=stPlanOf();window.PLD={slot:ME.slot,plan:pl};
   if(!(pl.stages||[]).length)return `${hd2('Задачи','Доска задач',[])}<div class="t2"><p class="mu2">Задач пока нет.</p></div>`;
+  if(ME.role!=='admin'&&!window.ASPFX&&(!window.PBF||window.PBF.st===undefined))window.PBF=Object.assign({},window.PBF,{st:String(stDateStage(pl))});
   const ci=stCurStage(pl),cs=pl.stages[ci],f=Object.assign({v:'status'},PBD,window.PBF),sw=f.st!=='all'&&(pl.stages[+f.st])?pl.stages[+f.st]:cs;
   const add=`<div class="sxadd" style="margin:14px 0"><input id="td-i" type="text" maxlength="140" data-w="${sw.wk!=null?sw.wk:0}" placeholder="Своя задача: «${esc(sw.title.replace(/^Неделя (\d+)\.\s*/,'Нед. $1: ').slice(0,26))}»" autocomplete="off"><button class="sxbtn" data-a="todoadd">+ Добавить</button></div>`;
   return `${hd2('Задачи','Все задачи программы на одной доске',[])}${add}${taskBoard()}`;
