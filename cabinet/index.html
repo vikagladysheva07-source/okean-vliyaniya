@@ -2258,11 +2258,20 @@ function clHome(){
    ${tile('#/approve',SV.check,pend.length,'ждут вашего ответа')}
    ${tile('#/reports',ico('chart'),reps.length,'отчётов')}
    ${clWeek()}
+   ${updTile()}
    ${key.length?`<a class="t2 lk2 c12 cl2" href="#/key"><h3>Важные моменты<span class="go">${SV.arrow}</span></h3>${key.slice(0,3).map(k=>`<div class="it2"><span class="pl2 ${k.type==='risk'?'w':''}">${KT[k.type]||'Важно'}</span><div class="x"><p>${esc(k.text)}</p>${k.date?`<small>${fdate(k.date)}</small>`:''}</div></div>`).join('')}</a>`:''}
    ${kpi.length?`<div class="t2 c12"><h3>Показатели</h3><div class="kp2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${kpi.slice(0,6).map(k=>`<div><b>${esc(k.v)}</b><span>${esc(k.l)}${k.d?' · '+esc(k.d):''}</span></div>`).join('')}</div></div>`:''}
    ${gantt}
   </div>
   <div style="margin-top:22px"><button class="btn g s" data-a="out">Выйти из кабинета</button></div>`;
+}
+/* Обновления платформы (meta 'updates': [{id,date,title,text}]): последнее крупно, прежние под спойлером */
+function updTile(){
+  const L=(Array.isArray(ST.meta.updates)?ST.meta.updates:[]).slice().sort((a,b)=>(a.date<b.date?1:a.date>b.date?-1:(b.id>a.id?1:-1)));
+  if(!L.length)return '';
+  const one=u=>`<div class="it2" style="align-items:flex-start"><div class="x"><p><b>${esc(u.title)}</b></p>${u.text?`<p class="mu2" style="margin-top:4px;white-space:pre-line">${esc(u.text)}</p>`:''}</div></div>`;
+  const rest=L.slice(1);
+  return `<div class="t2 c12"><h3>Последнее обновление платформы<span class="mu2" style="font-weight:400">${L[0].date?fdate(L[0].date):''}</span></h3>${one(L[0])}${rest.length?`<details style="margin-top:10px"><summary class="mu2" style="cursor:pointer">Прежние обновления: ${rest.length}</summary>${rest.map(u=>`<div style="margin-top:8px"><small class="mu2">${u.date?fdate(u.date):''}</small>${one(u)}</div>`).join('')}</details>`:''}</div>`;
 }
 function weekTile(pl){
   const td=today(),end=ymdOf(dnum(td)+6),L=[];
